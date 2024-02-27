@@ -1,0 +1,55 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.2.7.RELEASE)
+
+2023-06-02 17:05:31.942  INFO 2841042 --- [           main] c.p.pmastery.app.PfaPMasteryApplication  : Starting PfaPMasteryApplication v0.0.1-SNAPSHOT on cnrst-System-Product-Name with PID 2841042 (/home/cnrst/projets/pfemanager/backend/target/pfa-PMastery-0.0.1-SNAPSHOT.jar started by cnrst in /home/cnrst/projets/pfemanager/backend)
+2023-06-02 17:05:31.945  INFO 2841042 --- [           main] c.p.pmastery.app.PfaPMasteryApplication  : No active profile set, falling back to default profiles: default
+2023-06-02 17:05:32.722  INFO 2841042 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-06-02 17:05:32.790  INFO 2841042 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 60ms. Found 2 JPA repository interfaces.
+2023-06-02 17:05:33.354  INFO 2841042 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 5005 (https)
+2023-06-02 17:05:33.363  INFO 2841042 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-06-02 17:05:33.363  INFO 2841042 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.34]
+2023-06-02 17:05:33.407  INFO 2841042 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-06-02 17:05:33.407  INFO 2841042 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1409 ms
+2023-06-02 17:05:33.579  INFO 2841042 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-06-02 17:05:33.645  INFO 2841042 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.15.Final
+2023-06-02 17:05:33.775  INFO 2841042 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2023-06-02 17:05:33.887  INFO 2841042 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-06-02 17:05:34.019  INFO 2841042 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-06-02 17:05:34.034  INFO 2841042 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+2023-06-02 17:05:34.619  INFO 2841042 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-06-02 17:05:34.628  INFO 2841042 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-06-02 17:05:35.131  WARN 2841042 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-06-02 17:05:35.560  INFO 2841042 --- [           main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+2023-06-02 17:05:35.707  INFO 2841042 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@75120e58, org.springframework.security.web.context.SecurityContextPersistenceFilter@14a049f9, org.springframework.security.web.header.HeaderWriterFilter@2264ea32, org.springframework.web.filter.CorsFilter@48976e6d, org.springframework.security.web.authentication.logout.LogoutFilter@e4e1ef5, com.pfa.pmastery.app.security.AuthenticationFilter@2a367e93, com.pfa.pmastery.app.security.AuthorizationFilter@7f6874f2, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5de6cf3a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4af45442, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1a6dc589, org.springframework.security.web.session.SessionManagementFilter@71e4b308, org.springframework.security.web.access.ExceptionTranslationFilter@43d9f1a2, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@4b4eced1]
+2023-06-02 17:05:35.782  INFO 2841042 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2023-06-02 17:05:35.966  INFO 2841042 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2023-06-02 17:05:35.989  INFO 2841042 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2023-06-02 17:05:36.035  INFO 2841042 --- [           main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2023-06-02 17:05:36.241  INFO 2841042 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2023-06-02 17:05:36.247  INFO 2841042 --- [           main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-06-02 17:05:36.248 ERROR 2841042 --- [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 5005 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 5005 or configure this application to listen on another port.
+
+2023-06-02 17:05:36.251  INFO 2841042 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2023-06-02 17:05:36.254  INFO 2841042 --- [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-06-02 17:05:36.256  INFO 2841042 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-06-02 17:05:36.269  INFO 2841042 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
