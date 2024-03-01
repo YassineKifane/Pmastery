@@ -99,12 +99,12 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = modelMapper.map(newUser , UserDto.class);
 
-        //Add Sending Email Verification Function
+        //Add Sending Email  Verification Function
         ConfirmationToken confirmationToken = new ConfirmationToken(newUser);
         confirmationTokenRepository.save(confirmationToken);
 
         String msg="To confirm your account, please click here : "
-                +"https://pmastery.apps.ump.ma/user/confirmEmail?token="+confirmationToken.getConfirmationToken();
+                +"http://localhost:8082/user/confirmEmail?token="+confirmationToken.getConfirmationToken();
         String subject = "Complete Registration!";
         emailSenderService.sendEmail(userEntity.getEmail(),
                 subject,

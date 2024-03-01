@@ -124,7 +124,7 @@ public class UserController {
     public ModelAndView confirmEmail(@RequestParam("token")String confirmationToken){
         userService.confirmEmail(confirmationToken);
 
-        ModelAndView modelAndView = new ModelAndView("redirect:https://pmastery.apps.ump.ma/");
+        ModelAndView modelAndView = new ModelAndView("redirect:http://localhost:3000");
 
         return modelAndView;
     }
