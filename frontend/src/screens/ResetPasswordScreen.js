@@ -137,7 +137,7 @@ export default function ResetPasswordScreen() {
     }
     try {
       dispatch({ type: 'SEND_EMAIL' });
-      await axios.put('https://apps.ump.ma:5005/user/forgotPassword', null, {
+      await axios.put('http://localhost:8082/user/forgotPassword', null, {
         params: { email: form.email },
       });
       // console.log(result);
@@ -163,7 +163,7 @@ export default function ResetPasswordScreen() {
     }
     try {
       dispatch({ type: 'RESET_PASSWORD_REQUEST' });
-      await axios.put('https://apps.ump.ma:5005/user/resetPassword', `${form.newPass}`, {
+      await axios.put('http://localhost:8082/user/resetPassword', `${form.newPass}`, {
         params: { token: form.code },
         headers: { 'Content-Type': 'application/json' },
         transformRequest: [(data) => data],

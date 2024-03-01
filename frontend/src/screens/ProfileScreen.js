@@ -72,7 +72,7 @@ export default function ProfileScreen() {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       const { data } = await axios.put(
-        `https://apps.ump.ma:5005/user/${userInfo.userId}`,
+        `http://localhost:8082/user/${userInfo.userId}`,
         {
           userId: userInfo.userId,
           affiliationCode: userInfo.affiliationCode,

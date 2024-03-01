@@ -92,7 +92,7 @@ export default function StudentJoinForm() {
     try {
       setLoading(true);
       // console.log(form);
-      await axios.post('https://apps.ump.ma:5005/user', form, {
+      await axios.post('http://localhost:8082/user', form, {
         params: { role: 'ADMIN' },
       });
       setLoading(false);

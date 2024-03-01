@@ -86,7 +86,7 @@ export default function SoutenanceScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `https://apps.ump.ma:5005/soutnance/getInitializeDate/${userInfo.userId}`,
+          `http://localhost:8082/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -95,14 +95,14 @@ export default function SoutenanceScreen() {
             },
           }
         );
-        const result = await axios.get(`https://apps.ump.ma:5005/soutnance/getAllSoutnances`, {
+        const result = await axios.get(`http://localhost:8082/soutnance/getAllSoutnances`, {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             year: currentYear,
             affiliationCode: userInfo.affiliationCode,
           },
         });
-        const supervisors = await axios.get('https://apps.ump.ma:5005/user/allUsers', {
+        const supervisors = await axios.get('http://localhost:8082/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -321,7 +321,7 @@ export default function SoutenanceScreen() {
       };
       // console.log(sendData);
       const { data } = await axios.post(
-        `https://apps.ump.ma:5005/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
+        `http://localhost:8082/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
         sendData,
         {
           headers: {
@@ -352,7 +352,7 @@ export default function SoutenanceScreen() {
     try {
       dispatch({ type: 'AFFECT_PUB_REQUEST' });
       const { data } = await axios.put(
-        `https://apps.ump.ma:5005/soutnance/publishSoutnances/${userInfo.userId}`,
+        `http://localhost:8082/soutnance/publishSoutnances/${userInfo.userId}`,
         {},
         {
           headers: {

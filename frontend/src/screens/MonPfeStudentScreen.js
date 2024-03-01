@@ -92,7 +92,7 @@ export default function MonPfeStudentScreen() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const result = await axios.get(`https://apps.ump.ma:5005/pfe/user/${userInfo.userId}`, {
+        const result = await axios.get(`http://localhost:8082/pfe/user/${userInfo.userId}`, {
           params: { role: userInfo.role },
           headers: { Authorization: `${userInfo.token}` },
         });
@@ -129,7 +129,7 @@ export default function MonPfeStudentScreen() {
           .map((opt) => opt.label)
           .join(', '),
       };
-      const { data } = await axios.put(`https://apps.ump.ma:5005/pfe/${pfe.pfeId}`, sendData, {
+      const { data } = await axios.put(`http://localhost:8082/pfe/${pfe.pfeId}`, sendData, {
         headers: { Authorization: `${userInfo.token}` },
       });
       dispatch({

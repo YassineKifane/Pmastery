@@ -32,7 +32,7 @@ export default function MaSoutenanceStudentScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `https://apps.ump.ma:5005/soutnance/getAssignedSoutnance/${userInfo.userId}`,
+          `http://localhost:8082/soutnance/getAssignedSoutnance/${userInfo.userId}`,
           { headers: { Authorization: `${userInfo.token}` } }
         );
         // console.log(data);

@@ -91,7 +91,7 @@ export default function SupervisorJoinForm() {
     }
     try {
       setLoading(true);
-      await axios.post('https://apps.ump.ma:5005/user', form, {
+      await axios.post('http://localhost:8082/user', form, {
         params: { role: 'SUPERVISOR' },
       });
       setLoading(false);

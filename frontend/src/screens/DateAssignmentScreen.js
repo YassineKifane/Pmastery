@@ -86,7 +86,7 @@ export default function DateAssignmentScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `https://apps.ump.ma:5005/soutnance/getInitializeDate/${userInfo.userId}`,
+          `http://localhost:8082/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -95,14 +95,14 @@ export default function DateAssignmentScreen() {
             },
           }
         );
-        const result = await axios.get(`https://apps.ump.ma:5005/soutnance/getAllSoutnances`, {
+        const result = await axios.get(`http://localhost:8082/soutnance/getAllSoutnances`, {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             year: currentYear,
             affiliationCode: userInfo.affiliationCode,
           },
         });
-        const supervisors = await axios.get('https://apps.ump.ma:5005/user/allUsers', {
+        const supervisors = await axios.get('http://localhost:8082/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -277,7 +277,7 @@ export default function DateAssignmentScreen() {
       };
       // console.log(sendData);
       const { data } = await axios.post(
-        `https://apps.ump.ma:5005/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
+        `http://localhost:8082/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
         sendData,
         {
           headers: {

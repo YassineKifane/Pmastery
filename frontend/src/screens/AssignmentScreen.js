@@ -59,7 +59,7 @@ export default function AssignmentScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get('https://apps.ump.ma:5005/pfe/process', {
+        const { data } = await axios.get('http://localhost:8082/pfe/process', {
           params: {
             affiliationCode: userInfo.affiliationCode,
             isApproved: false,

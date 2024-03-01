@@ -16,7 +16,7 @@ export default function AssignmentChecklist(props) {
     try {
       dispatch({ type: 'ASSIGNMENT_REQUEST' });
       await axios.put(
-        `https://apps.ump.ma:5005/pfe/approve/${pfeId}`,
+        `http://localhost:8082/pfe/approve/${pfeId}`,
         { userId: userInfo.userId },
         {
           headers: { Authorization: `${userInfo.token}` },

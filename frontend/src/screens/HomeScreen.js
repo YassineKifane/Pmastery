@@ -36,7 +36,7 @@ export default function HomeScreen() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const { data } = await axios.get(`https://apps.ump.ma:5005/user/announcementMsg`, {
+        const { data } = await axios.get(`http://localhost:8082/user/announcementMsg`, {
           params: { userId: userInfo.userId },
           headers: { Authorization: `${userInfo.token}` },
         });
@@ -67,7 +67,7 @@ export default function HomeScreen() {
     try {
       // console.log(annonce, roles);
       const { data } = await axios.put(
-        `https://apps.ump.ma:5005/user/addAnnouncement`,
+        `http://localhost:8082/user/addAnnouncement`,
         {},
         {
           headers: { Authorization: `${userInfo.token}` },

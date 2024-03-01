@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "proxy": "https://apps.ump.ma:5005",
+  "proxy": "http://localhost:8082",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
