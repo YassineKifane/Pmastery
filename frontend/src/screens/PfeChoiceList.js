@@ -59,7 +59,7 @@ export default function PfeListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await Axios.get('https://apps.ump.ma:5005/user/allUsers', {
+        const { data } = await Axios.get('http://localhost:8082/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -109,7 +109,7 @@ export default function PfeListScreen() {
     try {
       dispatch({ type: 'CHOICE_REQUEST' });
       await Axios.put(
-        `https://apps.ump.ma:5005/user/selectPfe/${userInfo.userId}`,
+        `http://localhost:8082/user/selectPfe/${userInfo.userId}`,
         { userId: userInfo.userId },
         {
           headers: { Authorization: `${userInfo.token}` },

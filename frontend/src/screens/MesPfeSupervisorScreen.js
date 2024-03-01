@@ -32,7 +32,7 @@ export default function MesPfeSupervisorScreen() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const { data } = await axios.get(`https://apps.ump.ma:5005/pfe/user/${userInfo.userId}`, {
+        const { data } = await axios.get(`http://localhost:8082/pfe/user/${userInfo.userId}`, {
           params: { role: userInfo.role },
           headers: { Authorization: `${userInfo.token}` },
         });

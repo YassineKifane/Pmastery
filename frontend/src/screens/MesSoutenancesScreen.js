@@ -44,7 +44,7 @@ export default function MesSoutenancesScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `https://apps.ump.ma:5005/soutnance/getInitializeDate/${userInfo.userId}`,
+          `http://localhost:8082/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -53,7 +53,7 @@ export default function MesSoutenancesScreen() {
             },
           }
         );
-        const result = await axios.get(`https://apps.ump.ma:5005/soutnance/getAllSoutnances`, {
+        const result = await axios.get(`http://localhost:8082/soutnance/getAllSoutnances`, {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             year: currentYear,

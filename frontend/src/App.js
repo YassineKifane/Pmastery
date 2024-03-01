@@ -48,7 +48,7 @@ function App() {
   useEffect(() => {
     const fetchNumberOfDemands = async () => {
       try {
-        const { data } = await axios.get('https://apps.ump.ma:5005/user/nbRequests', {
+        const { data } = await axios.get('http://localhost:8082/user/nbRequests', {
           params: { affiliationCode: userInfo.affiliationCode },
           headers: { Authorization: `${userInfo.token}` },
         });

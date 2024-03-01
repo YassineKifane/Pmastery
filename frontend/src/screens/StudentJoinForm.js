@@ -168,7 +168,7 @@ export default function StudentJoinForm() {
       // data.pfe[0].usedTechnologies = data.pfe[0].usedTechnologies
       //   .map((opt) => opt.label)
       //   .join(', ');
-      await axios.post('https://apps.ump.ma:5005/user', data, {
+      await axios.post('http://localhost:8082/user', data, {
         params: { role: 'STUDENT' },
       });
       setLoading(false);

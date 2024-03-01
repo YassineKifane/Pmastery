@@ -68,14 +68,14 @@ export default function PfeListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get('https://apps.ump.ma:5005/pfe', {
+        const { data } = await axios.get('http://localhost:8082/pfe', {
           params: {
             affiliationCode: userInfo.affiliationCode,
             year: currentYear,
           },
           headers: { Authorization: `${userInfo.token}` },
         });
-        const supervisors = await axios.get('https://apps.ump.ma:5005/user/allUsers', {
+        const supervisors = await axios.get('http://localhost:8082/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,

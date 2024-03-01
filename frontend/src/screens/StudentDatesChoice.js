@@ -73,7 +73,7 @@ export default function StudentDatesChoice() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `https://apps.ump.ma:5005/soutnance/getInitializeDate/${userInfo.userId}`,
+          `http://localhost:8082/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -83,13 +83,13 @@ export default function StudentDatesChoice() {
           }
         );
         const result = await axios.get(
-          `https://apps.ump.ma:5005/soutnance/getProposeDates/${userInfo.userId}`,
+          `http://localhost:8082/soutnance/getProposeDates/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
           }
         );
         const result2 = await axios.get(
-          `https://apps.ump.ma:5005/soutnance/getAssignedSoutnance/${userInfo.userId}`,
+          `http://localhost:8082/soutnance/getAssignedSoutnance/${userInfo.userId}`,
           { headers: { Authorization: `${userInfo.token}` } }
         );
         // console.log(result.data);
@@ -180,7 +180,7 @@ export default function StudentDatesChoice() {
       dispatch({ type: 'SEND_CHOICE_REQUEST' });
       let datePropositions = selectedDates.map((d) => sendDateFormat(d));
       await axios.post(
-        `https://apps.ump.ma:5005/soutnance/proposeDates/${userInfo.userId}`,
+        `http://localhost:8082/soutnance/proposeDates/${userInfo.userId}`,
         datePropositions,
         {
           headers: {

@@ -69,7 +69,7 @@ export default function UsersDemandsScreen(props) {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await Axios.get('https://apps.ump.ma:5005/user/allUsers', {
+        const { data } = await Axios.get('http://localhost:8082/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -96,7 +96,7 @@ export default function UsersDemandsScreen(props) {
     try {
       dispatch({ type: 'ACCEPT_REQUEST' });
       await Axios.put(
-        `https://apps.ump.ma:5005/user/accept/${user.userId}`,
+        `http://localhost:8082/user/accept/${user.userId}`,
         { userId: user.userId },
         {
           headers: { Authorization: `${userInfo.token}` },
@@ -118,7 +118,7 @@ export default function UsersDemandsScreen(props) {
     ) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await Axios.delete(`https://apps.ump.ma:5005/user/${user.userId}`, {
+        await Axios.delete(`http://localhost:8082/user/${user.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
         });
         toast.success('Demande refusée');

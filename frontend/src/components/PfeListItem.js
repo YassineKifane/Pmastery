@@ -44,7 +44,7 @@ export default function PfeListItem(props) {
     try {
       dispatch({ type: 'ASSIGNMENT_REQUEST' });
       await axios.put(
-        `https://apps.ump.ma:5005/pfe/approve/${pfeSelectedAction.pfeId}`,
+        `https://localhost:8082/pfe/approve/${pfeSelectedAction.pfeId}`,
         {},
         {
           headers: { Authorization: `${userInfo.token}` },

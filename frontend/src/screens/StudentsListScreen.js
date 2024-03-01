@@ -48,7 +48,7 @@ export default function StudentsListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get('https://apps.ump.ma:5005/user/allUsers', {
+        const { data } = await axios.get('http://localhost:8082/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -75,7 +75,7 @@ export default function StudentsListScreen() {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimmer ce compte?`)) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(`https://apps.ump.ma:5005/user/${student.userId}`, {
+        await axios.delete(`http://localhost:8082/user/${student.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
         });
         toast.success('Étudiant  supprimé avec succès');
