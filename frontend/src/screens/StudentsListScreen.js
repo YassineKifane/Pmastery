@@ -33,7 +33,7 @@ const reducer = (state, action) => {
       return state;
   }
 };
-export default function StudentsListScreen() {
+export default function ListScreen() {
   const { state } = useContext(Store);
   const { userInfo } = state;
   const currentYear = new Date().getFullYear();
@@ -43,7 +43,6 @@ export default function StudentsListScreen() {
       loading: true,
       error: '',
     });
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,6 +54,9 @@ export default function StudentsListScreen() {
             isVerified: true,
           },
         });
+        console.log("data",data)
+
+
         dispatch({
           type: 'FETCH_SUCCESS',
           payload: data.filter((user) => user.role === 'STUDENT'),
@@ -78,7 +80,7 @@ export default function StudentsListScreen() {
         await axios.delete(`http://localhost:8082/user/${student.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
         });
-        toast.success('Étudiant  supprimé avec succès');
+        toast.success('Étudiant supprimé avec succès');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
         toast.error(getError(err));
@@ -135,7 +137,7 @@ export default function StudentsListScreen() {
                 </thead>
                 <tbody>
                   {students
-                    .filter((student) => student.pfe[0].year === 2023)
+                    .filter((student) => student.pfe[0].year === currentYear)
                     .filter((student) => {
                       return search.toLowerCase() === ''
                         ? student
