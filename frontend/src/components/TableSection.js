@@ -4,6 +4,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import useOpenController from '../hooks/useOpenController';
 
 export const TableSection = ({ user, deleteHandler }) => {
+  deleteHandler && console.log("salma")
   const { isOpen, toggle } = useOpenController(false);
   return (
     <React.Fragment key={user.userId}>
@@ -14,6 +15,7 @@ export const TableSection = ({ user, deleteHandler }) => {
         <td>{user.lastName}</td>
         <td>{user.firstName}</td>
         <td>{user.email}</td>
+        {deleteHandler &&
         <td>
           <Button
             type="button"
@@ -23,6 +25,7 @@ export const TableSection = ({ user, deleteHandler }) => {
             Supprimer
           </Button>
         </td>
+        }
       </tr>
       {isOpen && (
         <tr className="bg-light">
