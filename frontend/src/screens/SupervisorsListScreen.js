@@ -58,9 +58,9 @@ export default function SupervisorsListScreen() {
         });
         dispatch({
           type: 'FETCH_SUCCESS',
-          payload: data.filter((user) => user.role === 'SUPERVISOR'),
+          payload: data.filter(user => user.role === 'SUPERVISOR' && (user.pfe.length === 0 || (user.pfe.length > 0 && user.pfe[0].year === currentYear))),
         });
-        // console.log(data.filter((user) => user.role === 'SUPERVISOR'));
+        console.log(data.filter(user => user.role === 'SUPERVISOR' && (user.pfe.length === 0 || (user.pfe.length > 0 && user.pfe[0].year === currentYear))))
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: err });
       }
@@ -70,7 +70,7 @@ export default function SupervisorsListScreen() {
     } else {
       fetchData();
     }
-  }, [userInfo, successDelete]);
+  }, [userInfo, successDelete,currentYear]);
 
   const deleteHandler = async (supervisor) => {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimmer ce compte?`)) {

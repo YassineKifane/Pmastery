@@ -56,10 +56,9 @@ export default function ListScreen() {
         });
         console.log("data",data)
 
-
         dispatch({
           type: 'FETCH_SUCCESS',
-          payload: data.filter((user) => user.role === 'STUDENT'),
+          payload: data.filter((user) => user.role === 'STUDENT' && user.pfe[0].year === currentYear),
         });
         // console.log(data);
       } catch (err) {
@@ -137,7 +136,6 @@ export default function ListScreen() {
                 </thead>
                 <tbody>
                   {students
-                    .filter((student) => student.pfe[0].year === currentYear)
                     .filter((student) => {
                       return search.toLowerCase() === ''
                         ? student
