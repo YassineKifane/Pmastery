@@ -8,11 +8,30 @@ import java.util.List;
 @Entity(name="pfe")
 public class PfeEntity implements Serializable {
 
+
     @Id
     @GeneratedValue
     private Long id;
-    @Column(nullable = false , unique = true , length = 40)
+
+    @Column(nullable = false , unique = true)
     private String pfeId;
+    @Column(nullable = false , unique = true)
+    private  String userId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     @Column(nullable = false , length = 255)
     private String subject;
     @Column(nullable = false ,length = 50)
@@ -28,6 +47,8 @@ public class PfeEntity implements Serializable {
     /*@Column(name = "year", columnDefinition = "integer default year(current_date)")*/
     @Column(name = "year", columnDefinition = "integer default extract(year from current_date)")
     private int year;
+
+
     @PrePersist
     protected void onCreate() {
         year = java.time.LocalDate.now().getYear();
@@ -37,14 +58,6 @@ public class PfeEntity implements Serializable {
     @JoinTable(name="pfe_users" , joinColumns = @JoinColumn(name="pfeId") ,
             inverseJoinColumns = @JoinColumn(name="userId"))
     private List<UserEntity> users;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getPfeId() {
         return pfeId;

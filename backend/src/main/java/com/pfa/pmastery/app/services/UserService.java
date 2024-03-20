@@ -7,6 +7,7 @@ import javax.mail.MessagingException;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
+
     UserDto addUser(String role , UserDto userDto) throws MessagingException;
     UserDto getUser(String email);
     UserDto getUserByEmailAndPassword(String email,String password);

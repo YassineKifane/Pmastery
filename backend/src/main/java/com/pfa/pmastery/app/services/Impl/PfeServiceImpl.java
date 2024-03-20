@@ -24,6 +24,25 @@ public class PfeServiceImpl implements PfeService {
     private UserRepository userRepository;
 
     @Override
+    public PfeDto addPfe(PfeDto pfeDto) {
+        PfeEntity pfeEntity = new PfeEntity();
+
+        pfeEntity.setUserId(pfeDto.getUserId());
+        pfeEntity.setCity(pfeDto.getCity());
+        pfeEntity.setCompany(pfeDto.getCompany());
+        pfeEntity.setSubject(pfeDto.getSubject());
+        pfeEntity.setSupervisorEmail(pfeDto.getSupervisorEmail());
+        pfeEntity.setUsedTechnologies(pfeDto.getUsedTechnologies());
+
+        PfeEntity addedPfeEntity = pfeRepository.save(pfeEntity);
+
+        ModelMapper modelMapper = new ModelMapper();
+
+        return modelMapper.map(addedPfeEntity, PfeDto.class);
+    }
+
+
+    @Override
     public List<PfeDto> getPfeByYear(int year , String code) {
 
         List<PfeDto> pfeDto = new ArrayList<>();

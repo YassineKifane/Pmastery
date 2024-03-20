@@ -114,6 +114,7 @@ export default function NavbarComponent(props) {
                       </Nav.Item>
                     </>
                   )}
+
                   {userInfo.role === 'STUDENT' ? (
                     <Nav.Item className="ms-3 me-3">
                       <LinkContainer to="/mon-pfe">

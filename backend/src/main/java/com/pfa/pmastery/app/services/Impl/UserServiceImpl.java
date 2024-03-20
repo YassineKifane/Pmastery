@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
     @Override
     public UserDto addUser(String role , UserDto user) throws MessagingException {
 
@@ -57,20 +58,20 @@ public class UserServiceImpl implements UserService {
             if(user.getSector() != null) throw new RuntimeException("Vous n'êtes pas autorisé(e) à remplir le champ Secteur.");
         }
 
-        if (role.equals("STUDENT")) {
-            if (user.getPfe() == null || user.getPfe().isEmpty()){
-                throw new RuntimeException("Il manque des champs de PFE.");
-            }
-            for (int i = 0; i < user.getPfe().size(); i++) {
-                PfeDto pfeDto = user.getPfe().get(i);
-                pfeDto.setApproved(false);
-                pfeDto.setUser(user);
-                pfeDto.setPfeId(utils.generateStringId(32));
-                user.getPfe().set(i, pfeDto);
-            }
-        } else {
-            user.setPfe(null);
-        }
+//        if (role.equals("STUDENT")) {
+//            if (user.getPfe() == null || user.getPfe().isEmpty()){
+//                throw new RuntimeException("Il manque des champs de PFE.");
+//            }
+//            for (int i = 0; i < user.getPfe().size(); i++) {
+//                PfeDto pfeDto = user.getPfe().get(i);
+//                pfeDto.setApproved(false);
+//                pfeDto.setUser(user);
+//                pfeDto.setPfeId(utils.generateStringId(32));
+//                user.getPfe().set(i, pfeDto);
+//            }
+//        } else {
+//            user.setPfe(null);
+//        }
 
         ModelMapper modelMapper = new ModelMapper();
         UserEntity userEntity = modelMapper.map(user,UserEntity.class);

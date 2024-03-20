@@ -36,7 +36,7 @@ import StudentDatesChoice from './screens/StudentDatesChoice';
 import DateAssignmentScreen from './screens/DateAssignmentScreen';
 import MaSoutenanceStudentScreen from './screens/MaSoutenanceStudentScreen';
 import MesSoutenancesScreen from './screens/MesSoutenancesScreen';
-
+import RemplirPfeScreen from './screens/RemplirPfeScreen';
 axiosInterceptor();
 
 function App() {
@@ -188,6 +188,12 @@ function App() {
                   </StudentRoute>
                 }
               />
+                <Route
+                    path="/pfe-form"
+                    element={
+                        <ProtectedRoute>
+                            <RemplirPfeScreen />
+                            </ProtectedRoute>} />
               <Route
                 path="/studentsoutenancechoice"
                 element={
@@ -227,7 +233,8 @@ function App() {
                     <ProfileScreen />
                   </ProtectedRoute>
                 }
-              />
+                    />
+
             </Routes>
           </Container>
         </main>

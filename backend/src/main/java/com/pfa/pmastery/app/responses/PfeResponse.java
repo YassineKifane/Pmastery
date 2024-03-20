@@ -4,6 +4,7 @@ import java.util.List;
 
 public class PfeResponse {
     private String pfeId;
+    private String userId;
     private String subject;
     private String city;
     private String company;
@@ -94,5 +95,12 @@ public class PfeResponse {
 
     public void setUsers(List<UserResponseWithoutPfe> users) {
         this.users = users;
+    }
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

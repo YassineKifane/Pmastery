@@ -42,7 +42,7 @@ public class UserController {
 
         UserResponse userResponse = modelMapper.map(addedUser,UserResponse.class);
 
-        return new ResponseEntity<UserResponse>(userResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
     @GetMapping

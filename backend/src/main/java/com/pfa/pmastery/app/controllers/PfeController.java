@@ -1,17 +1,20 @@
 package com.pfa.pmastery.app.controllers;
 
 import com.pfa.pmastery.app.requests.PfeRequest;
-import com.pfa.pmastery.app.responses.PfeResponse;
-import com.pfa.pmastery.app.responses.PfeResponseWithoutUser;
-import com.pfa.pmastery.app.responses.ReportResponse;
-import com.pfa.pmastery.app.responses.SoutnanceResponse;
+import com.pfa.pmastery.app.responses.*;
 import com.pfa.pmastery.app.services.PfeService;
 import com.pfa.pmastery.app.services.StorageService;
+import com.pfa.pmastery.app.services.UserService;
 import com.pfa.pmastery.app.shared.dto.PfeDto;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
+import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,16 +26,36 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
 
 @RestController
+
 @RequestMapping("/pfe")
 public class PfeController {
-
+    private static final Logger logger = LoggerFactory.getLogger(PfeController.class);
     @Autowired
     PfeService pfeService;
 
+
+
     @Autowired
     StorageService storageService;
+    @PostMapping
+    public ResponseEntity<PfeResponse> addPfe(@RequestHeader(value = "role") String role ,@RequestBody @Valid PfeRequest pfeRequest)  {
+
+        ModelMapper modelMapper = new ModelMapper();
+        TypeMap<PfeRequest, PfeDto> typeMap = modelMapper.createTypeMap(PfeRequest.class, PfeDto.class);
+        typeMap.addMappings(mapper -> mapper.map(src -> src.getUserId(), PfeDto::setUserId));
+        // Mapping de PfeRequest vers PfeDto
+        PfeDto pfeDto = modelMapper.map(pfeRequest, PfeDto.class);
+        // Autre traitement pour ajouter le PFE, si nécessaire
+        PfeDto addedPfe = pfeService.addPfe(pfeDto);
+        // Mapping de PfeDto vers PfeResponse
+        PfeResponse pfeResponse = modelMapper.map(addedPfe, PfeResponse.class);
+
+        return new ResponseEntity<>(pfeResponse, HttpStatus.CREATED);
+    }
+
 
     @GetMapping
     public ResponseEntity<List<PfeResponseWithoutUser>> getPfeByYear(@RequestParam (value = "year") int year,

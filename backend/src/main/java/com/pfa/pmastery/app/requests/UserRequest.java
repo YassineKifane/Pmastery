@@ -32,7 +32,7 @@ public class UserRequest {
     @Size(max=50 ,message="Ce champ ne doit pas avoir plus de 50 Caracteres !")
     private String sector;
 
-    private List<@Valid PfeRequest> pfe;
+    //private List<@Valid PfeRequest> pfe;
 
     public String getEmail() {
         return email;
@@ -82,11 +82,11 @@ public class UserRequest {
         this.sector = sector;
     }
 
-    public List<PfeRequest> getPfe() {
-        return pfe;
-    }
-
-    public void setPfe(List<PfeRequest> pfe) {
-        this.pfe = pfe;
-    }
+//    public List<PfeRequest> getPfe() {
+//        return pfe;
+//    }
+//
+//    public void setPfe(List<PfeRequest> pfe) {
+//        this.pfe = pfe;
+//    }
 }

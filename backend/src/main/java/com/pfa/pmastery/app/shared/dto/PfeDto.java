@@ -1,40 +1,43 @@
 package com.pfa.pmastery.app.shared.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public class PfeDto implements Serializable {
 
-    private Long id;
-    private String pfeId;
-    private String subject;
-    private String city;
-    private String company;
-    private String supervisorEmail;
-    private String usedTechnologies;
-    private Boolean isApproved;
-    private int year;
-    private UserDto user;
+    String userId;
+    String subject;
+    String city;
+    String company;
+    String supervisorEmail;
+    String usedTechnologies;
+    Boolean isApproved;
+    int year;
+    UserDto user;
+    List<UserDto> users;
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
-    private List<UserDto> users;
-
-
-    public Long getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getPfeId() {
-        return pfeId;
-    }
-
-    public void setPfeId(String pfeId) {
-        this.pfeId = pfeId;
-    }
+//    public String getPfeId() {
+//        return pfeId;
+//    }
+//
+//    public void setPfeId(String pfeId) {
+//        this.pfeId = pfeId;
+//    }
 
     public String getSubject() {
         return subject;
@@ -107,4 +110,6 @@ public class PfeDto implements Serializable {
     public void setUsers(List<UserDto> users) {
         this.users = users;
     }
+
+
 }
