@@ -37,13 +37,11 @@ export default function SupervisorsListScreen() {
   const { userInfo } = state;
   const currentYear = new Date().getFullYear();
   const [search, setSearch] = useState('');
-  const [
-    { loading, error, supervisors, loadingDelete, successDelete },
-    dispatch,
-  ] = useReducer(reducer, {
-    loading: true,
-    error: '',
-  });
+  const [{ loading, error, supervisors, loadingDelete, successDelete }, dispatch,] =
+      useReducer(reducer, {
+          loading: true,
+          error: '',
+      });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,9 +56,10 @@ export default function SupervisorsListScreen() {
         });
         dispatch({
           type: 'FETCH_SUCCESS',
-          payload: data.filter(user => user.role === 'SUPERVISOR' && (user.pfe.length === 0 || (user.pfe.length > 0 && user.pfe[0].year === currentYear))),
+          payload: data.filter(
+                  user => user.role === 'SUPERVISOR' &&
+                  ((user.pfe.length > 0 && user.pfe.flatMap(p=>p.year).includes(currentYear)))),
         });
-        console.log(data.filter(user => user.role === 'SUPERVISOR' && (user.pfe.length === 0 || (user.pfe.length > 0 && user.pfe[0].year === currentYear))))
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: err });
       }
@@ -126,13 +125,14 @@ export default function SupervisorsListScreen() {
               </Form>
               <Table striped responsive>
                 <thead>
-                  <tr>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Nombre de sujets ({currentYear})</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                  </tr>
+                <tr>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Nombre de sujets ({currentYear})</th>
+                  <th>Email</th>
+                  <th>Actions</th>
+                  <th></th>
+                </tr>
                 </thead>
                 <tbody>
                   {supervisors
@@ -153,34 +153,42 @@ export default function SupervisorsListScreen() {
                               .length.toString() === search;
                     })
                     .map((supervisor) => (
-                      <tr key={supervisor.userId}>
-                        <td>{supervisor.lastName}</td>
-                        <td>{supervisor.firstName}</td>
-                        <td>
-                          {
-                            supervisor.pfe.filter(
-                              (p) =>
-                                p.year === currentYear && p.approved === true
-                            ).length
-                          }
-                        </td>
-                        <td>{supervisor.email}</td>
-                        <td>
-                          <Button
-                            type="button"
-                            variant="danger"
-                            onClick={() => deleteHandler(supervisor)}
-                          >
-                            Supprimer
-                          </Button>
-                        </td>
-                      </tr>
+                        <tr key={supervisor.userId}>
+                          <td>{supervisor.lastName}</td>
+                          <td>{supervisor.firstName}</td>
+                          <td>
+                            {
+                              supervisor.pfe.filter(
+                                  (p) =>
+                                      p.year === currentYear && p.approved === true
+                              ).length
+                            }
+                          </td>
+                          <td>{supervisor.email}</td>
+                          <td>
+                            <Button
+                                type="button"
+                                variant="danger"
+                                onClick={() => deleteHandler(supervisor)}
+                            >
+                              Supprimer
+                            </Button>
+                          </td>
+                          <td>
+                            <Button
+                                type="button"
+                                variant="primary"
+                            >
+                              sujets encadres
+                            </Button>
+                          </td>
+                        </tr>
                     ))}
                 </tbody>
               </Table>
             </>
           ) : (
-            <MessageBox>Il n'y a pas d'encadrants disponibles</MessageBox>
+              <MessageBox>Il n'y a pas d'encadrants disponibles</MessageBox>
           )}
         </>
       )}

@@ -4,31 +4,38 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import useOpenController from '../hooks/useOpenController';
 
 export const TableSection = ({ user, deleteHandler }) => {
-  deleteHandler && console.log("salma")
   const { isOpen, toggle } = useOpenController(false);
   return (
     <React.Fragment key={user.userId}>
       <tr>
         <td>
-          <ExpandableButton isOpen={isOpen} toggle={toggle} />
+          <ExpandableButton isOpen={isOpen} toggle={toggle}/>
         </td>
         <td>{user.lastName}</td>
         <td>{user.firstName}</td>
         <td>{user.email}</td>
-        {deleteHandler &&
         <td>
           <Button
-            type="button"
-            variant="danger"
-            onClick={() => deleteHandler(user)}
+              type="button"
+              variant="primary"
           >
-            Supprimer
+            Show
           </Button>
         </td>
+        {deleteHandler &&
+            <td>
+              <Button
+                  type="button"
+                  variant="danger"
+                  onClick={() => deleteHandler(user)}
+              >
+                Supprimer
+              </Button>
+            </td>
         }
       </tr>
       {isOpen && (
-        <tr className="bg-light">
+          <tr className="bg-light">
           <td></td>
           <td colSpan={4}>
             <Container fluid>
