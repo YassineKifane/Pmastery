@@ -5,6 +5,7 @@ import com.pfa.pmastery.app.entities.UserEntity;
 import com.pfa.pmastery.app.repositories.PfeRepository;
 import com.pfa.pmastery.app.repositories.UserRepository;
 import com.pfa.pmastery.app.services.PfeService;
+import com.pfa.pmastery.app.shared.Utils;
 import com.pfa.pmastery.app.shared.dto.PfeDto;
 import com.pfa.pmastery.app.shared.dto.UserDto;
 import org.modelmapper.ModelMapper;
@@ -22,25 +23,42 @@ public class PfeServiceImpl implements PfeService {
     PfeRepository pfeRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    Utils utils;
     @Override
-    public PfeDto addPfe(PfeDto pfeDto) {
+    public PfeDto addPfe(PfeDto pfeDto, UserDto userDto) {
+        // Create a new PfeEntity
         PfeEntity pfeEntity = new PfeEntity();
 
-        pfeEntity.setUserId(pfeDto.getUserId());
+        // Check if pfeId is not set, then generate a new one
+        if (pfeDto.getPfeId() == null || pfeDto.getPfeId().isEmpty()) {
+            pfeDto.setPfeId(utils.generateStringId(32));
+        }
+
+        // Map fields from PfeDto to PfeEntity
+        pfeEntity.setPfeId(pfeDto.getPfeId()); // Ensure to set the provided or generated ID
         pfeEntity.setCity(pfeDto.getCity());
         pfeEntity.setCompany(pfeDto.getCompany());
         pfeEntity.setSubject(pfeDto.getSubject());
         pfeEntity.setSupervisorEmail(pfeDto.getSupervisorEmail());
         pfeEntity.setUsedTechnologies(pfeDto.getUsedTechnologies());
 
+        // Save the PfeEntity to the database
         PfeEntity addedPfeEntity = pfeRepository.save(pfeEntity);
 
-        ModelMapper modelMapper = new ModelMapper();
+        // Map the addedPfeEntity back to PfeDto and return
+        PfeDto addedPfeDto = new PfeDto();
+        addedPfeDto.setPfeId(addedPfeEntity.getPfeId());
+        addedPfeDto.setCity(addedPfeEntity.getCity());
+        addedPfeDto.setCompany(addedPfeEntity.getCompany());
+        addedPfeDto.setSubject(addedPfeEntity.getSubject());
+        addedPfeDto.setApproved(false);
+        addedPfeDto.setUser(userDto);
+        addedPfeDto.setSupervisorEmail(addedPfeEntity.getSupervisorEmail());
+        addedPfeDto.setUsedTechnologies(addedPfeEntity.getUsedTechnologies());
 
-        return modelMapper.map(addedPfeEntity, PfeDto.class);
+        return addedPfeDto;
     }
-
 
     @Override
     public List<PfeDto> getPfeByYear(int year , String code) {

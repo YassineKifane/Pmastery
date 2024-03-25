@@ -3,11 +3,10 @@ package com.pfa.pmastery.app.services;
 import com.pfa.pmastery.app.shared.dto.PfeDto;
 import com.pfa.pmastery.app.shared.dto.UserDto;
 
-import javax.mail.MessagingException;
 import java.util.List;
 
 public interface PfeService {
- PfeDto addPfe(PfeDto pfeDto);
+  PfeDto addPfe(PfeDto pfeDto, UserDto userDto);
 
  List<PfeDto> getPfeByYear(int year , String code);
  List<PfeDto> getPfeWithStatus(int year , String code , boolean isApproved);

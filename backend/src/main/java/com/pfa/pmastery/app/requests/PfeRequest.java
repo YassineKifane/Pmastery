@@ -6,32 +6,20 @@ import javax.validation.constraints.Size;
 
 public class PfeRequest {
     @NotBlank(message = "Ce Champ ne doit pas etre null !")
-    private String userId;
+    @Size(max=255 ,message="Ce champ ne doit pas avoir plus de 255 Caracteres !")
+    private String subject;
     @NotBlank(message = "Ce Champ ne doit pas etre null !")
     @Size(max=50 ,message="Ce champ ne doit pas avoir plus de 50 Caracteres !")
     private String city;
     @NotBlank(message = "Ce Champ ne doit pas etre null !")
     @Size(max=50 ,message="Ce champ ne doit pas avoir plus de 50 Caracteres !")
     private String company;
-    @NotBlank(message = "Ce Champ ne doit pas etre null !")
-    @Size(max=255 ,message="Ce champ ne doit pas avoir plus de 255 Caracteres !")
-    private String subject;
-    @NotBlank(message = "Ce Champ ne doit pas etre null !")
     @Email
     @Size(max=100,message="Ce champ ne doit pas avoir plus de 100 Caracteres !")
     private String supervisorEmail;
     @NotBlank(message = "Ce Champ ne doit pas etre null !")
     @Size(max=255 ,message="Ce champ ne doit pas avoir plus de 255 Caracteres !")
     private String usedTechnologies;
-
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getSubject() {
         return subject;
@@ -72,9 +60,8 @@ public class PfeRequest {
     public void setUsedTechnologies(String usedTechnologies) {
         this.usedTechnologies = usedTechnologies;
     }
-
-
 }
+
 
 
 

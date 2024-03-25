@@ -14,6 +14,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity,Lo
 
     UserEntity findByEmail(String email);
     UserEntity findByUserId(String userId);
+
     @Query("SELECT u FROM users u JOIN u.pfe p WHERE p.pfeId = :pfeId AND u.role = :role AND u.isEmailVerified = true")
     List<UserEntity> findByPfeIdAndRole(@Param("pfeId") String pfeId, @Param("role") String role);
     UserEntity findByAffiliationCodeAndRole(String AffiliationCode,String role);

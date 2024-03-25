@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class UserDto implements Serializable {
-    @JsonIgnore
+
     private Long id;
     private String userId;
     private String email;
@@ -22,7 +22,6 @@ public class UserDto implements Serializable {
     private String affiliationCode;
     private String sector;
     private String announcementMsg;
-    @JsonIgnore
     private List<PfeDto> pfe;
 
     public Long getId() {

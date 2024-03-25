@@ -9,7 +9,6 @@ public class UserEntity implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-
     @Column(nullable = false , unique = true , length = 40)
     private String userId;
     @Column(nullable = false , unique = true , length = 100)
@@ -142,4 +141,6 @@ public class UserEntity implements Serializable {
     public void setPfe(List<PfeEntity> pfe) {
         this.pfe = pfe;
     }
+
+
 }

@@ -1,11 +1,14 @@
 package com.pfa.pmastery.app.controllers;
 
+import com.pfa.pmastery.app.entities.UserEntity;
+import com.pfa.pmastery.app.repositories.UserRepository;
 import com.pfa.pmastery.app.requests.PfeRequest;
 import com.pfa.pmastery.app.responses.*;
 import com.pfa.pmastery.app.services.PfeService;
 import com.pfa.pmastery.app.services.StorageService;
 import com.pfa.pmastery.app.services.UserService;
 import com.pfa.pmastery.app.shared.dto.PfeDto;
+import com.pfa.pmastery.app.shared.dto.UserDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -26,34 +29,45 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 
 @RestController
-
 @RequestMapping("/pfe")
 public class PfeController {
-    private static final Logger logger = LoggerFactory.getLogger(PfeController.class);
+
     @Autowired
     PfeService pfeService;
-
-
-
     @Autowired
     StorageService storageService;
+    @Autowired
+    UserRepository userRepository;
     @PostMapping
-    public ResponseEntity<PfeResponse> addPfe(@RequestHeader(value = "role") String role ,@RequestBody @Valid PfeRequest pfeRequest)  {
+    public ResponseEntity<?> addPfe(@RequestParam(value = "userId") String userId, @Valid @RequestBody PfeRequest pfeRequest) {
 
-        ModelMapper modelMapper = new ModelMapper();
-        TypeMap<PfeRequest, PfeDto> typeMap = modelMapper.createTypeMap(PfeRequest.class, PfeDto.class);
-        typeMap.addMappings(mapper -> mapper.map(src -> src.getUserId(), PfeDto::setUserId));
-        // Mapping de PfeRequest vers PfeDto
-        PfeDto pfeDto = modelMapper.map(pfeRequest, PfeDto.class);
-        // Autre traitement pour ajouter le PFE, si nécessaire
-        PfeDto addedPfe = pfeService.addPfe(pfeDto);
-        // Mapping de PfeDto vers PfeResponse
-        PfeResponse pfeResponse = modelMapper.map(addedPfe, PfeResponse.class);
+        // Proceed with adding the PFE if the request is valid
+        try {
+            // Retrieve the user based on userId
+            UserEntity userEntity = userRepository.findByUserId(userId);
+            if (userEntity == null) {
+                // If user not found, return an error response
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found for userId: " + userId);
+            }
+           ModelMapper modelMapper=new ModelMapper();
+            // Convert PfeRequest to PfeDto
+            PfeDto pfeDto = modelMapper.map(pfeRequest, PfeDto.class);
 
-        return new ResponseEntity<>(pfeResponse, HttpStatus.CREATED);
+            // Convert UserEntity to UserDto
+            UserDto userDto = modelMapper.map(userEntity, UserDto.class);
+
+            // Add PFE and associate it with the user
+            PfeDto addedPfe = pfeService.addPfe(pfeDto, userDto);
+            return new ResponseEntity<>(addedPfe, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // If an exception occurs during the addition process, return an internal server error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add PFE: " + e.getMessage());
+        }
     }
 
 

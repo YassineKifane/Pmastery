@@ -111,25 +111,28 @@ export default function RemplirPfeScreen() {
             setLoading(true);
             const pfeData = form.pfe[0];
             let data = {
-                ...form.pfe[0], // Inclut les champs du premier élément de pfe
-                userId: form.userId, // Ajoute userId au même niveau
+                ...form.pfe[0], // Includes the fields of the first element of pfe
                 usedTechnologies: form.pfe[0].usedTechnologies
                     .map((opt) => opt.label)
-                    .join(', ') // Traite usedTechnologies comme le reste des champs
+                    .join(', ') // Treat usedTechnologies like other fields
             };
 
-            console.log(data)
+            console.log(data);
+            console.log(form.userId)
+            // Sending request with userId in headers
             await axios.post('http://localhost:8082/pfe', data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'role': 'STUDENT'
+                params: {
+                    'userId': form.userId, // Passing userId in headers
                 }
+
             });
         } catch (err) {
             toast.error(getError(err));
+        } finally {
             setLoading(false);
         }
     };
+
 
     useEffect(() => {
         // Find the first input element with an error
