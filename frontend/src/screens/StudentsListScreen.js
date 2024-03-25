@@ -127,7 +127,6 @@ export default function ListScreen() {
               <Table responsive>
                 <thead>
                   <tr>
-                    <th></th>
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Email</th>
