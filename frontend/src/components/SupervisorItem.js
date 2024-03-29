@@ -16,10 +16,15 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
 
     function attestationHandler() {
             if (window.confirm(`Êtes-vous sûr de vouloir telecharger l'attestation?`)) {
-
             }
-
     }
+
+    function handleDeleteBtn() {
+        if(deleteHandler){
+            deleteHandler(supervisor)
+        }
+    }
+
     return (
         <tr key={supervisor.userId}>
             <td>{supervisor.lastName}</td>
@@ -165,7 +170,7 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
                         <Button
                             type="button"
                             variant="danger"
-                            onClick={() => deleteHandler(supervisor)}
+                            onClick={handleDeleteBtn}
                         >
                             Supprimer
                         </Button>

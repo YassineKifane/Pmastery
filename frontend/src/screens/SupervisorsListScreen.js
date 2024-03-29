@@ -7,9 +7,6 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
-import PfeDialogDetails from "../components/PfeDialogDetails";
-import CreatableSelect from "react-select/creatable";
-import {Dialog} from "primereact/dialog";
 import SupervisorItem from "../components/SupervisorItem";
 
 const reducer = (state, action) => {
@@ -112,7 +109,7 @@ export default function SupervisorsListScreen() {
         {loading ? (
             <LoadingBox />
         ) : error ? (
-            <MessageBox variant="danger">{error}</MessageBox>
+            <MessageBox variant="danger">{error.message}</MessageBox>
         ) : (
             <>
               <Row>
