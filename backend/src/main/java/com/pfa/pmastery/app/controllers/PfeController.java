@@ -118,24 +118,16 @@ public class PfeController {
         return new ResponseEntity<PfeResponseWithoutUser>(pfeResponses, HttpStatus.OK);
     }
 
-
-
     @GetMapping(path="/user/{userId}")
     public ResponseEntity<List<PfeResponseWithoutUser>> getPfeByUserId(@PathVariable String userId,
                                                                        @RequestParam (value="role") String role){
-
         List<PfeResponseWithoutUser> pfeResponses = new ArrayList<>();
         List<PfeDto> pfes = pfeService.getPfeByUserId(userId,role);
-
         for(PfeDto pfeDto : pfes) {
-
             ModelMapper modelMapper = new ModelMapper();
-
             PfeResponseWithoutUser pfeResponse = modelMapper.map(pfeDto, PfeResponseWithoutUser.class);
-
             pfeResponses.add(pfeResponse);
         }
-
         return new ResponseEntity<List<PfeResponseWithoutUser>>(pfeResponses, HttpStatus.OK);
     }
 

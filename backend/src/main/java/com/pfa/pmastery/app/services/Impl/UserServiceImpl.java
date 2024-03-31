@@ -14,6 +14,8 @@ import com.pfa.pmastery.app.shared.dto.UserDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
-
+import java.util.logging.Logger;
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -380,8 +382,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserByEmailAndPassword(String email,String password) {
+        final Logger logger = Logger.getLogger(getClass().getName());
         UserEntity userEntity = userRepository.findByEmail(email);
-
+        logger.info("Retrieved user entity: " + userEntity);
         if(userEntity == null) return null;
 
         // Check if the entered password matches the password in the database
@@ -389,11 +392,9 @@ public class UserServiceImpl implements UserService {
         if(!bCryptPasswordEncoder.matches(password, userEntity.getEncryptedPassword())) {
             return null;
         }
-
         UserDto userDto = new UserDto();
-
         BeanUtils.copyProperties(userEntity, userDto);
-
+        logger.info("Converted user entity to user dto: " + userDto);
         return userDto;
 
     }

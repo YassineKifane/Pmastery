@@ -18,7 +18,7 @@ export default function RemplirPfeScreen() {
     const redirect = redirectInUrl ? redirectInUrl : '/pfe-form';
     const { state } = useContext(Store);
     const { userInfo } = state;
-    //console.log(userInfo);
+    console.log(userInfo)
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         userId: userInfo && userInfo.userId ? userInfo.userId : '',
@@ -33,7 +33,7 @@ export default function RemplirPfeScreen() {
         ],
     });
 
-
+    const formRef = useRef();
     const firstErrorRef = useRef(null);
     const [errors, setErrors] = useState({});
 
@@ -126,13 +126,15 @@ export default function RemplirPfeScreen() {
                 }
 
             });
+
+            setLoading(false);
+            setForm({...form, pfe: [{ city: '', company: '', subject: '', supervisorEmail: '', usedTechnologies: [] }] });
         } catch (err) {
             toast.error(getError(err));
         } finally {
             setLoading(false);
         }
     };
-
 
     useEffect(() => {
         // Find the first input element with an error

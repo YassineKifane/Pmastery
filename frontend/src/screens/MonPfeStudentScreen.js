@@ -96,15 +96,19 @@ export default function MonPfeStudentScreen() {
           params: { role: userInfo.role },
           headers: { Authorization: `${userInfo.token}` },
         });
-        dispatch({ type: 'FETCH_SUCCESS', payload: result.data[0] });
-        setForm({
-          ...result.data[0],
-          usedTechnologies: result.data[0].usedTechnologies
-            .split(', ')
-            .map((tech) => {
-              return { value: tech.toLowerCase().trim(), label: tech };
-            }),
-        });
+
+        if(result.data && result.data.length > 0 && result.data[0].usedTechnologies){
+          dispatch({ type: 'FETCH_SUCCESS', payload: result.data[0] });
+          setForm({
+            ...result.data[0],
+            usedTechnologies: result.data[0].usedTechnologies
+                .split(', ')
+                .map((tech) => {
+                  return { value: tech.toLowerCase().trim(), label: tech };
+                }),
+          });
+        }
+
         // console.log(result.data);
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: err });

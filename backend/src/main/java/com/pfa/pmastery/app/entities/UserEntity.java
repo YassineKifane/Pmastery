@@ -1,5 +1,7 @@
 package com.pfa.pmastery.app.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -36,6 +38,7 @@ public class UserEntity implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     @JoinTable(name="pfe_users" , joinColumns = @JoinColumn(name="userId") ,
             inverseJoinColumns = @JoinColumn(name="pfeId"))
+    @JsonIgnore
     private List<PfeEntity> pfe;
 
     public Long getId() {

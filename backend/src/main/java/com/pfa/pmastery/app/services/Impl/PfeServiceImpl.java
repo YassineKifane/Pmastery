@@ -43,6 +43,14 @@ public class PfeServiceImpl implements PfeService {
         pfeEntity.setSupervisorEmail(pfeDto.getSupervisorEmail());
         pfeEntity.setUsedTechnologies(pfeDto.getUsedTechnologies());
 
+        List<UserEntity> users = new ArrayList<>();
+
+        UserEntity userEntity = userRepository.findByUserId(userDto.getUserId());
+        users.add(userEntity);
+
+        pfeEntity.setUsers(users);
+
+
         // Save the PfeEntity to the database
         PfeEntity addedPfeEntity = pfeRepository.save(pfeEntity);
 
