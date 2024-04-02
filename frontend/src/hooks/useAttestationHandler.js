@@ -8,6 +8,15 @@ export default function useAttestationHandler(supervisor,userinfo,selectedYearSu
     const [soutnances,setSoutnances]=useState([])
     const supervisor_name=supervisor.firstName+" "+supervisor.lastName
 
+    function getCurrentDate() {
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Les mois commencent à 0, donc +1
+        const year = date.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    }
+
         const fetchData=async ()=>{
             try{
                 const {data}=await axios.get(`http://localhost:8082/soutnance/getAllSoutnancesJuryToSupervisors/${supervisor.userId}`,{
@@ -17,6 +26,8 @@ export default function useAttestationHandler(supervisor,userinfo,selectedYearSu
                     }
                 })
                 setSoutnances(data)
+                console.log("soutnance: "+soutnances)
+
             }
             catch (err){
                 console.log(err)
@@ -35,6 +46,7 @@ export default function useAttestationHandler(supervisor,userinfo,selectedYearSu
                 fullName:soutnance.fullName,
                 pfeProject:soutnance.pfeSubject
             }));
+
             const pfeJury = soutnances.filter(soutnance =>soutnance.supervisorName !== supervisor_name).
                                                     map(soutnance=>({
                 fullName:soutnance.fullName,
@@ -44,7 +56,6 @@ export default function useAttestationHandler(supervisor,userinfo,selectedYearSu
             console.log("fullName"+fullName);
             console.log("pfeSoutnance ", pfeSoutnance);
             console.log("pfeJury ", pfeJury);
-            console.log("soutnance: "+soutnances)
             const lastyear=selectedYearSupervisors.value-1
             const year=lastyear+"/"+selectedYearSupervisors.value
 
@@ -53,7 +64,8 @@ export default function useAttestationHandler(supervisor,userinfo,selectedYearSu
                 SUPERVISOR: supervisor_name,
                 YEAR: year,
                 PFESOUTNANCES: pfeSoutnance,
-                PFEJURYS: pfeJury
+                PFEJURYS: pfeJury,
+                currentdate:getCurrentDate()
             };
             return jsonData
 

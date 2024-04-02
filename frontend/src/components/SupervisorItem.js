@@ -6,7 +6,13 @@ import MessageBox from "./MessageBox";
 import useAttestationHandler from "../hooks/useAttestationHandler";
 import {Store} from "../Store";
 import { jsPDF } from "jspdf";
+import docxTemplate from '../assets/images/Attestation_pfe_2023.docx';
+import PizZip from 'pizzip';
+import { saveAs } from 'file-saver';
 import enteteimg from '../assets/images/entete.jpg';
+import Docxtemplater from "docxtemplater";
+import {forEach} from "underscore";
+
 
 export  default function SupervisorItem({allstudents,deleteHandler,supervisor,selectedYearSupervisors,years}) {
     const { state } = useContext(Store);
@@ -20,81 +26,205 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
     });
     const handleAttestation = useAttestationHandler(supervisor, userInfo, selectedYearSupervisors, allstudents);
     const [attestationData,setAttestationData]=useState(null);
-    function getCurrentDate() {
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Les mois commencent à 0, donc +1
-        const year = date.getFullYear();
-
-        return `${day}/${month}/${year}`;
-    }
-
-    const generatePDF=()=> {
-        //const existingPdfUrl = "tickets (5).pdf";
-        const doc = new jsPDF();
 
 
-        const enteteX = 10;
-        const enteteY = 10;
-        const enteteWidth = doc.internal.pageSize.getWidth() - 25;
-        const enteteHeight = 35;
 
-        const logoImg = new Image();
-        logoImg.src = enteteimg
-        doc.addImage(logoImg, 'JPG', enteteX, enteteY, enteteWidth, enteteHeight);
-        const currentDate = getCurrentDate();
-        const dateX = enteteX+5;
-        const dateY = enteteY + enteteHeight + 5;
-        doc.setFont('times', 'bold');
-        doc.setFontSize(11);
-        doc.text("Oujda le "+currentDate, dateX, dateY);
+    const loadDocxFile = async () => {
+        try {
+            const response = await fetch(docxTemplate);
+            const content = await response.arrayBuffer();
+            return content;
+        } catch (error) {
+            console.error('Erreur lors du chargement du fichier .docx:', error);
+            throw error;
+        }
+    };
 
-        const titleX = (doc.internal.pageSize.getWidth() / 2);
-        const titleY = dateY + 25;
-        doc.setFont('times', 'bold');
-        doc.setFontSize(18);
-        doc.text("ATTESTATION", titleX, titleY, { align: 'center' });
+    const generatePDF = async () => {
+        try {
+            const docxContent = await loadDocxFile();
+            const zip = new PizZip(docxContent);
 
-        const paragraph=`Je soussigne, Monsieur ${attestationData.RESPONSABLE} ,Responsable de la filière Génie Informatique (GI) à l’école Nationale des Sciences Appliquées Oujda, atteste par la présente que :\n` +
-            `Monsieur ${attestationData.SUPERVISOR} a été un membre de jury durant le semestre S2 de l'année universitaire ${attestationData.YEAR} des Projets de Fin d’étude (PFE) suivants : \n`
+            const doc = new Docxtemplater();
+            doc.loadZip(zip);
 
-        const paragraphX = dateX;
-        let paragraphY = titleY + 20;
-        doc.setFont('times', 'normal');
-        doc.setFontSize(12);
-        const maxWidth = doc.internal.pageSize.getWidth() - 25;
-        const splitText = doc.splitTextToSize(paragraph, maxWidth);
-        splitText.forEach(text => {
-            doc.text(text, paragraphX, paragraphY);
-            paragraphY += 10;
-        });
+            doc.setData(attestationData);
 
-        const tableHeaders = ['Auteurs', 'Titres'];
-        const tableData = attestationData.PFESOUTNANCES
-            .map(soutnance =>
-                [
-                    soutnance.fullName,
-                    soutnance.pfeProject
-                ]);
+            const docContent = doc.getZip().file('word/document.xml').asText();
+
+            const tableStartIndex = docContent.indexOf('<w:tbl>');
+            const tableEndIndex = docContent.indexOf('</w:tbl>');
+            let newLine =null
+            const firstRowStartIndex = docContent.indexOf('<w:tr>', tableStartIndex);
+            const firstRowEndIndex = docContent.indexOf('</w:tr>', firstRowStartIndex) + '</w:tr>'.length;
+            if(attestationData.PFESOUTNANCES.length!==0){
+                newLine =
+                    `
+                    <w:tr>
+                        <w:tc>
+                            <w:p>
+                                <w:pPr>
+                                    <w:jc w:val="center"/>
+                                </w:pPr>
+                                <w:r>
+                                    <w:t>Encadrant</w:t>
+                                </w:r>
+                            </w:p>
+                        </w:tc>
+                    </w:tr>
+                    `;
+
+                attestationData.PFESOUTNANCES.forEach(soutnance=>{
+                    let name = soutnance.fullName
+                    let projet = soutnance.pfeProject
+                    newLine +=`
+                        <w:tr>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:jc w:val="center"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${name}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:jc w:val="center"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${projet}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                        </w:tr>
+                        `;
+                })
+                if(attestationData.PFEJURYS.length!==0){
+                    newLine +=
+                        `
+                    <w:tr>
+                        <w:tc>
+                            <w:p>
+                                <w:pPr>
+                                    <w:jc w:val="center"/>
+                                </w:pPr>
+                                <w:r>
+                                    <w:t>Jury</w:t>
+                                </w:r>
+                            </w:p>
+                        </w:tc>
+                    </w:tr>
+                    `;
+
+                    attestationData.PFEJURYS.forEach(soutnance=>{
+                        let name = soutnance.fullName
+                        let projet = soutnance.pfeProject
+                        newLine +=`
+                        <w:tr>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:jc w:val="center"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${name}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:jc w:val="center"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${projet}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                        </w:tr>
+                        `;
+                    })
 
 
-        doc.autoTable({
-            head: [tableHeaders],
-            body: tableData,
-            startY: paragraphY + 10,
-            headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
-            bodyStyles: { fillColor: [255, 255, 255] }
+                }
 
-        });
 
-        doc.save("modified-document.pdf");
+                const updatedDocContent = docContent.slice(0, firstRowEndIndex) + newLine + docContent.slice(firstRowEndIndex);
+                doc.getZip().file('word/document.xml', updatedDocContent);
 
-    }
+            } else {
+                if(attestationData.PFEJURYS.length!==0){
+                    newLine =
+                        `
+                    <w:tr>
+                        <w:tc>
+                            <w:p>
+                                <w:pPr>
+                                    <w:jc w:val="center"/>
+                                </w:pPr>
+                                <w:r>
+                                    <w:t>Jury</w:t>
+                                </w:r>
+                            </w:p>
+                        </w:tc>
+                    </w:tr>
+                    `;
+
+                    attestationData.PFEJURYS.forEach(soutnance=>{
+                        let name = soutnance.fullName
+                        let projet = soutnance.pfeProject
+                        newLine +=`
+                        <w:tr>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:jc w:val="center"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${name}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:jc w:val="center"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${projet}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                        </w:tr>
+                        `;
+                    })
+                    const updatedDocContent = docContent.slice(0, firstRowEndIndex) + newLine + docContent.slice(firstRowEndIndex);
+                    doc.getZip().file('word/document.xml', updatedDocContent);
+
+
+                }
+
+            }
+
+
+            doc.render();
+            const output = doc.getZip().generate({type: 'blob'});
+            saveAs(output, 'document_modifie.docx');
+        } catch (error) {
+            console.error('Erreur lors du remplacement des variables:', error);
+        }
+    };
+
+
     function attestationbtnHandler() {
         if (window.confirm(`Êtes-vous sûr de vouloir télécharger l'attestation?`)) {
             handleAttestation().then(attestationData => {
                 setAttestationData(attestationData)
-                console.log(attestationData); // Afficher les données dans la console
+                console.log(attestationData);
+
                 generatePDF()
             }).catch(error => {
                 console.error(error);

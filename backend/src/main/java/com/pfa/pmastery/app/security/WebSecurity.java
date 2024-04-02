@@ -32,8 +32,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/v2/api-docs",
                         "/swagger-resources/**",
+                        "/user/pfe/{pfeId}",
+                        "/user/{userId}",
+                        "/soutnance/getAllSoutnancesToSupervisors/{userId}",
+                        "/soutnance/getAllSoutnances",
+                        "/soutnance/getAllSoutnancesJuryToSupervisors/{userId}",
+                        "/pfe/{pfeId}",
+                        "/pfe/user/{userId}",
                         "/swagger-ui.html**",
                         "/webjars/**",
+            "/user/allUsers",
 			"/user/confirmEmail",
                         "/user/forgotPassword",
                         "/user/resetPassword")

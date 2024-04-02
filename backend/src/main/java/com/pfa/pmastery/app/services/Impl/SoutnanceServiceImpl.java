@@ -324,21 +324,18 @@ public class SoutnanceServiceImpl implements SoutnanceService {
         String name=user.getFirstName()+" "+user.getLastName();
         List<SoutnanceResponse> allsoutnanceResponse =getAllSoutnances(user.getAffiliationCode(),year);
 
-        for(int i=0;i<allsoutnanceResponse.toArray().length;i++){
-            SoutnanceResponse soutenance= allsoutnanceResponse.get(i);
-            List<String> JuryMembers=soutenance.getJuryMembers();
-            if(JuryMembers==null || JuryMembers.isEmpty()){
-                return soutnanceResponse;
-            }
-            else{
-                for (String juryMember : JuryMembers) {
+        allsoutnanceResponse.forEach(soutenance -> {
+            List<String> juryMembers = soutenance.getJuryMembers();
+            if (juryMembers == null || juryMembers.isEmpty()) {
+                //soutnanceResponse.add(soutenance);
+            } else {
+                for (String juryMember : juryMembers) {
                     if (name.equals(juryMember)) {
-                        soutnanceResponse.add(allsoutnanceResponse.get(i));
+                        soutnanceResponse.add(soutenance);
                     }
                 }
             }
-
-        }
+        });
         return soutnanceResponse;
     }
 
