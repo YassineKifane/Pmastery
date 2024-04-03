@@ -3,15 +3,12 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import PfeDialogDetails from "./PfeDialogDetails";
 import MessageBox from "./MessageBox";
-import useAttestationHandler from "../hooks/useAttestationHandler";
+import useAttestationDataHandler from "../hooks/useAttestationDataHandler";
 import {Store} from "../Store";
-import { jsPDF } from "jspdf";
-import docxTemplate from '../assets/images/Attestation_pfe_2023.docx';
+import docxTemplate from '../assets/models/Attestation_pfe.docx';
 import PizZip from 'pizzip';
 import { saveAs } from 'file-saver';
-import enteteimg from '../assets/images/entete.jpg';
 import Docxtemplater from "docxtemplater";
-import {forEach} from "underscore";
 
 
 export  default function SupervisorItem({allstudents,deleteHandler,supervisor,selectedYearSupervisors,years}) {
@@ -24,9 +21,8 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
         label: null,
         value: null
     });
-    const handleAttestation = useAttestationHandler(supervisor, userInfo, selectedYearSupervisors, allstudents);
+    const handleAttestation = useAttestationDataHandler(supervisor, userInfo, selectedYearSupervisors, allstudents);
     const [attestationData,setAttestationData]=useState(null);
-
 
 
     const loadDocxFile = async () => {
@@ -41,196 +37,204 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
     };
 
     const generatePDF = async () => {
-        try {
-            const docxContent = await loadDocxFile();
-            const zip = new PizZip(docxContent);
-
-            const doc = new Docxtemplater();
-            doc.loadZip(zip);
-
-            doc.setData(attestationData);
-
-            const docContent = doc.getZip().file('word/document.xml').asText();
-
-            const tableStartIndex = docContent.indexOf('<w:tbl>');
-            const tableEndIndex = docContent.indexOf('</w:tbl>');
-            let newLine =null
-            const firstRowStartIndex = docContent.indexOf('<w:tr>', tableStartIndex);
-            const firstRowEndIndex = docContent.indexOf('</w:tr>', firstRowStartIndex) + '</w:tr>'.length;
-            if(attestationData.PFESOUTNANCES.length!==0){
-                newLine =
-                    `
-                    <w:tr>
-                        <w:tc>
-                            <w:p>
-                                <w:pPr>
-                                    <w:jc w:val="center"/>
-                                </w:pPr>
-                                <w:r>
-                                    <w:t>Encadrant</w:t>
-                                </w:r>
-                            </w:p>
-                        </w:tc>
-                    </w:tr>
-                    `;
-
-                attestationData.PFESOUTNANCES.forEach(soutnance=>{
-                    let name = soutnance.fullName
-                    let projet = soutnance.pfeProject
-                    newLine +=`
-                        <w:tr>
-                            <w:tc>
-                                <w:p>
-                                    <w:pPr>
-                                        <w:jc w:val="center"/>
-                                    </w:pPr>
-                                    <w:r>
-                                        <w:t>${name}</w:t>
-                                    </w:r>
-                                </w:p>
-                            </w:tc>
-                            <w:tc>
-                                <w:p>
-                                    <w:pPr>
-                                        <w:jc w:val="center"/>
-                                    </w:pPr>
-                                    <w:r>
-                                        <w:t>${projet}</w:t>
-                                    </w:r>
-                                </w:p>
-                            </w:tc>
-                        </w:tr>
-                        `;
-                })
-                if(attestationData.PFEJURYS.length!==0){
-                    newLine +=
-                        `
-                    <w:tr>
-                        <w:tc>
-                            <w:p>
-                                <w:pPr>
-                                    <w:jc w:val="center"/>
-                                </w:pPr>
-                                <w:r>
-                                    <w:t>Jury</w:t>
-                                </w:r>
-                            </w:p>
-                        </w:tc>
-                    </w:tr>
-                    `;
-
-                    attestationData.PFEJURYS.forEach(soutnance=>{
-                        let name = soutnance.fullName
-                        let projet = soutnance.pfeProject
-                        newLine +=`
-                        <w:tr>
-                            <w:tc>
-                                <w:p>
-                                    <w:pPr>
-                                        <w:jc w:val="center"/>
-                                    </w:pPr>
-                                    <w:r>
-                                        <w:t>${name}</w:t>
-                                    </w:r>
-                                </w:p>
-                            </w:tc>
-                            <w:tc>
-                                <w:p>
-                                    <w:pPr>
-                                        <w:jc w:val="center"/>
-                                    </w:pPr>
-                                    <w:r>
-                                        <w:t>${projet}</w:t>
-                                    </w:r>
-                                </w:p>
-                            </w:tc>
-                        </w:tr>
-                        `;
-                    })
-
-
-                }
-
-
-                const updatedDocContent = docContent.slice(0, firstRowEndIndex) + newLine + docContent.slice(firstRowEndIndex);
-                doc.getZip().file('word/document.xml', updatedDocContent);
-
-            } else {
-                if(attestationData.PFEJURYS.length!==0){
-                    newLine =
-                        `
-                    <w:tr>
-                        <w:tc>
-                            <w:p>
-                                <w:pPr>
-                                    <w:jc w:val="center"/>
-                                </w:pPr>
-                                <w:r>
-                                    <w:t>Jury</w:t>
-                                </w:r>
-                            </w:p>
-                        </w:tc>
-                    </w:tr>
-                    `;
-
-                    attestationData.PFEJURYS.forEach(soutnance=>{
-                        let name = soutnance.fullName
-                        let projet = soutnance.pfeProject
-                        newLine +=`
-                        <w:tr>
-                            <w:tc>
-                                <w:p>
-                                    <w:pPr>
-                                        <w:jc w:val="center"/>
-                                    </w:pPr>
-                                    <w:r>
-                                        <w:t>${name}</w:t>
-                                    </w:r>
-                                </w:p>
-                            </w:tc>
-                            <w:tc>
-                                <w:p>
-                                    <w:pPr>
-                                        <w:jc w:val="center"/>
-                                    </w:pPr>
-                                    <w:r>
-                                        <w:t>${projet}</w:t>
-                                    </w:r>
-                                </w:p>
-                            </w:tc>
-                        </w:tr>
-                        `;
-                    })
-                    const updatedDocContent = docContent.slice(0, firstRowEndIndex) + newLine + docContent.slice(firstRowEndIndex);
-                    doc.getZip().file('word/document.xml', updatedDocContent);
-
-
-                }
-
-            }
-
-
-            doc.render();
-            const output = doc.getZip().generate({type: 'blob'});
-            saveAs(output, 'document_modifie.docx');
-        } catch (error) {
-            console.error('Erreur lors du remplacement des variables:', error);
-        }
-    };
-
-
-    function attestationbtnHandler() {
         if (window.confirm(`Êtes-vous sûr de vouloir télécharger l'attestation?`)) {
-            handleAttestation().then(attestationData => {
-                setAttestationData(attestationData)
-                console.log(attestationData);
+            try{
+                const attestationData = await handleAttestation();
+                setAttestationData(attestationData);
+                console.log("attestationData : "+attestationData.SUPERVISOR)
+                if (attestationData) {
+                    const docxContent = await loadDocxFile();
+                    const zip = new PizZip(docxContent);
 
-                generatePDF()
-            }).catch(error => {
-                console.error(error);
-            });
+                    const doc = new Docxtemplater();
+                    doc.loadZip(zip);
+
+                    doc.setData(attestationData);
+                    console.log(attestationData)
+
+                    const docContent = doc.getZip().file('word/document.xml').asText();
+
+                    const tableStartIndex = docContent.indexOf('<w:tbl>');
+                    const tableEndIndex = docContent.indexOf('</w:tbl>');
+                    let newLine =null
+                    const firstRowStartIndex = docContent.indexOf('<w:tr>', tableStartIndex);
+                    const firstRowEndIndex = docContent.indexOf('</w:tr>', firstRowStartIndex) + '</w:tr>'.length;
+                    if(attestationData.PFESOUTNANCES.length!==0){
+                        newLine = `
+                           <w:tr>
+                                <w:tc>
+                                    <w:tcPr>
+                                        <w:gridSpan w:val="2"/>
+                                        <w:tcBorders>
+                                            <w:top w:val="nil"/>
+                                            <w:bottom w:val="nil"/>
+                                        </w:tcBorders>
+                                    </w:tcPr>
+                                    <w:p>
+                                        <w:pPr>
+                                            <w:jc w:val="center"/>
+                                            <w:spacing w:line="360" w:lineRule="auto"/>
+                                        </w:pPr>
+                                        <w:r>
+                                            <w:t>ENCADREMENT</w:t>
+                                        </w:r>
+                                    </w:p>
+                                </w:tc>
+                            </w:tr>
+
+                    `;
+                        attestationData.PFESOUTNANCES.forEach(soutnance=>{
+                            let name = soutnance.fullName
+                            let projet = soutnance.pfeProject
+                            newLine +=`
+                        <w:tr>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:spacing w:line="360" w:lineRule="auto"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${name}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:spacing w:line="360" w:lineRule="auto"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${projet}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                        </w:tr>
+                        `;
+                        })
+                        if(attestationData.PFEJURYS.length!==0){
+                            newLine += `
+                           <w:tr>
+                                <w:tc>
+                                    <w:tcPr>
+                                        <w:gridSpan w:val="2"/>
+                                        <w:tcBorders>
+                                            <w:top w:val="nil"/>
+                                            <w:bottom w:val="nil"/>
+                                        </w:tcBorders>
+                                    </w:tcPr>
+                                    <w:p>
+                                        <w:pPr>
+                                            <w:jc w:val="center"/>
+                                            <w:spacing w:line="360" w:lineRule="auto"/>
+                                        </w:pPr>
+                                        <w:r>
+                                            <w:t>SOUTENANCE</w:t>
+                                        </w:r>
+                                    </w:p>
+                                </w:tc>
+                            </w:tr>
+                    `;
+                            attestationData.PFEJURYS.forEach(soutnance=>{
+                                let name = soutnance.fullName
+                                let projet = soutnance.pfeProject
+                                newLine +=`
+                        <w:tr>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:spacing w:line="360" w:lineRule="auto"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${name}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                        <w:spacing w:line="360" w:lineRule="auto"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${projet}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                        </w:tr>
+                        `;
+                            })
+                        }
+                        const updatedDocContent = docContent.slice(0, firstRowEndIndex) + newLine + docContent.slice(firstRowEndIndex);
+                        doc.getZip().file('word/document.xml', updatedDocContent);
+
+                    } else {
+                        if(attestationData.PFEJURYS.length!==0){
+                            newLine =
+                                `
+                                 <w:tr>
+                                            <w:tc>
+                                                <w:tcPr>
+                                                    <w:gridSpan w:val="2"/>
+                                                    <w:tcBorders>
+                                                        <w:top w:val="nil"/>
+                                                        <w:bottom w:val="nil"/>
+                                                    </w:tcBorders>
+                                                </w:tcPr>
+                                                <w:p>
+                                                    <w:pPr>
+                                                        <w:jc w:val="center"/>
+                                                        <w:spacing w:line="360" w:lineRule="auto"/>
+                                                    </w:pPr>
+                                                    <w:r>
+                                                        <w:t>SOUTENANCE</w:t>
+                                                    </w:r>
+                                                </w:p>
+                                            </w:tc>
+                                        </w:tr>
+                    `;
+
+                            attestationData.PFEJURYS.forEach(soutnance=>{
+                                let name = soutnance.fullName
+                                let projet = soutnance.pfeProject
+                                newLine +=`
+                        <w:tr>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                          <w:spacing w:line="360" w:lineRule="auto"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${name}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                            <w:tc>
+                                <w:p>
+                                    <w:pPr>
+                                           <w:spacing w:line="360" w:lineRule="auto"/>
+                                    </w:pPr>
+                                    <w:r>
+                                        <w:t>${projet}</w:t>
+                                    </w:r>
+                                </w:p>
+                            </w:tc>
+                        </w:tr>
+                        `;
+                            })
+                            const updatedDocContent = docContent.slice(0, firstRowEndIndex) + newLine + docContent.slice(firstRowEndIndex);
+                            doc.getZip().file('word/document.xml', updatedDocContent);
+                        }
+                    }
+                    doc.render();
+                    const output = doc.getZip().generate({type: 'blob'});
+                    saveAs(output, `attestation_${attestationData.SUPERVISOR}_${attestationData.SELECTEDYEAR}.docx`);
+                }
+            }
+            catch (e) {
+                console.error(e);
+            }
         }
-    }
+
+    };
 
 
 
@@ -241,7 +245,6 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
             deleteHandler(supervisor)
         }
     }
-
 
     return (
         <tr key={supervisor.userId}>
@@ -269,7 +272,7 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
                     selectedYearSupervisors.value !== currentYear &&
                     (
                         <Button
-                            onClick={() => attestationbtnHandler()}
+                            onClick={() => generatePDF()}
                         >
                             Attestation
                         </Button>
