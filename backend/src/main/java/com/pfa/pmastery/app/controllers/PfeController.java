@@ -54,6 +54,7 @@ public class PfeController {
                 // If user not found, return an error response
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found for userId: " + userId);
             }
+
            ModelMapper modelMapper=new ModelMapper();
             // Convert PfeRequest to PfeDto
             PfeDto pfeDto = modelMapper.map(pfeRequest, PfeDto.class);
@@ -70,7 +71,15 @@ public class PfeController {
         }
     }
 
-
+    @GetMapping("/hasPFE")
+    public ResponseEntity<?> hasPFE(@RequestParam(value = "userId") String userId) {
+        try {
+            boolean hasPFE = pfeService.hasPFE(userId);
+            return ResponseEntity.ok().body(hasPFE);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check PFE status: " + e.getMessage());
+        }
+    }
     @GetMapping
     public ResponseEntity<List<PfeResponseWithoutUser>> getPfeByYear(@RequestParam (value = "year") int year,
                                                                      @RequestParam (value = "affiliationCode") String code){

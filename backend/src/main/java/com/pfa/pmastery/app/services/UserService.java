@@ -18,6 +18,9 @@ public interface UserService extends UserDetailsService {
     UserDto addAnnouncementMsg(String affiliationCode,List<String> roles,String announcementMsg);
     String getAnnouncementMsg(String userId);
     void acceptRequest(String userId);
+
+    void sendAcceptanceEmail(String userEmail, String userName);
+
     void confirmEmail(String confirmationToken);
     void forgotPassword(String email);
     void resetPassword(String confirmationToken,String newPassword);

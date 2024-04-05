@@ -24,7 +24,8 @@ public interface PfeRepository extends PagingAndSortingRepository<PfeEntity,Long
 
     @Query("SELECT p FROM pfe p JOIN p.users u WHERE u.userId = :userId and u.role=:role and u.isEmailVerified=true")
     List<PfeEntity> findByUserId(@Param("userId") String userId ,@Param("role") String role );
-
+    @Query("SELECT p FROM pfe p JOIN p.users u WHERE u.userId = :userId  and u.isEmailVerified=true")
+    List<PfeEntity> findByUserId(@Param("userId") String userId );
     @Query("SELECT p FROM pfe p JOIN p.users u WHERE u.userId = :userId and u.role=:role and u.isEmailVerified=true and p.year=:year")
     List<PfeEntity> findByUserIdAndYear(@Param("userId") String userId ,@Param("role") String role, @Param("year") int year);
 

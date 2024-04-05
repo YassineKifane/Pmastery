@@ -182,5 +182,14 @@ public class PfeServiceImpl implements PfeService {
         return pfeDto;
     }
 
+    @Override
+    public boolean hasPFE(String userId) {
+        // Query the database to check if there are any PFEs associated with the given userId
+        List<PfeEntity> pfeList = pfeRepository.findByUserId(userId);
+
+        // If the list is not empty, it means the user already has a PFE
+        return !pfeList.isEmpty();
+    }
+
 
 }

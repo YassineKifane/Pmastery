@@ -34,24 +34,34 @@ export default function HomeScreen() {
   const setField = (field, value) => {
     setAnnonce({ ...annonce, [field]: value });
   };
+  const [hasPFE, setHasPFE] = useState(false); // Add this line
 
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
+        // Fetch announcement message
         const { data } = await axios.get(`http://localhost:8082/user/announcementMsg`, {
           params: { userId: userInfo.userId },
           headers: { Authorization: `${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
-        // console.log(data);
+
+        // Check if the student has a PFE
+        const hasPFEResponse = await axios.get(`http://localhost:8082/pfe/hasPFE`, {
+          params: { userId: userInfo.userId },
+          headers: { Authorization: `${userInfo.token}` },
+        });
+        const hasPFEValue = hasPFEResponse.data;
+        setHasPFE(hasPFEValue); // Update hasPFE state
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL' });
-        console.log(err);
+        console.error(err);
       }
     };
     fetchData();
   }, [userInfo]);
+
 
   const submitHandler = async () => {
     if (
@@ -188,7 +198,7 @@ export default function HomeScreen() {
                     )
                 )}
               </Row>
-              {userInfo.role === 'STUDENT' && (
+              {userInfo.role === 'STUDENT' && !hasPFE && (
                   <Row className="mb-2">
                     <Button onClick={handleFormFill}>Saisir PFE</Button>
                   </Row>

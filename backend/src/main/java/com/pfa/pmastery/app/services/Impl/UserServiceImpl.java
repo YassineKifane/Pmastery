@@ -14,8 +14,6 @@ import com.pfa.pmastery.app.shared.dto.UserDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -94,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
             userEntity.setSector(user.getSector());
 
-            userEntity.setVerified(true);
+//          userEntity.setVerified(true);//because this is the problem
             userEntity.setAffiliationCode(utils.generateStringId(6));
         }
 
@@ -264,8 +262,16 @@ public class UserServiceImpl implements UserService {
 
         userEntity.setVerified(true);
         userRepository.save(userEntity);
+        // Send email to the accepted user
+        sendAcceptanceEmail(userEntity.getEmail(), userEntity.getFirstName());
     }
+    @Override
+    public void sendAcceptanceEmail(String userEmail, String userName) {
+        String subject = "Your request has been accepted";
+        String message = "Dear " + userName + ",\n\nYour request has been accepted in P-Mastery by your sector leader. Welcome aboard!\n\nBest regards. ";
 
+        emailSenderService.sendEmail(userEmail, subject, message);
+    }
     @Override
     public void confirmEmail(String confirmationToken) {
         try {
@@ -273,6 +279,10 @@ public class UserServiceImpl implements UserService {
 
             if (token != null) {
                 UserEntity user = userRepository.findByEmail(token.getUserEntity().getEmail());
+                String userRole = user.getRole(); // Fetch user's role
+                if (userRole.equals("ADMIN")) {
+                    user.setVerified(true);
+                }
                 user.setEmailVerified(true);
                 userRepository.save(user);
             } else {
@@ -284,6 +294,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Utilisateur introuvable!", e);
         }
     }
+
 
     @Override
     public void forgotPassword(String email) {
