@@ -57,19 +57,25 @@ export default function SigninScreen() {
             payload: { ...result.data, token: result.headers.authorization },
           });
           localStorage.setItem(
-            'userInfo',
-            JSON.stringify({
-              ...result.data,
-              token: result.headers.authorization,
-            })
+              'userInfo',
+              JSON.stringify({
+                ...result.data,
+                token: result.headers.authorization,
+              })
           );
           navigate(redirect || '/home');
         } else {
-          toast.info("Votre demande n'a pas encore été acceptée");
+          if (result.data.role === 'ADMIN') {
+            toast.info(
+                "Vous devez d'abord valider votre compte (vérifier votre email)"
+            );
+          } else {
+            toast.info("Votre demande n'a pas encore été acceptée");
+          }
         }
       } else {
         toast.info(
-          "Vous devez d'abord valider votre compte (vérifier votre email)"
+            "Vous devez d'abord valider votre compte (vérifier votre email)"
         );
       }
     } catch (err) {
@@ -77,6 +83,7 @@ export default function SigninScreen() {
       toast.error(getError(err));
     }
   };
+
 
   useEffect(() => {
     if (userInfo) {
