@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +26,7 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
 
     @PostMapping
     public ResponseEntity<UserResponse> addUser(@RequestParam (value = "role") String role , @RequestBody @Valid UserRequest userRequest) throws MessagingException {

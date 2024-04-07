@@ -126,7 +126,7 @@ export default function NavbarComponent(props) {
                       <NavDropdown title="PFE" id="basic-nav-dropdown">
                         <LinkContainer to="/list-choix">
                           <NavDropdown.Item>
-                            Choix d'encadrement
+                            Choix d'encadrants
                           </NavDropdown.Item>
                         </LinkContainer>
                         {userInfo.role === 'ADMIN' && (
@@ -141,6 +141,9 @@ export default function NavbarComponent(props) {
                         )}
                         <LinkContainer to="/mes-pfe">
                           <NavDropdown.Item>Mes-PFE</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/fiches-de-stages">
+                          <NavDropdown.Item>Fiches de stages</NavDropdown.Item>
                         </LinkContainer>
                       </NavDropdown>
                     </>

@@ -173,7 +173,8 @@ public class UserServiceImpl implements UserService {
 
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) throw new UsernameNotFoundException(userId);
-        if (userEntity.getEmailVerified() == false) throw new RuntimeException("Veuillez Verifier Votre Email!");
+        if (userEntity.getEmailVerified() == false) throw new RuntimeException("Veuillez Verifier Votre Email! ");
+
 
         userEntity.setFirstName(user.getFirstName());
         userEntity.setLastName(user.getLastName());
@@ -361,9 +362,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String userId) {
         UserEntity userEntity = userRepository.findByUserId(userId);
-
         if (userEntity == null) throw new UsernameNotFoundException(userId);
-
         userRepository.delete(userEntity);
     }
 

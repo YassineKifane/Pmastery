@@ -53,7 +53,7 @@ export default function HomeScreen() {
           headers: { Authorization: `${userInfo.token}` },
         });
         const hasPFEValue = hasPFEResponse.data;
-        setHasPFE(hasPFEValue); // Update hasPFE state
+        setHasPFE(hasPFEValue);
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL' });
         console.error(err);
@@ -103,6 +103,9 @@ export default function HomeScreen() {
   const handleFormFill = () => {
     navigate('/pfe-form');
   };
+
+
+
 
   return (
       <div className="p-5">
@@ -203,6 +206,7 @@ export default function HomeScreen() {
                     <Button onClick={handleFormFill}>Saisir PFE</Button>
                   </Row>
               )}
+
             </Col>
             <Col sm={12} md={5}>
               <Calendar

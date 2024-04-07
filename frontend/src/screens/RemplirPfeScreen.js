@@ -11,14 +11,16 @@ import techOptions from './../data';
 import { Store } from '../Store';
 
 
+
+
 export default function RemplirPfeScreen() {
+
     const navigate = useNavigate();
     const { search } = useLocation();
     const redirectInUrl = new URLSearchParams(search).get('redirect');
     const redirect = redirectInUrl ? redirectInUrl : '/pfe-form';
     const { state } = useContext(Store);
     const { userInfo } = state;
-    console.log(userInfo)
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         userId: userInfo && userInfo.userId ? userInfo.userId : '',
@@ -33,7 +35,6 @@ export default function RemplirPfeScreen() {
         ],
     });
 
-    const formRef = useRef();
     const firstErrorRef = useRef(null);
     const [errors, setErrors] = useState({});
 
@@ -129,6 +130,7 @@ export default function RemplirPfeScreen() {
 
             setLoading(false);
             setForm({...form, pfe: [{ city: '', company: '', subject: '', supervisorEmail: '', usedTechnologies: [] }] });
+            window.location.href = "/home";
         } catch (err) {
             toast.error(getError(err));
         } finally {

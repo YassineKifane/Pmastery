@@ -35,6 +35,7 @@ public class UserEntity implements Serializable {
     private String announcementMsg;
 
     //@ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL , mappedBy = "users")
+
     @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     @JoinTable(name="pfe_users" , joinColumns = @JoinColumn(name="userId") ,
             inverseJoinColumns = @JoinColumn(name="pfeId"))

@@ -29,6 +29,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -54,7 +55,6 @@ public class PfeController {
                 // If user not found, return an error response
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found for userId: " + userId);
             }
-
            ModelMapper modelMapper=new ModelMapper();
             // Convert PfeRequest to PfeDto
             PfeDto pfeDto = modelMapper.map(pfeRequest, PfeDto.class);
@@ -70,7 +70,6 @@ public class PfeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add PFE: " + e.getMessage());
         }
     }
-
     @GetMapping("/hasPFE")
     public ResponseEntity<?> hasPFE(@RequestParam(value = "userId") String userId) {
         try {
@@ -80,6 +79,8 @@ public class PfeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check PFE status: " + e.getMessage());
         }
     }
+
+
     @GetMapping
     public ResponseEntity<List<PfeResponseWithoutUser>> getPfeByYear(@RequestParam (value = "year") int year,
                                                                      @RequestParam (value = "affiliationCode") String code){
@@ -201,4 +202,7 @@ public class PfeController {
         List<ReportResponse> reportResponses = storageService.reportStatusToSupervisor(userId,year);
         return new ResponseEntity<List<ReportResponse>>(reportResponses, HttpStatus.OK);
     }
+
+
+
 }
