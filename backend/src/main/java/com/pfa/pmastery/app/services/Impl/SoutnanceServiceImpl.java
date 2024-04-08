@@ -314,4 +314,29 @@ public class SoutnanceServiceImpl implements SoutnanceService {
 
         return soutnanceResponse;
     }
+
+    //@Override
+    public List<SoutnanceResponse> getAllSoutnancesJuryToSupervisors(String userId, int year) {
+
+        List<SoutnanceResponse> soutnanceResponse = new ArrayList<>();
+
+        UserEntity user=userRepository.findByUserId(userId);
+        String name=user.getFirstName()+" "+user.getLastName();
+        List<SoutnanceResponse> allsoutnanceResponse =getAllSoutnances(user.getAffiliationCode(),year);
+
+        allsoutnanceResponse.forEach(soutenance -> {
+            List<String> juryMembers = soutenance.getJuryMembers();
+            if (juryMembers == null || juryMembers.isEmpty()) {
+                //soutnanceResponse.add(soutenance);
+            } else {
+                for (String juryMember : juryMembers) {
+                    if (name.equals(juryMember)) {
+                        soutnanceResponse.add(soutenance);
+                    }
+                }
+            }
+        });
+        return soutnanceResponse;
+    }
+
 }

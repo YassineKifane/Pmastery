@@ -42,6 +42,16 @@ public class UserEntity implements Serializable {
     @JsonIgnore
     private List<PfeEntity> pfe;
 
+
+    @OneToMany(mappedBy = "sender")
+    @JsonIgnore
+    private List<ChatMessageEntity> sentMessages;
+
+    @OneToMany(mappedBy = "recipient")
+    @JsonIgnore
+    private List<ChatMessageEntity> receivedMessages;
+
+
     public Long getId() {
         return id;
     }
@@ -146,5 +156,19 @@ public class UserEntity implements Serializable {
         this.pfe = pfe;
     }
 
+    public List<ChatMessageEntity> getSentMessages() {
+        return sentMessages;
+    }
 
+    public void setSentMessages(List<ChatMessageEntity> sentMessages) {
+        this.sentMessages = sentMessages;
+    }
+
+    public List<ChatMessageEntity> getReceivedMessages() {
+        return receivedMessages;
+    }
+
+    public void setReceivedMessages(List<ChatMessageEntity> receivedMessages) {
+        this.receivedMessages = receivedMessages;
+    }
 }

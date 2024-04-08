@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, ListGroup, Row } from 'react-bootstrap';
 import { Dialog } from 'primereact/dialog';
+import PfeDialogDetails from "./PfeDialogDetails";
 
-function PfeItem(props) {
-  const { pfeDetails, selectedPfes, setSelectedPfes } = props;
+function PfeItem({ pfeDetails, selectedPfes, setSelectedPfes }) {
   const [visible, setVisible] = useState(false);
   const [pfeChecked, setPfeChecked] = useState();
-
   useEffect(() => {
     setPfeChecked(selectedPfes.includes(pfeDetails.pfe[0].pfeId));
   }, [selectedPfes, pfeDetails]);
 
   const addPfeToChoices = (pfeId) => {
-    const newPfeChoisces = [...selectedPfes, pfeId];
-    setSelectedPfes(newPfeChoisces);
+    const newPfeChoices = [...selectedPfes, pfeId];
+    setSelectedPfes(newPfeChoices);
     setPfeChecked(true);
   };
 
   const remPfeFromChoices = (pfeId) => {
-    const newselectedPfes = selectedPfes.filter((e) => e !== pfeId);
-    setSelectedPfes(newselectedPfes);
+    const newSelectedPfes = selectedPfes.filter((e) => e !== pfeId);
+    setSelectedPfes(newSelectedPfes);
     setPfeChecked(false);
   };
   return (
@@ -39,55 +38,11 @@ function PfeItem(props) {
             </span>
           </p>
           <Button onClick={() => setVisible(true)}>Details</Button>
-          <Dialog
-            header={pfeDetails.pfe[0].subject}
-            visible={visible}
-            style={{ width: '50vw' }}
-            onHide={() => setVisible(false)}
-            draggable={false}
-          >
-            <Row>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <p>
-                    <strong>Les technologies utilisées: </strong>
-                    {pfeDetails.pfe[0].usedTechnologies}
-                  </p>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>Informations de l'étudiant:</strong>
-                  <Row>
-                    <Row>
-                      <Col>Nom: {pfeDetails.lastName}</Col>
-                    </Row>
-                    <Row>
-                      <Col>Prénom: {pfeDetails.firstName}</Col>
-                    </Row>
-                    <Row>
-                      <Col>Email: {pfeDetails.email}</Col>
-                    </Row>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>Informations du stage:</strong>
-                  <Row>
-                    <Row>
-                      <Col>Entreprise: {pfeDetails.pfe[0].company}</Col>
-                    </Row>
-                    <Row>
-                      <Col>Ville: {pfeDetails.pfe[0].city}</Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        Email d'encadrant du stage:{' '}
-                        {pfeDetails.pfe[0].supervisorEmail}
-                      </Col>
-                    </Row>
-                  </Row>
-                </ListGroup.Item>
-              </ListGroup>
-            </Row>
-          </Dialog>
+          <PfeDialogDetails
+              visible={visible}
+              setVisible={setVisible}
+              pfeDetails={pfeDetails}
+          />
         </Col>
         <Col
           sm={2}

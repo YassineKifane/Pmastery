@@ -117,5 +117,11 @@ public class SoutnanceController {
         List<SoutnanceResponse> allStudentResponses = soutnanceService.getAllSoutnancesToSupervisors(userId, year);
         return new ResponseEntity<List<SoutnanceResponse>>(allStudentResponses, HttpStatus.OK);
     }
+    @GetMapping("/getAllSoutnancesJuryToSupervisors/{userId}")
+    public  ResponseEntity<List<SoutnanceResponse>> getAllSoutnancesJuryToSupervisors(@PathVariable String userId,
+                                                                                      @RequestParam("year") int year){
+        List<SoutnanceResponse> soutnances=soutnanceService.getAllSoutnancesJuryToSupervisors(userId,year);
+        return new ResponseEntity<List<SoutnanceResponse>>(soutnances, HttpStatus.OK);
+    }
 
 }
