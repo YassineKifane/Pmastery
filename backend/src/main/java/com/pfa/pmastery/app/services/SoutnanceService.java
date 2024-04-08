@@ -17,4 +17,6 @@ public interface SoutnanceService {
     String publishSoutnances(String userId,int year);
     List<SoutnanceResponse> getAllSoutnances(String affiliationCode,int year);
     List<SoutnanceResponse> getAllSoutnancesToSupervisors(String userId,int year);
+
+    List<SoutnanceResponse> getAllSoutnancesJuryToSupervisors(String userId, int year);
 }

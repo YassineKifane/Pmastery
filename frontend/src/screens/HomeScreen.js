@@ -7,6 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import LoadingBox from '../components/LoadingBox';
 import { useNavigate } from 'react-router-dom';
+import { URL } from "../constants";
 
 
 const reducer = (state, action) => {
@@ -41,14 +42,14 @@ export default function HomeScreen() {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
         // Fetch announcement message
-        const { data } = await axios.get(`http://localhost:8082/user/announcementMsg`, {
+        const { data } = await axios.get(URL + `/user/announcementMsg`, {
           params: { userId: userInfo.userId },
           headers: { Authorization: `${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
 
         // Check if the student has a PFE
-        const hasPFEResponse = await axios.get(`http://localhost:8082/pfe/hasPFE`, {
+        const hasPFEResponse = await axios.get(URL + `/pfe/hasPFE`, {
           params: { userId: userInfo.userId },
           headers: { Authorization: `${userInfo.token}` },
         });
@@ -80,7 +81,7 @@ export default function HomeScreen() {
     try {
       // console.log(annonce, roles);
       const { data } = await axios.put(
-          `http://localhost:8082/user/addAnnouncement`,
+          URL + `/user/addAnnouncement`,
           {},
           {
             headers: { Authorization: `${userInfo.token}` },

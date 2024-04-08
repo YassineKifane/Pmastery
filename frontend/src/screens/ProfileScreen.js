@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { getError } from '../utils';
 import axios from 'axios';
 import LoadingBox from '../components/LoadingBox';
+import { URL } from "../constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -72,7 +73,7 @@ export default function ProfileScreen() {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       const { data } = await axios.put(
-        `http://localhost:8082/user/${userInfo.userId}`,
+        URL + `/user/${userInfo.userId}`,
         {
           userId: userInfo.userId,
           affiliationCode: userInfo.affiliationCode,

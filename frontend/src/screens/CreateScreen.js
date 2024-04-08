@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { Store } from '../Store';
 import { getError } from '../utils';
 import LoadingBox from '../components/LoadingBox';
+import { URL } from "../constants";
 
 export default function StudentJoinForm() {
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ export default function StudentJoinForm() {
     try {
       setLoading(true);
       // console.log(form);
-      await axios.post('http://localhost:8082/user', form, {
+      await axios.post(URL + '/user', form, {
         params: { role: 'ADMIN' },
       });
       setLoading(false);

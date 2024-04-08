@@ -9,6 +9,7 @@ import CreatableSelect from 'react-select/creatable';
 import techOptions from '../data';
 import { toast } from 'react-toastify';
 import { getError } from '../utils';
+import { URL } from "../constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -92,7 +93,7 @@ export default function MonPfeStudentScreen() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const result = await axios.get(`http://localhost:8082/pfe/user/${userInfo.userId}`, {
+        const result = await axios.get(URL + `/pfe/user/${userInfo.userId}`, {
           params: { role: userInfo.role },
           headers: { Authorization: `${userInfo.token}` },
         });
@@ -133,7 +134,7 @@ export default function MonPfeStudentScreen() {
           .map((opt) => opt.label)
           .join(', '),
       };
-      const { data } = await axios.put(`http://localhost:8082/pfe/${pfe.pfeId}`, sendData, {
+      const { data } = await axios.put(URL + `/pfe/${pfe.pfeId}`, sendData, {
         headers: { Authorization: `${userInfo.token}` },
       });
       dispatch({
