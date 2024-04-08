@@ -6,6 +6,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { Col, Container, Row } from 'react-bootstrap';
 import { formatDate } from '../utils';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -32,7 +33,7 @@ export default function MaSoutenanceStudentScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `http://localhost:8082/soutnance/getAssignedSoutnance/${userInfo.userId}`,
+          URL + `/soutnance/getAssignedSoutnance/${userInfo.userId}`,
           { headers: { Authorization: `${userInfo.token}` } }
         );
         // console.log(data);

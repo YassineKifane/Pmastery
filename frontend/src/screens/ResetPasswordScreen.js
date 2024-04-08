@@ -8,6 +8,7 @@ import { getError } from '../utils';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Store } from '../Store';
 import resetPassImg from '../assets/images/resetPass.svg';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -137,7 +138,7 @@ export default function ResetPasswordScreen() {
     }
     try {
       dispatch({ type: 'SEND_EMAIL' });
-      await axios.put('http://localhost:8082/user/forgotPassword', null, {
+      await axios.put(URL + '/user/forgotPassword', null, {
         params: { email: form.email },
       });
       // console.log(result);
@@ -163,7 +164,7 @@ export default function ResetPasswordScreen() {
     }
     try {
       dispatch({ type: 'RESET_PASSWORD_REQUEST' });
-      await axios.put('http://localhost:8082/user/resetPassword', `${form.newPass}`, {
+      await axios.put(URL + '/user/resetPassword', `${form.newPass}`, {
         params: { token: form.code },
         headers: { 'Content-Type': 'application/json' },
         transformRequest: [(data) => data],

@@ -9,6 +9,7 @@ import DatePickerImage from '../assets/images/DatePicker.svg';
 import { Calendar } from 'primereact/calendar';
 import { toast } from 'react-toastify';
 import { getError } from '../utils';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -73,7 +74,7 @@ export default function StudentDatesChoice() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `http://localhost:8082/soutnance/getInitializeDate/${userInfo.userId}`,
+          URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -83,13 +84,13 @@ export default function StudentDatesChoice() {
           }
         );
         const result = await axios.get(
-          `http://localhost:8082/soutnance/getProposeDates/${userInfo.userId}`,
+          URL + `/soutnance/getProposeDates/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
           }
         );
         const result2 = await axios.get(
-          `http://localhost:8082/soutnance/getAssignedSoutnance/${userInfo.userId}`,
+          URL + `/soutnance/getAssignedSoutnance/${userInfo.userId}`,
           { headers: { Authorization: `${userInfo.token}` } }
         );
         // console.log(result.data);
@@ -180,7 +181,7 @@ export default function StudentDatesChoice() {
       dispatch({ type: 'SEND_CHOICE_REQUEST' });
       let datePropositions = selectedDates.map((d) => sendDateFormat(d));
       await axios.post(
-        `http://localhost:8082/soutnance/proposeDates/${userInfo.userId}`,
+        URL + `/soutnance/proposeDates/${userInfo.userId}`,
         datePropositions,
         {
           headers: {

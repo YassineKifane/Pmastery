@@ -9,6 +9,7 @@ import MessageBox from '../components/MessageBox';
 import PfeItem from '../components/PfeItem';
 import { toast } from 'react-toastify';
 import { getError } from '../utils';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -59,7 +60,7 @@ export default function PfeListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await Axios.get('http://localhost:8082/user/allUsers', {
+        const { data } = await Axios.get(URL + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -109,7 +110,7 @@ export default function PfeListScreen() {
     try {
       dispatch({ type: 'CHOICE_REQUEST' });
       await Axios.put(
-        `http://localhost:8082/user/selectPfe/${userInfo.userId}`,
+        URL + `/user/selectPfe/${userInfo.userId}`,
         { userId: userInfo.userId },
         {
           headers: { Authorization: `${userInfo.token}` },

@@ -8,6 +8,7 @@ import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
 import { TableSection } from '../components/TableSection';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -33,7 +34,7 @@ const reducer = (state, action) => {
       return state;
   }
 };
-export default function StudentsListScreen() {
+export default function ListScreen() {
   const { state } = useContext(Store);
   const { userInfo } = state;
   const currentYear = new Date().getFullYear();
@@ -43,21 +44,22 @@ export default function StudentsListScreen() {
       loading: true,
       error: '',
     });
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get('http://localhost:8082/user/allUsers', {
+        const { data } = await axios.get(URL + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
             isVerified: true,
           },
         });
+        console.log("data",data)
+
         dispatch({
           type: 'FETCH_SUCCESS',
-          payload: data.filter((user) => user.role === 'STUDENT'),
+          payload: data.filter((user) => user.role === 'STUDENT' && user.pfe[0].year === currentYear),
         });
         // console.log(data);
       } catch (err) {
@@ -75,10 +77,10 @@ export default function StudentsListScreen() {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimmer ce compte?`)) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(`http://localhost:8082/user/${student.userId}`, {
+        await axios.delete(URL + `/user/${student.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
         });
-        toast.success('Étudiant  supprimé avec succès');
+        toast.success('Étudiant supprimé avec succès');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
         toast.error(getError(err));
@@ -126,7 +128,6 @@ export default function StudentsListScreen() {
               <Table responsive>
                 <thead>
                   <tr>
-                    <th></th>
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Email</th>
@@ -135,7 +136,6 @@ export default function StudentsListScreen() {
                 </thead>
                 <tbody>
                   {students
-                    .filter((student) => student.pfe[0].year === 2023)
                     .filter((student) => {
                       return search.toLowerCase() === ''
                         ? student

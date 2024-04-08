@@ -20,6 +20,7 @@ import CreatableSelect from 'react-select/creatable';
 import { toast } from 'react-toastify';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -86,7 +87,7 @@ export default function SoutenanceScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `http://localhost:8082/soutnance/getInitializeDate/${userInfo.userId}`,
+          URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -95,14 +96,14 @@ export default function SoutenanceScreen() {
             },
           }
         );
-        const result = await axios.get(`http://localhost:8082/soutnance/getAllSoutnances`, {
+        const result = await axios.get(URL + `/soutnance/getAllSoutnances`, {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             year: currentYear,
             affiliationCode: userInfo.affiliationCode,
           },
         });
-        const supervisors = await axios.get('http://localhost:8082/user/allUsers', {
+        const supervisors = await axios.get(URL + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -321,7 +322,7 @@ export default function SoutenanceScreen() {
       };
       // console.log(sendData);
       const { data } = await axios.post(
-        `http://localhost:8082/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
+        URL + `/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
         sendData,
         {
           headers: {
@@ -352,7 +353,7 @@ export default function SoutenanceScreen() {
     try {
       dispatch({ type: 'AFFECT_PUB_REQUEST' });
       const { data } = await axios.put(
-        `http://localhost:8082/soutnance/publishSoutnances/${userInfo.userId}`,
+        URL + `/soutnance/publishSoutnances/${userInfo.userId}`,
         {},
         {
           headers: {

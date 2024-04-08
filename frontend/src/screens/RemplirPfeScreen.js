@@ -9,6 +9,7 @@ import LoadingBox from '../components/LoadingBox';
 import CreatableSelect from 'react-select/creatable';
 import techOptions from './../data';
 import { Store } from '../Store';
+import { URL } from "../constants/constants";
 
 
 
@@ -121,7 +122,7 @@ export default function RemplirPfeScreen() {
             console.log(data);
             console.log(form.userId)
             // Sending request with userId in headers
-            await axios.post('http://localhost:8082/pfe', data, {
+            await axios.post(URL + '/pfe', data, {
                 params: {
                     'userId': form.userId, // Passing userId in headers
                 }

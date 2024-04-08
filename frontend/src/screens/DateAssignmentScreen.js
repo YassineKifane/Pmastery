@@ -8,6 +8,8 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import CreatableSelect from 'react-select/creatable';
 import { toast } from 'react-toastify';
+import { URL } from "../constants/constants";
+
 import {
   compareDates,
   convertDateFormat,
@@ -86,7 +88,7 @@ export default function DateAssignmentScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `http://localhost:8082/soutnance/getInitializeDate/${userInfo.userId}`,
+          URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -95,14 +97,14 @@ export default function DateAssignmentScreen() {
             },
           }
         );
-        const result = await axios.get(`http://localhost:8082/soutnance/getAllSoutnances`, {
+        const result = await axios.get(URL + `/soutnance/getAllSoutnances`, {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             year: currentYear,
             affiliationCode: userInfo.affiliationCode,
           },
         });
-        const supervisors = await axios.get('http://localhost:8082/user/allUsers', {
+        const supervisors = await axios.get(URL + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -277,7 +279,7 @@ export default function DateAssignmentScreen() {
       };
       // console.log(sendData);
       const { data } = await axios.post(
-        `http://localhost:8082/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
+        URL + `/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
         sendData,
         {
           headers: {

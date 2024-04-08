@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import axios from 'axios';
 import { useContext, useEffect, useReducer } from 'react';
 import { Badge, Button, Tab, Table, Tabs } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
@@ -7,6 +7,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -69,7 +70,7 @@ export default function UsersDemandsScreen(props) {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await Axios.get('http://localhost:8082/user/allUsers', {
+        const { data } = await axios.get(URL + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -95,8 +96,8 @@ export default function UsersDemandsScreen(props) {
   const acceptHandler = async (user) => {
     try {
       dispatch({ type: 'ACCEPT_REQUEST' });
-      await Axios.put(
-        `http://localhost:8082/user/accept/${user.userId}`,
+      await axios.put(
+        URL + `/user/accept/${user.userId}`,
         { userId: user.userId },
         {
           headers: { Authorization: `${userInfo.token}` },
@@ -118,7 +119,7 @@ export default function UsersDemandsScreen(props) {
     ) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await Axios.delete(`http://localhost:8082/user/${user.userId}`, {
+        await axios.delete(URL + `/user/${user.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
         });
         toast.success('Demande refusée');

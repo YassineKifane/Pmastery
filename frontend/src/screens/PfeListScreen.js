@@ -13,6 +13,7 @@ import axios from 'axios';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import PfeListItem from '../components/PfeListItem';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -68,14 +69,14 @@ export default function PfeListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get('http://localhost:8082/pfe', {
+        const { data } = await axios.get(URL + '/pfe', {
           params: {
             affiliationCode: userInfo.affiliationCode,
             year: currentYear,
           },
           headers: { Authorization: `${userInfo.token}` },
         });
-        const supervisors = await axios.get('http://localhost:8082/user/allUsers', {
+        const supervisors = await axios.get(URL + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,

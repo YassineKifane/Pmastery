@@ -13,6 +13,7 @@ import axios from 'axios';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import AssignmentChecklist from '../components/AssignmentChecklist';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -59,7 +60,7 @@ export default function AssignmentScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get('http://localhost:8082/pfe/process', {
+        const { data } = await axios.get(URL + '/pfe/process', {
           params: {
             affiliationCode: userInfo.affiliationCode,
             isApproved: false,

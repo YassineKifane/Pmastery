@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { getError } from '../utils';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -53,7 +54,7 @@ export default function LancementSoutenances() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `http://localhost:8082/soutnance/getInitializeDate/${userInfo.userId}`,
+          URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -88,7 +89,7 @@ export default function LancementSoutenances() {
         ).padStart(2, '0')}/${String(endDate.getFullYear())}`
       );
       const { data } = await axios.put(
-        `http://localhost:8082/soutnance/initializeDate/${userInfo.userId}`,
+        URL + `/soutnance/initializeDate/${userInfo.userId}`,
         {},
         {
           headers: { Authorization: `${userInfo.token}` },
