@@ -9,7 +9,7 @@ import LoadingBox from '../components/LoadingBox';
 import CreatableSelect from 'react-select/creatable';
 import techOptions from './../data';
 import { Store } from '../Store';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 
 

@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { getError } from '../utils';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -130,7 +131,7 @@ export default function LancementSoutenances() {
       {loading ? (
         <LoadingBox />
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+        <MessageBox variant="danger">{error.message}</MessageBox>
       ) : (
         <Container className="d-flex flex-column align-items-center">
           <Row>

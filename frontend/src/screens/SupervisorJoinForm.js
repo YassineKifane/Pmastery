@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { Store } from '../Store';
 import { getError } from '../utils';
 import LoadingBox from '../components/LoadingBox';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 export default function SupervisorJoinForm() {
   const navigate = useNavigate();

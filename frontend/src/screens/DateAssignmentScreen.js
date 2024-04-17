@@ -8,7 +8,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import CreatableSelect from 'react-select/creatable';
 import { toast } from 'react-toastify';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 import {
   compareDates,
@@ -316,7 +316,7 @@ export default function DateAssignmentScreen() {
       {loading ? (
         <LoadingBox />
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+        <MessageBox variant="danger">{error.message}</MessageBox>
       ) : dateInterval.length > 0 ? (
         <Container fluid>
           <Row>

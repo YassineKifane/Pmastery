@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { getError } from '../utils';
 import axios from 'axios';
 import LoadingBox from '../components/LoadingBox';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {

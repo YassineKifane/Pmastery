@@ -9,7 +9,7 @@ import DatePickerImage from '../assets/images/DatePicker.svg';
 import { Calendar } from 'primereact/calendar';
 import { toast } from 'react-toastify';
 import { getError } from '../utils';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -350,7 +350,7 @@ export default function StudentDatesChoice() {
       ) : (
         <div className="p-5">
           <MessageBox variant="info">
-            Votre soutenance est programmée, voir "Ma soutenance"
+            Votre choix des dates est envoyé, voir "Ma soutenance"
           </MessageBox>
         </div>
       )}

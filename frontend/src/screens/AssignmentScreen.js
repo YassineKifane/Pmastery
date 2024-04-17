@@ -13,7 +13,7 @@ import axios from 'axios';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import AssignmentChecklist from '../components/AssignmentChecklist';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {

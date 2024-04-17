@@ -40,7 +40,7 @@ import ChatScreen from './screens/ChatScreen';
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 import RemplirPfeScreen from "./screens/RemplirPfeScreen";
-import { URL } from "../constants";
+import { URL } from "./constants/constants";
 
 axiosInterceptor();
 

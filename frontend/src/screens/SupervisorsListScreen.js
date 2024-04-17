@@ -8,7 +8,7 @@ import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
 import SupervisorItem from "../components/SupervisorItem";
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {

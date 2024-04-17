@@ -7,7 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import LoadingBox from '../components/LoadingBox';
 import { useNavigate } from 'react-router-dom';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 
 const reducer = (state, action) => {

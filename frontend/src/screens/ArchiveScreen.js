@@ -7,7 +7,7 @@ import {Store} from "../Store";
 import {TableSection} from "../components/TableSection";
 import CreatableSelect from "react-select/creatable";
 import SupervisorItem from "../components/SupervisorItem";
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
     switch (action.type) {

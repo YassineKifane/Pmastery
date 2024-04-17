@@ -9,7 +9,7 @@ import MessageBox from '../components/MessageBox';
 import PfeItem from '../components/PfeItem';
 import { toast } from 'react-toastify';
 import { getError } from '../utils';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {

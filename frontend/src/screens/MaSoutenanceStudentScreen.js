@@ -6,7 +6,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { Col, Container, Row } from 'react-bootstrap';
 import { formatDate } from '../utils';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -56,7 +56,7 @@ export default function MaSoutenanceStudentScreen() {
         <MessageBox variant="danger">{error}</MessageBox>
       ) : soutenance.affectedDate === null || soutenance === '' ? (
         <MessageBox variant="info">
-          Votre soutenance n'a pas encore programmé
+          Votre soutenance n'est pas encore programmé
         </MessageBox>
       ) : (
         <Container>

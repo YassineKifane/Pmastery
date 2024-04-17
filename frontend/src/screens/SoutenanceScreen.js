@@ -20,7 +20,7 @@ import CreatableSelect from 'react-select/creatable';
 import { toast } from 'react-toastify';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -387,7 +387,7 @@ export default function SoutenanceScreen() {
       {loading ? (
         <LoadingBox />
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+        <MessageBox variant="danger">{error.message}</MessageBox>
       ) : dateInterval.length > 0 ? (
         <Container fluid>
           <Row>

@@ -7,7 +7,7 @@ import { Col, Container, ListGroup, Row } from 'react-bootstrap';
 import LoadingBox from '../components/LoadingBox';
 import { compareDates, convertDateFormat, formatDate } from '../utils';
 import { Badge } from 'primereact/badge';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -121,7 +121,9 @@ export default function MesSoutenancesScreen() {
       {loading ? (
         <LoadingBox />
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+          <MessageBox variant="info">
+            Les soutenances ne sont pas encore programmées
+          </MessageBox>
       ) : dateInterval.length > 0 ? (
         <Container fluid>
           <Row>

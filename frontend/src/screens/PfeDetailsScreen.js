@@ -7,7 +7,7 @@ import MessageBox from '../components/MessageBox';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { Store } from '../Store';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {

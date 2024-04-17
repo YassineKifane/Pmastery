@@ -8,7 +8,7 @@ import { getError } from '../utils';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Store } from '../Store';
 import resetPassImg from '../assets/images/resetPass.svg';
-import { URL } from "../constants";
+import { URL } from "../constants/constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
