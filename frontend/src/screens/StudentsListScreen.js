@@ -8,6 +8,7 @@ import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
 import { TableSection } from '../components/TableSection';
+import { URL } from "../constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -47,7 +48,7 @@ export default function ListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get('http://localhost:8082/user/allUsers', {
+        const { data } = await axios.get(URL + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -76,7 +77,7 @@ export default function ListScreen() {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimmer ce compte?`)) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(`http://localhost:8082/user/${student.userId}`, {
+        await axios.delete(URL + `/user/${student.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
         });
         toast.success('Étudiant supprimé avec succès');

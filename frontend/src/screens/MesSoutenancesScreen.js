@@ -7,6 +7,7 @@ import { Col, Container, ListGroup, Row } from 'react-bootstrap';
 import LoadingBox from '../components/LoadingBox';
 import { compareDates, convertDateFormat, formatDate } from '../utils';
 import { Badge } from 'primereact/badge';
+import { URL } from "../constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -44,7 +45,7 @@ export default function MesSoutenancesScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          `http://localhost:8082/soutnance/getInitializeDate/${userInfo.userId}`,
+          URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -53,7 +54,7 @@ export default function MesSoutenancesScreen() {
             },
           }
         );
-        const result = await axios.get(`http://localhost:8082/soutnance/getAllSoutnances`, {
+        const result = await axios.get(URL + `/soutnance/getAllSoutnances`, {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             year: currentYear,

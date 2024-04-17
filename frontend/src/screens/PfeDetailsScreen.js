@@ -7,6 +7,7 @@ import MessageBox from '../components/MessageBox';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { Store } from '../Store';
+import { URL } from "../constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -36,7 +37,7 @@ export default function PfeDetailsScreen() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const result = await axios.get(`http://localhost:8082/pfe/${pfeId}`, {
+        const result = await axios.get(URL + `/pfe/${pfeId}`, {
           params: { role: userInfo.role },
           headers: { Authorization: `${userInfo.token}` },
         });

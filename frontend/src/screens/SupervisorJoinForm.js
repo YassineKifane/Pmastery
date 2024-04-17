@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { Store } from '../Store';
 import { getError } from '../utils';
 import LoadingBox from '../components/LoadingBox';
+import { URL } from "../constants";
 
 export default function SupervisorJoinForm() {
   const navigate = useNavigate();
@@ -91,7 +92,7 @@ export default function SupervisorJoinForm() {
     }
     try {
       setLoading(true);
-      await axios.post('http://localhost:8082/user', form, {
+      await axios.post(URL + '/user', form, {
         params: { role: 'SUPERVISOR' },
       });
       setLoading(false);

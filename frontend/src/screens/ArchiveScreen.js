@@ -7,6 +7,7 @@ import {Store} from "../Store";
 import {TableSection} from "../components/TableSection";
 import CreatableSelect from "react-select/creatable";
 import SupervisorItem from "../components/SupervisorItem";
+import { URL } from "../constants";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -66,7 +67,7 @@ export default function ArchiveScreen() {
         const fetchData = async () => {
             try {
                 dispatch({ type: 'FETCH_REQUEST' });
-                const { data } = await axios.get('http://localhost:8082/user/allUsers', {
+                const { data } = await axios.get(URL + '/user/allUsers', {
                     headers: { Authorization: `${userInfo.token}` },
                     params: {
                         affiliationCode: userInfo.affiliationCode,

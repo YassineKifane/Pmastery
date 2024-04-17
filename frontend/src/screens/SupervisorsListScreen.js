@@ -8,6 +8,7 @@ import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
 import SupervisorItem from "../components/SupervisorItem";
+import { URL } from "../constants";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -48,7 +49,7 @@ export default function SupervisorsListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get('http://localhost:8082/user/allUsers', {
+        const { data } = await axios.get(URL + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -80,7 +81,7 @@ export default function SupervisorsListScreen() {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimmer ce compte?`)) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(`http://localhost:8082/user/${supervisor.userId}`, {
+        await axios.delete(URL + `/user/${supervisor.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
         });
         toast.success('Encadrant supprimé avec succès');

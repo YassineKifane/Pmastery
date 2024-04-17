@@ -40,6 +40,7 @@ import ChatScreen from './screens/ChatScreen';
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 import RemplirPfeScreen from "./screens/RemplirPfeScreen";
+import { URL } from "../constants";
 
 axiosInterceptor();
 
@@ -55,7 +56,7 @@ function App() {
 
     const fetchUnreadMessages = async () => {
         try {
-            const { data } = await axios.get('http://localhost:8082/messages/recipient', {
+            const { data } = await axios.get(URL + '/messages/recipient', {
                 params: { recipientId: userInfo.userId, isNotified: false },
                 headers: { Authorization: `${userInfo.token}` },
             });
@@ -70,7 +71,7 @@ function App() {
     const markNotificationsAsRead = async () => {
         try {
             for (const notification of notifications) {
-                await axios.put(`http://localhost:8082/messages/notified/${notification.id}`, null, {
+                await axios.put(URL + `/messages/notified/${notification.id}`, null, {
                     params: { isNotified: true },
                     headers: { Authorization: `${userInfo.token}` },
                 });
@@ -88,7 +89,7 @@ function App() {
     useEffect(() => {
         const fetchNumberOfDemands = async () => {
             try {
-                const { data } = await axios.get('http://localhost:8082/user/nbRequests', {
+                const { data } = await axios.get(URL + '/user/nbRequests', {
                     params: { affiliationCode: userInfo.affiliationCode },
                     headers: { Authorization: `${userInfo.token}` },
                 });

@@ -6,6 +6,7 @@ import supervisorImg from '../assets/images/supervisorBoard.svg';
 import studentImg from '../assets/images/student.svg';
 import headOfDepartment from '../assets/images/headOfDepartment.svg';
 import { Divider } from 'primereact/divider';
+import { URL } from "../constants";
 
 export default function JoinScreen() {
   return (

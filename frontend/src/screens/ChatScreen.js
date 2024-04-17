@@ -6,12 +6,11 @@ import RecipientMessage from "../components/RecipientMessage";
 import SenderMessage from "../components/SenderMessage";
 import SenderItem from "../components/SenderItem";
 import axios from 'axios';
-import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { Store } from "../Store";
-import { Stomp } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
+import { URL } from "../constants";
+
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -47,7 +46,7 @@ export default function ChatScreen(props) {
         const fetchData = async () => {
             dispatch({ type: 'FETCH_REQUEST' });
             try {
-                const { data } = await axios.get(`http://localhost:8082/pfe/user/${userInfo.userId}`, {
+                const { data } = await axios.get(URL + `/pfe/user/${userInfo.userId}`, {
                     params: { role: userInfo.role },
                     headers: { Authorization: `${userInfo.token}` },
                 });
@@ -137,7 +136,7 @@ export default function ChatScreen(props) {
 
             setRecipient(selectedRecipient);
             try {
-                const response = await axios.get(`http://localhost:8082/messages/${userInfo.userId}/${selectedRecipient.userId}`, {
+                const response = await axios.get(URL + `/messages/${userInfo.userId}/${selectedRecipient.userId}`, {
                     headers: { Authorization: `${userInfo.token}` },
                 });
                 setRecipientMessages({ ...recipientMessages, [selectedRecipient.userId]: response.data });
