@@ -350,7 +350,7 @@ export default function StudentDatesChoice() {
       ) : (
         <div className="p-5">
           <MessageBox variant="info">
-            Votre soutenance est programmée, voir "Ma soutenance"
+            Votre choix des dates est envoyé, voir "Ma soutenance"
           </MessageBox>
         </div>
       )}

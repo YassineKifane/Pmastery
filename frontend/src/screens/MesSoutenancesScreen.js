@@ -121,7 +121,9 @@ export default function MesSoutenancesScreen() {
       {loading ? (
         <LoadingBox />
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+          <MessageBox variant="info">
+            Les soutenances ne sont pas encore programmées
+          </MessageBox>
       ) : dateInterval.length > 0 ? (
         <Container fluid>
           <Row>

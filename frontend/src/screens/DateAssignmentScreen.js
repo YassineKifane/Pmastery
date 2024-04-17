@@ -316,7 +316,7 @@ export default function DateAssignmentScreen() {
       {loading ? (
         <LoadingBox />
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+        <MessageBox variant="danger">{error.message}</MessageBox>
       ) : dateInterval.length > 0 ? (
         <Container fluid>
           <Row>

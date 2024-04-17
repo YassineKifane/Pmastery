@@ -131,7 +131,7 @@ export default function LancementSoutenances() {
       {loading ? (
         <LoadingBox />
       ) : error ? (
-        <MessageBox variant="danger">{error}</MessageBox>
+        <MessageBox variant="danger">{error.message}</MessageBox>
       ) : (
         <Container className="d-flex flex-column align-items-center">
           <Row>

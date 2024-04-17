@@ -1,4 +1,10 @@
-FROM openjdk:17-oracle
-VOLUME /tmp
+FROM openjdk:11-jdk-slim
+
+WORKDIR /app
+
 COPY target/*.jar app.jar
+
+EXPOSE 8082
+
 ENTRYPOINT ["java","-jar","/app.jar"]
+

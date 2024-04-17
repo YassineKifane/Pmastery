@@ -56,7 +56,7 @@ export default function MaSoutenanceStudentScreen() {
         <MessageBox variant="danger">{error}</MessageBox>
       ) : soutenance.affectedDate === null || soutenance === '' ? (
         <MessageBox variant="info">
-          Votre soutenance n'a pas encore programmé
+          Votre soutenance n'est pas encore programmé
         </MessageBox>
       ) : (
         <Container>
