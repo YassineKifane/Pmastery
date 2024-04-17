@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.pfa.pmastery.app.PfaPMasteryApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 30.179 s - in com.pfa.pmastery.app.PfaPMasteryApplicationTests
