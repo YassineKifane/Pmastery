@@ -1,16 +1,63 @@
 
-import React, { useContext } from 'react';
-import {Badge, Container, Nav, Navbar, NavbarBrand, NavDropdown} from 'react-bootstrap';
+import React, { useContext, useEffect, useState } from 'react';
+import { Navbar, Nav, NavDropdown, Container, Badge } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Store } from '../Store';
+import { URL } from "../constants/constants";
 import { Link, useLocation } from 'react-router-dom';
 import PMasteryLogo from '../assets/logo/PMastery_text.png';
-import { Store } from '../Store';
+import axios from 'axios';
 
 export default function NavbarComponent(props) {
   const location = useLocation();
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
   const { numberOfDemands, numberOfNotifications , markNotificationsAsRead } = props;
+  const [hasPFE, setHasPFE] = useState(false);
+    const [hasSoutnance, setHasSoutnance] = useState(false);
+    const [hasSupervisor, setHasSupervisor] = useState(false);
+
+
+  useEffect(() => {
+      const fetchHasPfeData = async () => {
+          try {
+              const hasPFEResponse = await axios.get(`${URL}/pfe/hasPFE`, {
+                  params: { userId: userInfo.userId },
+              });
+              const hasPFEValue = hasPFEResponse.data;
+              setHasPFE(hasPFEValue);
+               console.log(userInfo.pfe[0].pfeId)
+              console.log("has pfe: "+hasPFEValue);
+
+              if (hasPFEValue) {
+                  const hasSupervisorResponse = await axios.get(`${URL}/pfe/hasSupervisorEmail`, {
+                      params: { pfeId: userInfo.pfe[0].pfeId },
+                      headers: { Authorization: `${userInfo.token}` },
+                  });
+                  const hasSupervisorValue = hasSupervisorResponse.data;
+                  setHasSupervisor(hasSupervisorValue);
+              }
+
+        } catch (err) {
+        console.error(err);
+      }
+    };
+
+      const fetchHasSoutnanceData = async () => {
+          try {
+              const response = await axios.get(`${URL}/soutnance/hasSoutnance/${userInfo.userId}`);
+              setHasSoutnance(response.data);
+              console.log(response.data);
+          } catch (error) {
+              console.error('Une erreur s\'est produite lors de la récupération des données:', error);
+          }
+      };
+
+      fetchHasPfeData();
+      fetchHasSoutnanceData();
+
+  }, [userInfo]);
+
 
   const signoutHandler = () => {
     ctxDispatch({ type: 'USER_SIGNOUT' });
@@ -79,8 +126,8 @@ export default function NavbarComponent(props) {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-        {userInfo && (
-            <>
+          {userInfo && (hasSoutnance || hasPFE) && (
+              <>
               <Navbar expand="lg" className="userNavBarStyle" variant="dark">
                 <Container>
                   <Navbar.Toggle className="w-100" aria-controls="user-navbar-nav">
@@ -119,23 +166,29 @@ export default function NavbarComponent(props) {
                             </Nav.Item>
                           </>
                       )}
-                      {userInfo.role === 'STUDENT' ? (
-                          <NavDropdown title="PFE" id="basic-nav-dropdown">
-                            <LinkContainer to="/mon-pfe">
-                              <NavDropdown.Item>Mon-PFE</NavDropdown.Item>
-                            </LinkContainer>
-                            <LinkContainer to="/suivi-pfe">
-                              <NavDropdown.Item onClick={props.markNotificationsAsRead}>
-                                Suivi Mon PFE{' '}
-                                {numberOfNotifications > 0 && (
-                                    <Badge pill className="bg-danger">
-                                      {numberOfNotifications}
-                                    </Badge>
-                                )}
-                              </NavDropdown.Item>
-                            </LinkContainer>
-                          </NavDropdown>
+                      {userInfo.role === 'STUDENT'  ? (
+                          hasPFE ?  (
+                              <NavDropdown title="PFE" id="basic-nav-dropdown">
+                                <LinkContainer to="/mon-pfe">
+                                  <NavDropdown.Item>Mon-PFE</NavDropdown.Item>
+                                </LinkContainer>
 
+                                {hasSupervisor && (
+                                    <LinkContainer to="/suivi-pfe">
+                                      <NavDropdown.Item onClick={markNotificationsAsRead}>
+                                        Suivi Mon PFE{' '}
+                                        {numberOfNotifications > 0 && (
+                                            <Badge pill className="bg-danger">
+                                              {numberOfNotifications}
+                                            </Badge>
+                                        )}
+                                      </NavDropdown.Item>
+                                    </LinkContainer>
+                                )}
+                              </NavDropdown>
+                          ) : (
+                              ' '
+                          )
                       ) : (
                           <>
                             <NavDropdown title="PFE" id="basic-nav-dropdown">
@@ -184,30 +237,38 @@ export default function NavbarComponent(props) {
                               <LinkContainer to="/soutenances">
                                 <NavDropdown.Item>Soutenances</NavDropdown.Item>
                               </LinkContainer>
+                                {hasSoutnance && (
                               <LinkContainer to="/messoutenances">
                                 <NavDropdown.Item>Mes soutenances</NavDropdown.Item>
                               </LinkContainer>
+                                    )}
 
                             </NavDropdown>
                           </>
-                      ) : userInfo.role === 'STUDENT' ? (
-                          <>
-                            <NavDropdown title="Soutenance" id="basic-nav-dropdown">
-                              <LinkContainer to="/studentsoutenancechoice">
-                                <NavDropdown.Item>Choix des dates</NavDropdown.Item>
-                              </LinkContainer>
-                              <LinkContainer to="/masoutenance">
-                                <NavDropdown.Item>Ma soutenance</NavDropdown.Item>
-                              </LinkContainer>
-                            </NavDropdown>
-                          </>
                       ) : (
-                          <Nav.Item className="ms-3 me-3">
-                            <LinkContainer to="/messoutenances">
-                              <Nav.Link>Mes Soutenances</Nav.Link>
-                            </LinkContainer>
-                          </Nav.Item>
+                          <>
+                      {hasSoutnance && (
+                          <>
+                              {userInfo.role === 'STUDENT' ? (
+                                  <NavDropdown title="Soutenance" id="basic-nav-dropdown">
+                                  <LinkContainer to="/studentsoutenancechoice">
+                                  <NavDropdown.Item>Choix des dates</NavDropdown.Item>
+                                  </LinkContainer>
+                                  <LinkContainer to="/masoutenance">
+                                  <NavDropdown.Item>Ma soutenance</NavDropdown.Item>
+                                  </LinkContainer>
+                                  </NavDropdown>
+                                  ) : (
+                                  <Nav.Item className="ms-3 me-3">
+                                  <LinkContainer to="/messoutenances">
+                                  <Nav.Link>Mes Soutenances</Nav.Link>
+                                  </LinkContainer>
+                                  </Nav.Item>
+                                  )}
+                          </>
                       )}
+                  </>
+                    )}
                       {userInfo.role !== 'STUDENT' && (
                           <Nav.Item className="ms-3 me-3">
                             <LinkContainer to="/archive">

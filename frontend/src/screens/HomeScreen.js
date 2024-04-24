@@ -35,7 +35,7 @@ export default function HomeScreen() {
   const setField = (field, value) => {
     setAnnonce({ ...annonce, [field]: value });
   };
-  const [hasPFE, setHasPFE] = useState(false); // Add this line
+  const [hasPFE, setHasPFE] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -204,7 +204,7 @@ export default function HomeScreen() {
               </Row>
               {userInfo.role === 'STUDENT' && !hasPFE && (
                   <Row className="mb-2">
-                    <Button onClick={handleFormFill}>Saisir PFE</Button>
+                    <Button onClick={handleFormFill}>Saisir votre PFE</Button>
                   </Row>
               )}
 

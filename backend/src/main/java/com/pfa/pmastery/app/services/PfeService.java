@@ -14,6 +14,7 @@ public interface PfeService {
  List<PfeDto> getPfeByUserId(String userId,String role);
  PfeDto updatePfe(String pfeId , PfeDto pfeDto);
  PfeDto approvePfeToSupervisors(String pfeId, List<String> userIds);
+ boolean hasPFE(String userId);
+ boolean hasSupervisorEmail(String pfeId);
 
-    boolean hasPFE(String userId);
 }

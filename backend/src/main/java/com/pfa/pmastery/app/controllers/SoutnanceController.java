@@ -120,8 +120,14 @@ public class SoutnanceController {
     @GetMapping("/getAllSoutnancesJuryToSupervisors/{userId}")
     public  ResponseEntity<List<SoutnanceResponse>> getAllSoutnancesJuryToSupervisors(@PathVariable String userId,
                                                                                       @RequestParam("year") int year){
-        List<SoutnanceResponse> soutnances=soutnanceService.getAllSoutnancesJuryToSupervisors(userId,year);
+        List<SoutnanceResponse> soutnances = soutnanceService.getAllSoutnancesJuryToSupervisors(userId,year);
         return new ResponseEntity<List<SoutnanceResponse>>(soutnances, HttpStatus.OK);
+    }
+
+    @GetMapping("/hasSoutnance/{userId}")
+    public ResponseEntity<Boolean> hasSoutnance(@PathVariable String userId) {
+        boolean hasSoutnance = soutnanceService.userHasSoutnance(userId);
+        return ResponseEntity.ok().body(hasSoutnance);
     }
 
 }

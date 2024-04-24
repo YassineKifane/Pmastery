@@ -191,6 +191,15 @@ public class PfeServiceImpl implements PfeService {
         // If the list is not empty, it means the user already has a PFE
         return !pfeList.isEmpty();
     }
+    @Override
+    public boolean hasSupervisorEmail(String pfeId) {
+        PfeEntity pfe = pfeRepository.findByPfeId(pfeId);
 
+        if (pfe == null) {
+            throw new UsernameNotFoundException("PFE with ID " + pfeId + " not found.");
+        }
+
+        return pfe.getSupervisorEmail() != null;
+    }
 
 }

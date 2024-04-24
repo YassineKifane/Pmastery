@@ -79,7 +79,15 @@ public class PfeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check PFE status: " + e.getMessage());
         }
     }
-
+    @GetMapping("/hasSupervisorEmail")
+    public ResponseEntity<?> hasSupervisorEmail(@RequestParam("pfeId") String pfeId) {
+        try {
+            boolean hasSupervisorEmail = pfeService.hasSupervisorEmail(pfeId);
+            return ResponseEntity.ok().body(hasSupervisorEmail);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check supervisor email status: " + e.getMessage());
+        }
+    }
 
     @GetMapping
     public ResponseEntity<List<PfeResponseWithoutUser>> getPfeByYear(@RequestParam (value = "year") int year,

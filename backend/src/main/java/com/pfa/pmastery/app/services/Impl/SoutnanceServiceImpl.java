@@ -339,4 +339,10 @@ public class SoutnanceServiceImpl implements SoutnanceService {
         return soutnanceResponse;
     }
 
+    public boolean userHasSoutnance(String userId) {
+        return soutnanceRepository.existsByUserEntityUserId(userId);
+    }
+
+
+
 }

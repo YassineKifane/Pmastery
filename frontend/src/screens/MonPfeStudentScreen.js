@@ -209,7 +209,7 @@ export default function MonPfeStudentScreen() {
                   setModifyPfe(true);
                 }}
               >
-                Modifier les informations de PFE{' '}
+                Modifier les informations de mon PFE{' '}
               </Button>
             </div>
           </Row>
