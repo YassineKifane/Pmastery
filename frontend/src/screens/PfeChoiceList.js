@@ -73,6 +73,7 @@ export default function PfeListScreen() {
           payload: data.filter(
             (e) =>
               e.role === 'STUDENT' &&
+              e.pfe[0] &&
               e.pfe[0].year === currentYear &&
               e.pfe[0].approved === false
           ),
