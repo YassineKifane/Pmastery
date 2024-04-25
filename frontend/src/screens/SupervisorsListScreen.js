@@ -63,7 +63,7 @@ export default function SupervisorsListScreen() {
                 user => user.role === 'SUPERVISOR' &&
                     ((user.pfe.length > 0 && user.pfe.flatMap(p => p.year).includes(currentYear)))),
             students:data.filter(
-                user => user.role === 'STUDENT' && user.pfe[0].year===currentYear),
+                user => user.role === 'STUDENT' && user.pfe[0] && user.pfe[0].year===currentYear),
           }
         });
       } catch (err) {

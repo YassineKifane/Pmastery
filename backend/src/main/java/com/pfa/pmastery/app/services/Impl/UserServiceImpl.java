@@ -408,4 +408,31 @@ public class UserServiceImpl implements UserService {
         return userDto;
 
     }
+
+    @Override
+    public List<UserDto> getStudentWithPfe(String affiliationCode) {
+        String role = "student";
+        List<UserEntity> users = userRepository.findAllByAffiliationCodeAndRoleAndPfeIsNotNull(affiliationCode, role);
+        List<UserDto> userDtoList = new ArrayList<>();
+
+        ModelMapper modelMapper = new ModelMapper();
+
+        for(UserEntity userEntity : users){
+            UserDto userDto = modelMapper.map(userEntity, UserDto.class);
+
+            UserDto userWithoutPfe = modelMapper.map(userEntity, UserDto.class);
+            userWithoutPfe.setPfe(null);
+
+            List<PfeDto> pfeDtoList = userDto.getPfe();
+
+            for(int i = 0; i < pfeDtoList.size(); i++){
+                pfeDtoList.get(i).setUsers(null);
+                pfeDtoList.get(i).setUser(userWithoutPfe);
+            }
+            userDto.setPfe(pfeDtoList);
+            userDtoList.add(userDto);
+        }
+
+        return userDtoList;
+    }
 }

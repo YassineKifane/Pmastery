@@ -48,20 +48,18 @@ export default function ListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(URL + '/user/allUsers', {
+        const { data } = await axios.get(URL + '/user/studentsWithPfe', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
-            affiliationCode: userInfo.affiliationCode,
-            isVerified: true,
+            affiliationCode: userInfo.affiliationCode
           },
         });
-        console.log("data",data)
+        console.log("data1  ",data)
 
         dispatch({
           type: 'FETCH_SUCCESS',
-          payload: data.filter((user) => user.role === 'STUDENT' && user.pfe[0].year === currentYear),
+          payload: data.filter((student) => student.pfe[0].year === currentYear),
         });
-        // console.log(data);
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: err });
       }

@@ -126,7 +126,7 @@ export default function NavbarComponent(props) {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-          {userInfo && (hasSoutnance || hasPFE) && (
+          {userInfo  && (
               <>
               <Navbar expand="lg" className="userNavBarStyle" variant="dark">
                 <Container>

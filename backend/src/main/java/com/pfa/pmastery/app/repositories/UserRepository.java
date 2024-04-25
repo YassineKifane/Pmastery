@@ -25,4 +25,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity,Lo
     List<UserEntity> findAllByAffiliationCodeAndRoleAndYear(@Param("affiliationCode") String affiliationCode,
                                                             @Param("role") String role,
                                                             @Param("year") int year);
+
+    List<UserEntity> findAllByAffiliationCodeAndRoleAndPfeIsNotNull(String affiliationCode, String role);
+
 }

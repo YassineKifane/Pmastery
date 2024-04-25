@@ -165,4 +165,11 @@ public class UserController {
         userService.deleteUser(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/studentsWithPfe")
+    public ResponseEntity<List<UserDto>> getStudentsWithPfe(@RequestParam String affiliationCode) {
+        List<UserDto> studentsWithPfe = userService.getStudentWithPfe(affiliationCode);
+        return new ResponseEntity<>(studentsWithPfe, HttpStatus.OK);
+    }
+
 }

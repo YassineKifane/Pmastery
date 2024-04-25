@@ -25,4 +25,5 @@ public interface UserService extends UserDetailsService {
     void forgotPassword(String email);
     void resetPassword(String confirmationToken,String newPassword);
     void deleteUser(String userId);
+    List<UserDto> getStudentWithPfe(String affiliationCode);
 }
