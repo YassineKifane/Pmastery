@@ -1,31 +1,40 @@
-version: '3'
 
 services:
+  # Backend Service
+  pmastery-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    restart: always
+    environment:
+      MYSQL_HOST: pmastery-db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: pmastery
+      MYSQL_USER: root
+      MYSQL_PASSWORD: PMasteryData@MfMe2023
+    depends_on:
+      - pmastery-db
+
+  # Frontend Service
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    restart: always
+    depends_on:
+    - pmastery-backend
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
-    environment:
-      MYSQL_HOST: mysqldb
-      MYSQL_PORT: 3306
-      MYSQL_DATABASE: pmastery
-      MYSQL_USER: root
-      MYSQL_PASSWORD:
-
-  mysqldb:
-    container_name: mysqldb
-    image: mysql
+    # Database Service (Mysql)
+  pmastery-db:
+    image: mariadb:10.4.28
     ports:
       - 3307:3306
+    restart: always
     environment:
       MYSQL_DATABASE: pmastery
-      MYSQL_ROOT_PASSWORD:
+      MYSQL_PASSWORD: PMasteryData@MfMe2023
+      MYSQL_ROOT_PASSWORD: root123
