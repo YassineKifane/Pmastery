@@ -1,0 +1,40 @@
+services:
+  pmastery-backend:
+    build:
+      context: ./backend/pfa-PMastery
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    restart: always
+    environment:
+      DB_URL: jdbc:mysql://pmastery-db/pmastery
+      DB_USERNAME: root
+      DB_PASSWORD: PMasteryData@MfMe2023
+    depends_on:
+      - pmastery-db
+  pmastery-frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8082
+    restart: always
+    depends_on:
+      - pmastery-backend
+  # Database Service (Mysql)
+  pmastery-db:
+    image: mariadb:10.4.28
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_DATABASE: pmastery
+      MYSQL_USER: pmastery-user
+      MYSQL_PASSWORD: PMasteryData@MfMe2023
+      MYSQL_ROOT_PASSWORD: root123
+    volumes:
+      - dbdata:/var/lib/mysql
+  
+# Volumes
+volumes:
+  dbdata:

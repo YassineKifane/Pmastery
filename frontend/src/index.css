@@ -1,0 +1,166 @@
+@import url('https://fonts.cdnfonts.com/css/montserrat');
+
+* {
+  font-family: montserrat, Arial, Helvetica, sans-serif;
+}
+:root {
+  --logo-color: #67b7aa;
+}
+.site-container {
+  min-height: 100vh;
+}
+main {
+  flex: 1;
+}
+.list-group {
+  border-radius: 0 !important;
+}
+input {
+  box-shadow: none !important;
+}
+input:focus {
+  border: 1px var(--logo-color) solid !important;
+}
+.css-b62m3t-container input {
+  border: initial !important;
+}
+.css-t3ipsp-control {
+  border-color: var(--logo-color) !important;
+  box-shadow: none !important;
+}
+.errorInput .css-13cymwt-control {
+  border-color: #dc3545 !important;
+}
+/* ---Navbar Style--- */
+.navBarStyle #basic-nav-dropdown {
+  color: #2e3348;
+}
+.navBarStyle a {
+  color: #2e3348;
+}
+.navBarStyle a:hover {
+  color: var(--logo-color);
+}
+.navBarStyle a:focus {
+  color: #2e3348;
+}
+.navBarStyle .nav-link.active {
+  color: var(--logo-color) !important;
+}
+.userNavBarStyle {
+  background-color: var(--logo-color);
+}
+.userNavBarStyle i {
+  color: #fff;
+}
+/* ------- */
+.btnStyle {
+  background-color: var(--logo-color) !important;
+  border: none !important;
+  font-weight: 600;
+}
+.btnStyle:hover {
+  background-color: #1f9582 !important;
+}
+.signinScreen img {
+  min-width: 300px;
+}
+.formErrorMsg {
+  font-size: 14px;
+  color: #dc3545;
+}
+/*  */
+.navbar-toggler {
+  color: var(--logo-color) !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+/* Join Screen  */
+.joinScreen .card {
+  border: 2px var(--logo-color) solid !important;
+  cursor: pointer;
+}
+.joinScreen .card:hover {
+  background-color: var(--logo-color);
+  transition: 0.5s;
+}
+.joinScreen .card:hover .card-title {
+  color: #fff;
+  border: 2px #fff solid;
+  background-color: var(--logo-color);
+}
+.joinScreen .card-title {
+  color: var(--logo-color);
+  background-color: #fff;
+  border: 2px var(--logo-color) solid;
+  padding: 0 5px;
+  font-size: 30px !important;
+  font-weight: bold !important;
+}
+/* calendar */
+.p-datepicker-calendar thead tr th {
+  text-align: center !important;
+}
+/* scrolling */
+.removeZindex {
+  z-index: 0 !important;
+}
+/* supervisorsList */
+.supervisorsList {
+  max-height: 180px;
+  overflow-y: auto;
+}
+.supervisorsList .btn {
+  --bs-btn-border-radius: 0 !important;
+}
+/* linkStyle */
+.linkStyle a {
+  color: var(--logo-color);
+}
+.linkStyle a:hover {
+  color: #1f9582;
+}
+/* checkout steps */
+.checkout-steps > div {
+  border-bottom: 0.2rem solid #cecece;
+  color: #cecece;
+}
+.checkout-steps > div.active {
+  border-bottom: 0.2rem solid #67b7aa;
+  color: #67b7aa;
+}
+/* importForm */
+.importForm {
+  color: #1f9582;
+  display: flex;
+  font-weight: 700;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #1f9582;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.validateForm {
+  color: #1f9582;
+  font-weight: 700;
+}
+.validateForm img,
+.importForm img {
+  height: 50px;
+  width: auto;
+}
+.cursorNorm {
+  cursor: auto;
+}
+.contFile span {
+  display: inline-block;
+  max-width: 15em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Date choice */
+.startEndDate {
+  background-color: #1f9582;
+  color: #fff;
+}
