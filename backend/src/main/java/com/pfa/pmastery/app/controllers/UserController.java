@@ -124,7 +124,7 @@ public class UserController {
     public ModelAndView confirmEmail(@RequestParam("token")String confirmationToken){
         userService.confirmEmail(confirmationToken);
 
-        ModelAndView modelAndView = new ModelAndView("redirect:http://localhost:3000");
+        ModelAndView modelAndView = new ModelAndView("redirect:http://localhost:8082");
 
         return modelAndView;
     }
