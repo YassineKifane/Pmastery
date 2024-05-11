@@ -70,7 +70,7 @@ export default function FichesDeStagesScreen() {
 
     const generatePDF = async (demande) => {
         try {
-            const { data: imageData } = await axios.get(`${URL}/image?affiliationCode=${demande.users[0].affiliationCode}`, {
+            const { data: imageData } = await axios.get(`${URL}/image?affiliationCode=${demande.users[1].affiliationCode}`, {
                 responseType: 'arraybuffer'
             });
 
@@ -95,10 +95,10 @@ export default function FichesDeStagesScreen() {
         doc.rect(10, 75, doc.internal.pageSize.getWidth() - 20, 40);
         doc.setFontSize(10);
         doc.text('Nom & Prenom:', 30, 85);
-        doc.text(`${demande.users[0].lastName} ${demande.users[0].firstName}`, 70, 85);
+        doc.text(`${demande.users[1].lastName} ${demande.users[1].firstName}`, 70, 85);
         doc.text('CNE:', 30, 95);
         doc.text('Filiere:', 30, 105);
-        doc.text(`${demande.users[0].sector}`, 70, 105);
+        doc.text(`${demande.users[1].sector}`, 70, 105);
         doc.setFontSize(12);
         const stageTitleY = 130;
         doc.text('Stage:', 30, stageTitleY);
@@ -139,7 +139,7 @@ export default function FichesDeStagesScreen() {
         addSignature(doc, signatureImage);
         const pdfBlob = doc.output('blob');
         const formData = new FormData();
-        formData.append('email', demande.users[0].email);
+        formData.append('email', demande.users[1].email);
         formData.append('subject', 'Fiche de stage');
         formData.append('message', 'Cher(e) étudiant(e),\n' + '\n' +
                 'Nous avons le plaisir de vous informer que votre demande de fiche de stage a été traitée avec succès. \n'+'Veuillez trouver ci-joint le fichier PDF contenant votre fiche de stage.\n' +
@@ -151,7 +151,7 @@ export default function FichesDeStagesScreen() {
         await axios.post(URL + '/send-pdf', formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
-            await axios.delete(`${URL}/demande/${demande.userId}`, {
+            await axios.delete(`${URL}/demande/${demande.users[1].userId}`, {
                 headers: { Authorization: `${userInfo.token}` }
             });
             toast.success('Fiche de stage envoyée avec succès !');
@@ -188,8 +188,8 @@ export default function FichesDeStagesScreen() {
                             <tbody>
                             {demands.map((demande) => (
                                 <tr key={demande.pfeId}>
-                                    <td>{demande.users[0].lastName}</td>
-                                    <td>{demande.users[0].firstName}</td>
+                                    <td>{demande.users[1].lastName}</td>
+                                    <td>{demande.users[1].firstName}</td>
                                     <td>{demande.subject}</td>
                                     <td>{demande.company}</td>
                                     <td>{demande.city}</td>
