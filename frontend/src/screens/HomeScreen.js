@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import { URL } from "../constants/constants";
 
 
-
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST':

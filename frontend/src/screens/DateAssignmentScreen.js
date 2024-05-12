@@ -318,7 +318,7 @@ export default function DateAssignmentScreen() {
         <LoadingBox />
       ) : error ? (
           <MessageBox variant="info">
-            {error.message}
+            Les soutenances n'ont pas encore été lancées
           </MessageBox>
       ) : dateInterval.length > 0 ? (
         <Container fluid>

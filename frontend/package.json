@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "proxy": "http://localhost:8083",
+  "proxy": "http://pmastery-backend:8083",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
