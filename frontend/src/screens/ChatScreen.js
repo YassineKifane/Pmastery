@@ -201,7 +201,7 @@ export default function ChatScreen(props) {
                                 ) : state.error ? (
                                     <MessageBox variant="danger">{state.error}</MessageBox>
                                 ) : (
-                                    <div className="chat-messages">
+                                    <div className="chat-messages vh-100">
                                         {recipientMessages[recipient.userId] && recipientMessages[recipient.userId].map((msg, index) => {
                                             if (msg.sender.userId === userInfo.userId) {
                                                 return (

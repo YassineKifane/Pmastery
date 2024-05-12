@@ -5,7 +5,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Store } from '../Store';
 import { URL } from "../constants/constants";
 import { Link, useLocation } from 'react-router-dom';
-import PMasteryLogo from '../assets/logo/PMastery_text.png';
+import PMasteryLogo from '../assets/logo/PMastery2.png';
 import axios from 'axios';
 
 export default function NavbarComponent(props) {
@@ -266,13 +266,11 @@ export default function NavbarComponent(props) {
                                                     )}
                                                 </NavDropdown>
                                             ) : (
-                                                hasSoutnance && (
                                                     <Nav.Item className="ms-3 me-3">
                                                         <LinkContainer to="/messoutenances">
                                                             <Nav.Link>Mes Soutenances</Nav.Link>
                                                         </LinkContainer>
                                                     </Nav.Item>
-                                                )
                                             )}
                                         </>
                                     )}
