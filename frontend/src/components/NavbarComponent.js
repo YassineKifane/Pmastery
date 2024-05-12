@@ -5,7 +5,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Store } from '../Store';
 import { URL } from "../constants/constants";
 import { Link, useLocation } from 'react-router-dom';
-import PMasteryLogo from '../assets/logo/PMastery2.png';
+import PMasteryLogo from '../assets/logo/PMasteryv2.png';
 import axios from 'axios';
 
 export default function NavbarComponent(props) {
