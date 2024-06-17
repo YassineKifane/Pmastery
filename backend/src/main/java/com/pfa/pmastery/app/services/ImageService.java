@@ -22,23 +22,19 @@ public class ImageService {
     public String uploadImage(MultipartFile image, UserEntity userEntity) throws IOException {
         ImageData imageData = imageRepository.save(ImageData.builder()
                 .name(image.getOriginalFilename())
-                .type(image.getOriginalFilename())
+                .type(image.getContentType())
                 .imageData(ImageUtils.compressImage(image.getBytes()))
                 .user(userEntity)
                 .build());
         if(imageData != null){
             return "image uploaded successfully";
-        }else{
-            return null
-                    ;
+        } else {
+            return null;
         }
     }
 
-
-    public byte[] downloadImage(Long idChefFiliere){
-        Optional<ImageData> dbImageData= imageRepository.findByUserId(idChefFiliere);
-        byte[] images = ImageUtils.decompressImage(dbImageData.get().getImageData());
-        return images;
-
+    public byte[] downloadImage(Long idChefFiliere) {
+        Optional<ImageData> dbImageData = imageRepository.findByUserId(idChefFiliere);
+        return dbImageData.map(data -> ImageUtils.decompressImage(data.getImageData())).orElse(null);
     }
 }

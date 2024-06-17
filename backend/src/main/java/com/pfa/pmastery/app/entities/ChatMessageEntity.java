@@ -26,6 +26,7 @@ public class ChatMessageEntity {
 
     private boolean notified;
 
+    public ChatMessageEntity() {}
 
     public ChatMessageEntity(String chatId, UserEntity sender, UserEntity recipient, String content, Date timestamp) {
         this.chatId = chatId;
@@ -35,9 +36,6 @@ public class ChatMessageEntity {
         this.timestamp = timestamp;
     }
 
-    public ChatMessageEntity() {
-
-    }
 
     public Long getId() {
         return this.id;

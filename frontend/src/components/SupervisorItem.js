@@ -237,9 +237,6 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
     };
 
 
-
-
-
     function handleDeleteBtn() {
         if(deleteHandler){
             deleteHandler(supervisor)
@@ -295,7 +292,7 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
                                     supervisor.pfe.filter(p => (p.year === selectedYearSupervisors.value && p.approved === true))
                                         .map(
                                             pfe => (
-                                                <Row className="mb-3">
+                                                <Row key={pfe.pfeId} className="mb-3">
                                                     <Col>
                                                         {pfe.subject}
                                                     </Col>

@@ -13,11 +13,13 @@ public class ConfirmationToken {
     @Id
     @GeneratedValue
     private long tokenid;
+
     private String confirmationToken;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @OneToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "userId")
     private UserEntity userEntity;
 

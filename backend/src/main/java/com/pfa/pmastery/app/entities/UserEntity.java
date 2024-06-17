@@ -6,53 +6,77 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@Entity(name="users")
-
+@Entity(name = "users")
 public class UserEntity implements Serializable {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false , unique = true , length = 40)
+
+    @Column(nullable = false, unique = true, length = 40)
     private String userId;
-    @Column(nullable = false , unique = true , length = 100)
+
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
+
     @Column(nullable = false)
     private String encryptedPassword;
-    @Column(nullable = false , length = 30)
+
+    @Column(nullable = false, length = 30)
     private String firstName;
-    @Column(nullable = false , length = 30)
+
+    @Column(nullable = false, length = 30)
     private String lastName;
-    @Column(nullable = false , length = 20)
+
+    @Column(nullable = false, length = 20)
     private String role;
+
     @Column(nullable = true)
     private Boolean isVerified = false;
+
+    @Column(nullable = true)
     private Boolean isEmailVerified = false;
-    @Column(nullable = false , length = 10)
+
+    @Column(nullable = false, length = 10)
     private String affiliationCode;
-    @Column(nullable = false , length = 50)
+
+    @Column(nullable = false, length = 50)
     private String sector;
+
     private String announcementMsg;
-
-
-    //@ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL , mappedBy = "users")
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
     private ImageData imageData;
 
-    @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
-    @JoinTable(name="pfe_users" , joinColumns = @JoinColumn(name="userId") ,
-            inverseJoinColumns = @JoinColumn(name="pfeId"))
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinTable(name = "pfe_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "pfe_id"))
     @JsonIgnore
     private List<PfeEntity> pfe;
+//@ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+//private List<PfeEntity> pfe;
 
 
-    @OneToMany(mappedBy = "sender")
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ChatMessageEntity> sentMessages;
 
-    @OneToMany(mappedBy = "recipient")
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ChatMessageEntity> receivedMessages;
+
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ConfirmationToken> confirmationTokens;
+
+    // Constructors, getters, and setters
+
+    public UserEntity() {
+        // Default constructor
+    }
+
+    // Getters and setters (omitted for brevity)
 
     public Long getId() {
         return id;
@@ -150,6 +174,14 @@ public class UserEntity implements Serializable {
         this.announcementMsg = announcementMsg;
     }
 
+    public ImageData getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(ImageData imageData) {
+        this.imageData = imageData;
+    }
+
     public List<PfeEntity> getPfe() {
         return pfe;
     }
@@ -174,12 +206,11 @@ public class UserEntity implements Serializable {
         this.receivedMessages = receivedMessages;
     }
 
-    public ImageData getImageData() {
-        return imageData;
+    public List<ConfirmationToken> getConfirmationTokens() {
+        return confirmationTokens;
     }
 
-    public void setImageData(ImageData imageData) {
-        this.imageData = imageData;
+    public void setConfirmationTokens(List<ConfirmationToken> confirmationTokens) {
+        this.confirmationTokens = confirmationTokens;
     }
 }
-

@@ -26,5 +26,4 @@ public class ImageData {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
-
 }

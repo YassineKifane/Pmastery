@@ -160,10 +160,14 @@ public class UserController {
         return new ResponseEntity<UserResponseWithoutPfe>(userResponse , HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping(path="/{userId}")
-    public ResponseEntity<Object> deleteUser(@PathVariable String userId){
-        userService.deleteUser(userId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable String userId, @RequestParam String role) {
+        try {
+            userService.deleteUser(userId, role);
+            return ResponseEntity.ok("Utilisateur supprimé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la suppression de l'utilisateur: " + e.getMessage());
+        }
     }
 
     @GetMapping("/studentsWithPfe")

@@ -28,6 +28,6 @@ public interface UserService extends UserDetailsService {
     void confirmEmail(String confirmationToken);
     void forgotPassword(String email);
     void resetPassword(String confirmationToken,String newPassword);
-    void deleteUser(String userId);
+    void deleteUser(String userId, String role);
     List<UserDto> getStudentWithPfe(String affiliationCode);
 }

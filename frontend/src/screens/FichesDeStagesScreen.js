@@ -94,10 +94,10 @@ export default function FichesDeStagesScreen() {
         doc.text('Etudiant:', 30, 65);
         doc.rect(10, 75, doc.internal.pageSize.getWidth() - 20, 40);
         doc.setFontSize(10);
-        doc.text('Nom & Prenom:', 30, 85);
+        doc.text('Nom & Prénom:', 30, 85);
         doc.text(`${demande.users[0].lastName} ${demande.users[0].firstName}`, 70, 85);
         doc.text('CNE:', 30, 95);
-        doc.text('Filiere:', 30, 105);
+        doc.text('Filière:', 30, 105);
         doc.text(`${demande.users[0].sector}`, 70, 105);
         doc.setFontSize(12);
         const stageTitleY = 130;
@@ -105,11 +105,11 @@ export default function FichesDeStagesScreen() {
         const stageRectY = stageTitleY + 10;
         doc.rect(10, stageRectY, doc.internal.pageSize.getWidth() - 20, 60);
         doc.setFontSize(10);
-        doc.text(`Societe: ${demande.company}`, 30, stageRectY + 10);
+        doc.text(`Société: ${demande.company}`, 30, stageRectY + 10);
         doc.text(`Adresse: ${demande.city}`, 30, stageRectY + 20);
-        doc.text('Tel:', 30, stageRectY + 30);
+        doc.text('Tél:', 30, stageRectY + 30);
         doc.text('Fax:', 90, stageRectY + 30);
-        doc.text('Duree de stage:', 30, stageRectY + 40);
+        doc.text('Durée de stage:', 30, stageRectY + 40);
         doc.text(`Sujet: ${demande.subject}`, 30, stageRectY + 50);
         const colWidth = (doc.internal.pageSize.getWidth() - 20) / 3;
         const startY = stageRectY + 80;

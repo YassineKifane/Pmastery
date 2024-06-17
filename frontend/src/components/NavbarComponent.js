@@ -1,12 +1,13 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import { Navbar, Nav, NavDropdown, Container, Badge } from 'react-bootstrap';
+import {Navbar, Nav, NavDropdown, Container, Badge, NavLink} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Store } from '../Store';
 import { URL } from "../constants/constants";
 import { Link, useLocation } from 'react-router-dom';
 import PMasteryLogo from '../assets/logo/PMasteryv2.png';
 import axios from 'axios';
+
 
 export default function NavbarComponent(props) {
     const location = useLocation();
@@ -21,23 +22,27 @@ export default function NavbarComponent(props) {
     useEffect(() => {
         const fetchHasPfeData = async () => {
             try {
-                const hasPFEResponse = await axios.get(`${URL}/pfe/hasPFE`, {
-                    params: { userId: userInfo.userId },
-                });
-                const hasPFEValue = hasPFEResponse.data;
-                setHasPFE(hasPFEValue);
-                console.log(userInfo.pfe[0].pfeId)
-                console.log("has pfe: "+hasPFEValue);
-
-                if (hasPFEValue) {
-                    const hasSupervisorResponse = await axios.get(`${URL}/pfe/hasSupervisorEmail`, {
-                        params: { pfeId: userInfo.pfe[0].pfeId },
-                        headers: { Authorization: `${userInfo.token}` },
+                if (userInfo.pfe && userInfo.pfe.length > 0) {
+                    const hasPFEResponse = await axios.get(`${URL}/pfe/hasPFE`, {
+                        params: { userId: userInfo.userId },
                     });
-                    const hasSupervisorValue = hasSupervisorResponse.data;
-                    setHasSupervisor(hasSupervisorValue);
-                }
+                    const hasPFEValue = hasPFEResponse.data;
+                    setHasPFE(hasPFEValue);
+                    console.log(userInfo.pfe[0].pfeId); // Assurez-vous que userInfo.pfe[0] est défini ici
+                    console.log("has pfe: " + hasPFEValue);
 
+                    if (hasPFEValue) {
+                        const hasSupervisorResponse = await axios.get(`${URL}/pfe/hasSupervisorEmail`, {
+                            params: { pfeId: userInfo.pfe[0].pfeId },
+                            headers: { Authorization: `${userInfo.token}` },
+                        });
+                        const hasSupervisorValue = hasSupervisorResponse.data;
+                        setHasSupervisor(hasSupervisorValue);
+                    }
+                } else {
+                    // Gérer le cas où userInfo.pfe n'est pas défini ou est vide
+                    console.log("Aucune information sur le PFE trouvée pour cet utilisateur.");
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -53,10 +58,14 @@ export default function NavbarComponent(props) {
             }
         };
 
-        fetchHasPfeData();
-        fetchHasSoutnanceData();
+        // Vérification de userInfo pour éviter d'appeler fetchHasPfeData et fetchHasSoutnanceData si userInfo est null ou undefined
+        if (userInfo) {
+            fetchHasPfeData();
+            fetchHasSoutnanceData();
+        }
 
     }, [userInfo]);
+
 
 
     const signoutHandler = () => {

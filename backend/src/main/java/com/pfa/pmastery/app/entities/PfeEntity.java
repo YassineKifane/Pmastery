@@ -12,37 +12,50 @@ public class PfeEntity implements Serializable {
 
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false , unique = true)
+    @Column(nullable = false, unique = true)
     private String pfeId;
-    @Column(nullable = false , length = 255)
+
+    @Column(nullable = false, length = 255)
     private String subject;
 
-    @Column(nullable = false ,length = 50)
+    @Column(nullable = false, length = 50)
     private String city;
-    @Column(nullable = false ,length = 50)
+
+    @Column(nullable = false, length = 50)
     private String company;
-    @Column(nullable = false ,length = 100)
+
+    @Column(nullable = false, length = 100)
     private String supervisorEmail;
+
     @Column(nullable = false, length = 255)
     private String usedTechnologies;
+
     @Column(nullable = false)
     private Boolean isApproved = false;
-    /*@Column(name = "year", columnDefinition = "integer default year(current_date)")*/
+
     @Column(name = "year", columnDefinition = "integer default extract(year from current_date)")
     private int year;
+
     @PrePersist
     protected void onCreate() {
         year = java.time.LocalDate.now().getYear();
     }
-    @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
-    @JoinTable(name="pfe_users" , joinColumns = @JoinColumn(name="pfeId") ,inverseJoinColumns = @JoinColumn(name="userId"))
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "pfe_users",
+            joinColumns = @JoinColumn(name = "pfe_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnore
     private List<UserEntity> users;
+
+
+
     public Long getId() {
         return id;
+
     }
 
     public void setId(Long id) {
@@ -119,4 +132,5 @@ public class PfeEntity implements Serializable {
     public void setUsers(List<UserEntity> users) {
         this.users = users;
     }
+
 }

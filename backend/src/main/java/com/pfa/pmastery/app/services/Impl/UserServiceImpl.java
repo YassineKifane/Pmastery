@@ -29,6 +29,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.logging.Logger;
+import org.springframework.transaction.annotation.Transactional;
+
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -45,6 +48,8 @@ public class UserServiceImpl implements UserService {
     Utils utils;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 
 
     @Override
@@ -325,12 +330,81 @@ public class UserServiceImpl implements UserService {
                 && cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
     }
 
-    @Override
-    public void deleteUser(String userId) {
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        if (userEntity == null) throw new UsernameNotFoundException(userId);
-        userRepository.delete(userEntity);
+
+//    @Override
+//    @Transactional
+//    public void deleteUser(String userId) {
+//        UserEntity user = userRepository.findByUserId(userId);
+//
+//        // Remove associations from PfeEntity
+//        for (PfeEntity pfe : user.getPfe()) {
+//            pfe.getUsers().remove(user);
+//            pfeRepository.save(pfe);
+//        }
+//
+//        // Remove associations from ConfirmationToken
+//        for (ConfirmationToken token : user.getConfirmationTokens()) {
+//            confirmationTokenRepository.delete(token);
+//        }
+//
+//        user.getPfe().clear();
+//        user.getSentMessages().clear();
+//        user.getReceivedMessages().clear();
+//
+//        userRepository.delete(user);
+//    }
+@Override
+@Transactional
+public void deleteUser(String userId, String role) {
+    UserEntity user = userRepository.findByUserId(userId);
+
+    if (user == null) {
+        throw new RuntimeException("Utilisateur introuvable avec l'ID: " + userId);
     }
+
+    // Supprimer les associations avec les PFE (si l'utilisateur est un étudiant)
+    if ("STUDENT".equals(role)) {
+        List<PfeEntity> pfeEntities = user.getPfe();
+        for (PfeEntity pfe : pfeEntities) {
+            pfe.getUsers().remove(user); // Supprimer l'utilisateur de la liste des étudiants associés au PFE
+            if (pfe.getUsers().isEmpty()) {
+                pfeRepository.delete(pfe); // Supprimer le PFE s'il n'a plus d'étudiants associés
+            } else {
+                pfeRepository.save(pfe); // Sauvegarder les entités PFE mises à jour
+            }
+        }
+    }
+
+
+    if ("SUPERVISOR".equals(role)) {
+        List<PfeEntity> pfeEntities = user.getPfe();
+        for (PfeEntity pfe : pfeEntities) {
+            pfe.getUsers().remove(user);
+            pfeRepository.delete(pfe);// Supprimer l'utilisateur de la liste des étudiants associés au PFE
+            if (pfe.getUsers().isEmpty()) {
+                pfeRepository.delete(pfe); // Supprimer le PFE s'il n'a plus d'étudiants associés
+            } else {
+                pfeRepository.save(pfe); // Sauvegarder les entités PFE mises à jour
+            }
+        }
+    }
+
+    // Supprimer les tokens de confirmation associés à l'utilisateur
+    for (ConfirmationToken token : user.getConfirmationTokens()) {
+        confirmationTokenRepository.delete(token);
+    }
+
+
+
+    // Supprimer toutes les associations
+    user.getPfe().clear();
+    user.getSentMessages().clear();
+    user.getReceivedMessages().clear();
+
+    // Enfin, supprimer l'entité utilisateur elle-même
+    userRepository.delete(user);
+}
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

@@ -78,20 +78,34 @@ export default function SupervisorsListScreen() {
   }, [userInfo, successDelete,currentYear]);
 
   const deleteHandler = async (supervisor) => {
-    if (window.confirm(`Êtes-vous sûr de vouloir supprimmer ce compte?`)) {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer ce compte?`)) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
         await axios.delete(URL + `/user/${supervisor.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
+          params: { role: 'SUPERVISOR' },
         });
         toast.success('Encadrant supprimé avec succès');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
-        toast.error(getError(err));
+        console.error('Error deleting supervisor:', err);
+
+        if (err.response && err.response.data && err.response.data.message) {
+          if (err.response.data.message.includes('constraint')) {
+            toast.error('Impossible de supprimer l\'encadrant. Il se peut qu\'il soit référencé par d\'autres enregistrements.');
+          } else {
+            toast.error(getError(err));
+          }
+        } else {
+          toast.error(getError(err));
+        }
+
         dispatch({ type: 'DELETE_FAIL' });
       }
     }
   };
+
+
 
   return (
       <div className="p-5">
@@ -160,6 +174,7 @@ export default function SupervisorsListScreen() {
                           })
                           .map((supervisor) => (
                               <SupervisorItem
+                                  key={supervisor.userId}
                                   supervisor={supervisor}
                                   allstudents={students}
                                   selectedYearSupervisors={{value:currentYear,label:currentYear}}
