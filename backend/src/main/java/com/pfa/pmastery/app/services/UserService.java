@@ -30,4 +30,6 @@ public interface UserService extends UserDetailsService {
     void resetPassword(String confirmationToken,String newPassword);
     void deleteUser(String userId, String role);
     List<UserDto> getStudentWithPfe(String affiliationCode);
+    List<UserDto> userWithCurrentPfeAndApproved(String role ,String affiliationCode , int year);
+
 }

@@ -22,45 +22,46 @@ function PfeItem({ pfeDetails, selectedPfes, setSelectedPfes }) {
     setPfeChecked(false);
   };
   return (
-    <ListGroup.Item className={pfeChecked ? 'bg-light p-3' : 'p-3'}>
-      <Row>
-        <Col sm={10}>
-          <h5>Sujet: {pfeDetails.pfe[0].subject}</h5>
-          <p>
+      <ListGroup.Item className={pfeChecked ? 'bg-light p-3' : 'p-3'}>
+        <Row>
+          <Col sm={10}>
+            <h5>Sujet: {pfeDetails.pfe[0].subject}</h5>
+            <p>
             <span>
               <strong>Etudiant: </strong>
               {`${pfeDetails.firstName} ${pfeDetails.lastName}`}
             </span>
-            <br />
-            <span>
+              <br />
+              <span>
               <strong>Les technologies utilisées: </strong>
-              {pfeDetails.pfe[0].usedTechnologies}
+                {pfeDetails.pfe[0].usedTechnologies}
             </span>
-          </p>
-          <Button onClick={() => setVisible(true)}>Details</Button>
-          <PfeDialogDetails
-              visible={visible}
-              setVisible={setVisible}
-              pfeDetails={pfeDetails}
-          />
-        </Col>
-        <Col
-          sm={2}
-          className="d-flex align-items-center justify-content-center"
-        >
-          <Button
-            className={pfeChecked ? 'bg-success' : 'bg-white'}
-            onClick={
-              pfeChecked
-                ? () => remPfeFromChoices(pfeDetails.pfe[0].pfeId)
-                : () => addPfeToChoices(pfeDetails.pfe[0].pfeId)
-            }
+            </p>
+            <Button onClick={() => setVisible(true)}>Details</Button>
+            <PfeDialogDetails
+                visible={visible}
+                setVisible={setVisible}
+                pfeDetails={pfeDetails.pfe[0]}
+                student={pfeDetails}
+            />
+          </Col>
+          <Col
+              sm={2}
+              className="d-flex align-items-center justify-content-center"
           >
-            <i className="pi pi-check"></i>
-          </Button>
-        </Col>
-      </Row>
-    </ListGroup.Item>
+            <Button
+                className={pfeChecked ? 'bg-success' : 'bg-white'}
+                onClick={
+                  pfeChecked
+                      ? () => remPfeFromChoices(pfeDetails.pfe[0].pfeId)
+                      : () => addPfeToChoices(pfeDetails.pfe[0].pfeId)
+                }
+            >
+              <i className="pi pi-check"></i>
+            </Button>
+          </Col>
+        </Row>
+      </ListGroup.Item>
   );
 }
 

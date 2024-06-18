@@ -3,10 +3,10 @@ import {Dialog} from "primereact/dialog";
 import React from "react";
 
 
-export default function PfeDialogDetails({pfeDetails,visible,setVisible}){
+export default function PfeDialogDetails({student, pfeDetails,visible,setVisible}){
     return(
         <Dialog
-            header={pfeDetails.pfe[0].subject}
+            header={pfeDetails.subject}
             visible={visible}
             style={{ width: '50vw' }}
             onHide={() => setVisible(false)}
@@ -17,36 +17,37 @@ export default function PfeDialogDetails({pfeDetails,visible,setVisible}){
                     <ListGroup.Item>
                         <p>
                             <strong>Les technologies utilisées: </strong>
-                            {pfeDetails.pfe[0].usedTechnologies}
+                            {pfeDetails.usedTechnologies}
                         </p>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <strong>Informations de l'étudiant:</strong>
                         <Row>
                             <Row>
-                                <Col>Nom: {pfeDetails.lastName}</Col>
+                                <Col>Nom: {student.lastName}</Col>
                             </Row>
                             <Row>
-                                <Col>Prénom: {pfeDetails.firstName}</Col>
+                                <Col>Prénom: {student.firstName}</Col>
                             </Row>
                             <Row>
-                                <Col>Email: {pfeDetails.email}</Col>
+                                <Col>Email: {student.email}</Col>
                             </Row>
                         </Row>
                     </ListGroup.Item>
+
                     <ListGroup.Item>
                         <strong>Informations du stage:</strong>
                         <Row>
                             <Row>
-                                <Col>Entreprise: {pfeDetails.pfe[0].company}</Col>
+                                <Col>Entreprise: {pfeDetails.company}</Col>
                             </Row>
                             <Row>
-                                <Col>Ville: {pfeDetails.pfe[0].city}</Col>
+                                <Col>Ville: {pfeDetails.city}</Col>
                             </Row>
                             <Row>
                                 <Col>
                                     Email d'encadrant du stage:{' '}
-                                    {pfeDetails.pfe[0].supervisorEmail}
+                                    {pfeDetails.supervisorEmail}
                                 </Col>
                             </Row>
                         </Row>

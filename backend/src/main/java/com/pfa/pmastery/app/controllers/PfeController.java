@@ -185,4 +185,9 @@ public class PfeController {
         List<ReportResponse> reportResponses = storageService.reportStatusToSupervisor(userId,year);
         return new ResponseEntity<List<ReportResponse>>(reportResponses, HttpStatus.OK);
     }
+    @GetMapping(path = "/pfeYears")
+    public List<Integer> getAllPfeYears(@RequestParam("affiliationCode") String affiliationCode){
+        List<Integer> yearsList=pfeService.pfeYearsList(affiliationCode);
+        return yearsList;
+    }
 }

@@ -202,4 +202,9 @@ public class PfeServiceImpl implements PfeService {
         return pfe.getSupervisorEmail() != null;
     }
 
+    @Override
+    public List<Integer> pfeYearsList(String affiliationCode) {
+        return pfeRepository.findAllPfeYears(affiliationCode);
+    }
+
 }

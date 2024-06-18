@@ -15,10 +15,9 @@ const reducer = (state, action) => {
             return { ...state, loading: true };
         case 'FETCH_SUCCESS':
             return { ...state,
-                    loading: false,
-                    allstudents: action.payload.allstudents,
-                    students: action.payload.students,
-                    supervisors: action.payload.supervisors,
+                loading: false,
+                students: action.payload.students,
+                supervisors: action.payload.supervisors,
             };
         case 'FETCH_FAIL':
             return { ...state, loading: false, error: action.payload };
@@ -41,7 +40,7 @@ const reducer = (state, action) => {
 export default function ArchiveScreen() {
     const { state } = useContext(Store);
     const { userInfo } = state;
-    const [{ loading, error,allstudents,students,supervisors, loadingDelete, successDelete }, dispatch] =
+    const [{ loading, error,students,supervisors, loadingDelete, successDelete }, dispatch] =
         useReducer(reducer, {
             loading: true,
             error: '',
@@ -64,249 +63,288 @@ export default function ArchiveScreen() {
     });
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchYears = async () => {
             try {
-                dispatch({ type: 'FETCH_REQUEST' });
-                const { data } = await axios.get(URL + '/user/allUsers', {
+                const dataYears = await axios.get(URL + '/pfe/pfeYears', {
                     headers: { Authorization: `${userInfo.token}` },
                     params: {
                         affiliationCode: userInfo.affiliationCode,
-                        isVerified: true,
                     },
                 });
-                const allstudents=data.filter(user=>user.role==="STUDENT")
-                const students = data.filter((user) =>
-                    user.role === 'STUDENT' &&
-                    user.pfe[0].year===selectedYear.student.value
-                );
-                const supervisors = data.filter((user) =>
-                    user.role === 'SUPERVISOR' &&
-                    user.pfe.flatMap(p => p.year).includes(selectedYear.supervisor.value)
-                );
-                dispatch({
-                    type: 'FETCH_SUCCESS',
-                    payload: {
-                        allstudents: allstudents,
-                        students: students,
-                        supervisors: supervisors,
-                    },
-                });
-                let listyears = [...new Set(data.flatMap(user => user.pfe.map(pfe=> pfe.year)))].filter(year => year !== currentYear);
-                setYears(listyears)
+                setYears(dataYears.data.filter(year => year !== currentYear));
             } catch (err) {
                 dispatch({ type: 'FETCH_FAIL', payload: err });
             }
         };
+
+        fetchYears();
+    }, [userInfo]);
+
+    useEffect(() => {
+        const fetchSupervisors = async () => {
+            if (selectedYear.supervisor.value) {
+                dispatch({ type: 'FETCH_REQUEST' });
+                try {
+                    const { data } = await axios.get(URL + '/user/usersWithCurrentPfeAndApproved', {
+                        headers: { Authorization: `${userInfo.token}` },
+                        params: {
+                            role: "SUPERVISOR",
+                            affiliationCode: userInfo.affiliationCode,
+                            year: selectedYear.supervisor.value,
+                        },
+                    });
+                    dispatch({
+                        type: 'FETCH_SUCCESS',
+                        payload: {
+                            students,
+                            supervisors: data,
+                        },
+                    });
+                } catch (err) {
+                    dispatch({ type: 'FETCH_FAIL', payload: err });
+                }
+            }
+        };
+
+        fetchSupervisors();
+    }, [userInfo, selectedYear.supervisor.value]);
+
+    useEffect(() => {
+        const fetchStudents = async () => {
+            if (selectedYear.student.value) {
+                dispatch({ type: 'FETCH_REQUEST' });
+                try {
+                    const { data } = await axios.get(URL + '/user/usersWithCurrentPfeAndApproved', {
+                        headers: { Authorization: `${userInfo.token}` },
+                        params: {
+                            role: "STUDENT",
+                            affiliationCode: userInfo.affiliationCode,
+                            year: selectedYear.student.value,
+                        },
+                    });
+                    dispatch({
+                        type: 'FETCH_SUCCESS',
+                        payload: {
+                            students: data,
+                            supervisors,
+                        },
+                    });
+                } catch (err) {
+                    dispatch({ type: 'FETCH_FAIL', payload: err });
+                }
+            }
+        };
+
+        fetchStudents();
+    }, [userInfo, selectedYear.student.value]);
+
+    useEffect(() => {
         if (successDelete) {
             dispatch({ type: 'DELETE_RESET' });
-        } else {
-            fetchData();
         }
-    }, [userInfo, successDelete,years,selectedYear.supervisor.value,selectedYear.student.value]);
-
-  return (
-      <div className="p-5">
-          <Helmet>
-              <title>Archives</title>
-          </Helmet>
-          <h1>Archives</h1>
-          <Tabs
-              defaultActiveKey="Archives des encadrants"
-              id="fill-tab-example"
-              className="mb-3"
-              fill
-          >
-              <Tab
-                  eventKey="Archives des encadrants"
-                  title={
-                      <>
-                          Archives des encadrants{' '}
-                      </>
-                  }
+    }, [successDelete]);
+    return (
+        <div className="p-5">
+            <Helmet>
+                <title>Archives</title>
+            </Helmet>
+            <h1>Archives</h1>
+            <Tabs
+                defaultActiveKey="Archives des encadrants"
+                id="fill-tab-example"
+                className="mb-3"
+                fill
+            >
+                <Tab
+                    eventKey="Archives des encadrants"
+                    title={
+                        <>
+                            Archives des encadrants{' '}
+                        </>
+                    }
                 >
-                  <Form.Group as={Row} controlId="yearSelect" className="justify-content-end mb-4">
-                      <Form.Label column sm={3} style={{ width: "8%"}}>
-                          L'année:
-                      </Form.Label>
-                      <Col sm={2}>
-                          <CreatableSelect
-                              placeholder="Choisir l'annee"
-                              options={years.map(year=>(({value:year, label:year})))}
-                              isSearchable={false}
-                              value={selectedYear.supervisor}
-                              onChange={selectedOption =>
-                                  setselectedYear({
-                                      ...selectedYear,
-                                      supervisor: {
-                                          value:selectedOption.value,
-                                          label: selectedOption.value
-                                      }})}
-                          />
-                      </Col>
-                  </Form.Group>
-                  {
-                    (selectedYear.supervisor.value && supervisors && supervisors.length > 0 ) ?
-                    (<>
+                    <Form.Group as={Row} controlId="yearSelect" className="justify-content-end mb-4">
+                        <Form.Label column sm={3} style={{ width: "8%"}}>
+                            L'année:
+                        </Form.Label>
+                        <Col sm={2}>
+                            <CreatableSelect
+                                placeholder="Choisir l'annee"
+                                options={years.map(year=>(({value:year, label:year})))}
+                                isSearchable={false}
+                                value={selectedYear.supervisor}
+                                onChange={selectedOption =>
+                                    setselectedYear({
+                                        ...selectedYear,
+                                        supervisor: {
+                                            value:selectedOption.value,
+                                            label: selectedOption.value
+                                        }})}
+                            />
+                        </Col>
+                    </Form.Group>
+                    {
+                        (selectedYear.supervisor.value && supervisors && supervisors.length > 0 ) ?
+                            (<>
+                                <Row>
+                                    <Col className="text-end">
+                                        <h6>Nombre d'encadrants: {supervisors.length}</h6>
+                                    </Col>
+                                </Row>
+                                <>
+                                    <div >
+                                        <Form >
+                                            <InputGroup >
+                                                <Form.Control
+                                                    onChange={(e) =>
+                                                        setSearchValues({
+                                                            ...searchValues,
+                                                            supervisor:e.target.value
+                                                        })
+                                                    }
+                                                    placeholder="Rechercher"
+                                                />
+                                            </InputGroup>
+                                        </Form>
+                                    </div>
+                                    <Table responsive>
+                                        <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Prénom</th>
+                                            <th>Nombre de sujets</th>
+                                            <th>Email</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {supervisors
+                                            .filter((supervisor) => {
+                                                return searchValues.supervisor.toLowerCase() === ''
+                                                    ? supervisor
+                                                    : supervisor.lastName
+                                                        .toLowerCase()
+                                                        .includes(searchValues.supervisor.toLowerCase()) ||
+                                                    supervisor.firstName
+                                                        .toLowerCase()
+                                                        .includes(searchValues.supervisor.toLowerCase()) ||
+                                                    supervisor.email
+                                                        .toLowerCase()
+                                                        .includes(searchValues.supervisor.toLowerCase()) ||
+                                                    supervisor.pfe
+                                                        .filter((p) => p.year === currentYear)
+                                                        .length.toString() === searchValues.supervisor;
+                                            })
+                                            .map((supervisor) => (
+                                                <SupervisorItem
+                                                    supervisor={supervisor}
+                                                    selectedYearSupervisors={selectedYear.supervisor}
+                                                />
+                                            ))
+                                        }
+                                        </tbody>
+                                    </Table>
+                                </>
+                            </>)
+                            : (
+                                (selectedYear.supervisor.value && supervisors && supervisors.length === 0) &&
+                                <MessageBox>Aucun encadrant inscrit pour cette année</MessageBox>
+                            )
+                    }
+                </Tab>
+                <Tab
+                    eventKey="Archives des étudiants"
+                    title={
+                        <>
+                            Archives des étudiants{' '}
+
+                        </>
+                    }
+                >
+                    <Form.Group as={Row} controlId="yearSelect" className="justify-content-end mb-4">
+                        <Form.Label column sm={3} style={{width: "18%"}}>
+                            Sélectionner l'année:
+                        </Form.Label>
+                        <Col sm={2}>
+                            <CreatableSelect
+                                placeholder="choisir l'annee"
+                                options={years.map(year => (({value: year, label: year})))}
+                                isSearchable={false}
+                                value={selectedYear.student}
+                                onChange={(selectedOption) =>
+                                    setselectedYear({
+                                        ...selectedYear,
+                                        student: {
+                                            value: selectedOption.value,
+                                            label: selectedOption.value
+                                        }
+                                    })}
+                            />
+                        </Col>
+                    </Form.Group>
+                    {(selectedYear.student.value && students && students.length > 0) ? (
+                        <>
                             <Row>
                                 <Col className="text-end">
-                                    <h6>Nombre d'encadrants: {supervisors.length}</h6>
+                                    <h6>Nombre d'étudiants: {students.length}</h6>
                                 </Col>
                             </Row>
                             <>
-                                <div >
-                                    <Form >
-                                        <InputGroup >
-                                            <Form.Control
-                                                onChange={(e) =>
-                                                    setSearchValues({
-                                                        ...searchValues,
-                                                        supervisor:e.target.value
-                                                    })
-                                                }
-                                                placeholder="Rechercher"
-                                            />
-                                        </InputGroup>
-                                    </Form>
-                                </div>
+                                <Form>
+                                    <InputGroup className="my-3">
+                                        <Form.Control
+                                            onChange={e =>
+                                                setSearchValues({
+                                                    ...searchValues,
+                                                    students:  e.target.value
+                                                })}
+                                            placeholder="Rechercher"
+                                        />
+                                    </InputGroup>
+                                </Form>
                                 <Table responsive>
                                     <thead>
                                     <tr>
                                         <th>Nom</th>
                                         <th>Prénom</th>
-                                        <th>Nombre de sujets</th>
                                         <th>Email</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        {supervisors
-                                        .filter((supervisor) => {
-                                        return searchValues.supervisor.toLowerCase() === ''
-                                            ? supervisor
-                                            : supervisor.lastName
-                                                .toLowerCase()
-                                                .includes(searchValues.supervisor.toLowerCase()) ||
-                                                supervisor.firstName
-                                                .toLowerCase()
-                                                .includes(searchValues.supervisor.toLowerCase()) ||
-                                                supervisor.email
-                                                .toLowerCase()
-                                                .includes(searchValues.supervisor.toLowerCase()) ||
-                                                supervisor.pfe
-                                                .filter((p) => p.year === currentYear)
-                                                .length.toString() === searchValues.supervisor;
+                                    {students
+                                        .filter((student) => {
+                                            return searchValues.students.toLowerCase() === ''
+                                                ? student
+                                                : student.lastName
+                                                    .toLowerCase()
+                                                    .includes(searchValues.students.toLowerCase()) ||
+                                                student.firstName
+                                                    .toLowerCase()
+                                                    .includes(searchValues.students.toLowerCase()) ||
+                                                student.email
+                                                    .toLowerCase()
+                                                    .includes(searchValues.students.toLowerCase()) ||
+                                                student.pfe
+                                                    .filter((p) => p.year === currentYear)
+                                                    .length.toString() === searchValues.students;
                                         })
-                                        .map((supervisor) => (
-                                           <SupervisorItem
-                                            supervisor={supervisor}
-                                            selectedYearSupervisors={selectedYear.supervisor}
-                                            years={years}
-                                            allstudents={allstudents}
-                                           />
-                                        ))
-                                        }
+                                        .map((student) => (
+                                            <TableSection
+                                                key={student.userId}
+                                                user={student}
+                                                currentYear={selectedYear.student.value}
+                                            />
+                                        ))}
                                     </tbody>
                                 </Table>
                             </>
-                    </>)
-                        : (
-                            (selectedYear.supervisor.value && supervisors && supervisors.length === 0) &&
-                            <MessageBox>Aucun encadrant inscrit pour cette année</MessageBox>
-                        )
-                  }
-              </Tab>
-              <Tab
-                  eventKey="Archives des étudiants"
-                  title={
-                      <>
-                          Archives des étudiants{' '}
-
-                      </>
-                  }
-              >
-                  <Form.Group as={Row} controlId="yearSelect" className="justify-content-end mb-4">
-                      <Form.Label column sm={3} style={{width: "18%"}}>
-                          Sélectionner l'année:
-                      </Form.Label>
-                      <Col sm={2}>
-                          <CreatableSelect
-                              placeholder="choisir l'annee"
-                              options={years.map(year => (({value: year, label: year})))}
-                              isSearchable={false}
-                              value={selectedYear.student}
-                              onChange={(selectedOption) =>
-                                  setselectedYear({
-                                  ...selectedYear,
-                                  student: {
-                                      value: selectedOption.value,
-                                      label: selectedOption.value
-                                  }
-                                  })}
-                          />
-                      </Col>
-                  </Form.Group>
-                  {(selectedYear.student.value && students && students.length > 0) ? (
-                      <>
-                          <Row>
-                              <Col className="text-end">
-                                  <h6>Nombre d'étudiants: {students.length}</h6>
-                              </Col>
-                          </Row>
-                          <>
-                              <Form>
-                                  <InputGroup className="my-3">
-                                      <Form.Control
-                                          onChange={e =>
-                                              setSearchValues({
-                                                  ...searchValues,
-                                                  students:  e.target.value
-                                              })}
-                                          placeholder="Rechercher"
-                                      />
-                                  </InputGroup>
-                              </Form>
-                              <Table responsive>
-                                  <thead>
-                                  <tr>
-                                      <th>Nom</th>
-                                      <th>Prénom</th>
-                                      <th>Email</th>
-                                      <th>Actions</th>
-                                  </tr>
-                                  </thead>
-                                  <tbody>
-                                  {students
-                                      .filter((student) => {
-                                          return searchValues.students.toLowerCase() === ''
-                                              ? student
-                                              : student.lastName
-                                                  .toLowerCase()
-                                                .includes(searchValues.students.toLowerCase()) ||
-                                                student.firstName
-                                                .toLowerCase()
-                                                .includes(searchValues.students.toLowerCase()) ||
-                                                student.email
-                                                .toLowerCase()
-                                                .includes(searchValues.students.toLowerCase()) ||
-                                                student.pfe
-                                                .filter((p) => p.year === currentYear)
-                                                .length.toString() === searchValues.students;
-                                        })
-                                      .map((student) => (
-                                          <TableSection
-                                              key={student.userId}
-                                              user={student}
-                                          />
-                                      ))}
-                                  </tbody>
-                              </Table>
                         </>
-                    </>
-                      ) : ( (selectedYear.student.value && students && students.length === 0) &&
-                          <MessageBox>Aucun étudiant inscrit pour cette année</MessageBox>
-                      )}
-              </Tab>
-          </Tabs>
-      </div>
-  );
+                    ) : ( (selectedYear.student.value && students && students.length === 0) &&
+                        <MessageBox>Aucun étudiant inscrit pour cette année</MessageBox>
+                    )}
+                </Tab>
+            </Tabs>
+        </div>
+    );
 }

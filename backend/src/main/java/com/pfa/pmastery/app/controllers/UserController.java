@@ -176,5 +176,23 @@ public class UserController {
         return new ResponseEntity<>(studentsWithPfe, HttpStatus.OK);
     }
 
+    @GetMapping(path = "/usersWithCurrentPfeAndApproved")
+    public ResponseEntity<List<UserResponse>> supervisorWithCurrentPfeAndApproved(@RequestParam("year") int year,
+                                                                                  @RequestParam("affiliationCode") String affiliationCode,
+                                                                                  @RequestParam("role") String role){
+
+        List<UserResponse> userResponses = new ArrayList<>();
+        List<UserDto> supervisorlist = userService.userWithCurrentPfeAndApproved(role,affiliationCode ,year);
+
+
+        for (UserDto userDto : supervisorlist) {
+            ModelMapper modelMapper = new ModelMapper();
+            UserResponse user = modelMapper.map(userDto, UserResponse.class);
+            userResponses.add(user);
+        }
+
+        return new ResponseEntity<List<UserResponse>>(userResponses, HttpStatus.OK);
+    }
+
 
 }

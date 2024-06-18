@@ -475,4 +475,26 @@ public void deleteUser(String userId, String role) {
 
         return userDtoList;
     }
+
+    @Override
+    public List<UserDto> userWithCurrentPfeAndApproved(String role, String affiliationCode, int year) {
+        List<UserDto> userListDto = new ArrayList<>();
+        List<UserEntity> supervisorsList = userRepository.findUserWithApprovedPfe(role, affiliationCode, year);
+
+        for (UserEntity userEntity : supervisorsList) {
+            ModelMapper modelMapper = new ModelMapper();
+            UserDto userDto = modelMapper.map(userEntity, UserDto.class);
+
+            // Ensure PFE information is included
+            List<PfeDto> pfeDtoList = new ArrayList<>();
+            for (PfeEntity pfeEntity : userEntity.getPfe()) {
+                PfeDto pfeDto = modelMapper.map(pfeEntity, PfeDto.class);
+                pfeDtoList.add(pfeDto);
+            }
+            userDto.setPfe(pfeDtoList);
+
+            userListDto.add(userDto);
+        }
+        return userListDto;
+    }
 }

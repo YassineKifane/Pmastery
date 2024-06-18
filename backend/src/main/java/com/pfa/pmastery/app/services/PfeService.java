@@ -17,4 +17,6 @@ public interface PfeService {
  boolean hasPFE(String userId);
  boolean hasSupervisorEmail(String pfeId);
 
+ List<Integer> pfeYearsList(String affiliationCode);
+
 }

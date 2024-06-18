@@ -15,7 +15,7 @@ const reducer = (state, action) => {
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false,supervisors: action.payload.supervisors, students: action.payload.students };
+      return { ...state, loading: false,supervisors: action.payload};
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
     case 'DELETE_REQUEST':
@@ -39,7 +39,7 @@ export default function SupervisorsListScreen() {
   const { userInfo } = state;
   const currentYear = new Date().getFullYear();
   const [search, setSearch] = useState('');
-  const [{ loading, error, supervisors,students, loadingDelete, successDelete }, dispatch,] =
+  const [{ loading, error, supervisors, loadingDelete, successDelete }, dispatch,] =
       useReducer(reducer, {
         loading: true,
         error: '',
@@ -49,22 +49,29 @@ export default function SupervisorsListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(URL + '/user/allUsers', {
+        const { data } = await axios.get(URL + '/user/usersWithCurrentPfeAndApproved', {
+          headers: { Authorization: `${userInfo.token}` },
+          params: {
+            role : "SUPERVISOR",
+            affiliationCode: userInfo.affiliationCode,
+            year: currentYear,
+          },
+        });
+
+
+        const dataa = await axios.get(URL + '/pfe/pfeYears', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
-            isVerified: true,
           },
         });
+        console.log("dataaa  "+dataa.data)
+
+
+        console.log("data  "+data)
         dispatch({
           type: 'FETCH_SUCCESS',
-          payload: {
-            supervisors:data.filter(
-                user => user.role === 'SUPERVISOR' &&
-                    ((user.pfe.length > 0 && user.pfe.flatMap(p => p.year).includes(currentYear)))),
-            students:data.filter(
-                user => user.role === 'STUDENT' && user.pfe[0] && user.pfe[0].year===currentYear),
-          }
+          payload:data
         });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: err });
@@ -74,6 +81,7 @@ export default function SupervisorsListScreen() {
       dispatch({ type: 'DELETE_RESET' });
     } else {
       fetchData();
+      //console.log("data  " +data)
     }
   }, [userInfo, successDelete,currentYear]);
 
@@ -106,7 +114,6 @@ export default function SupervisorsListScreen() {
   };
 
 
-
   return (
       <div className="p-5">
         <Helmet>
@@ -124,7 +131,7 @@ export default function SupervisorsListScreen() {
         {loading ? (
             <LoadingBox />
         ) : error ? (
-            <MessageBox variant="danger">{error.message}</MessageBox>
+            <MessageBox>{error.message} Il n'y a pas d'encadrants disponibles</MessageBox>
         ) : (
             <>
               <Row>
@@ -176,7 +183,6 @@ export default function SupervisorsListScreen() {
                               <SupervisorItem
                                   key={supervisor.userId}
                                   supervisor={supervisor}
-                                  allstudents={students}
                                   selectedYearSupervisors={{value:currentYear,label:currentYear}}
                                   deleteHandler={()=>deleteHandler(supervisor)}
                               />

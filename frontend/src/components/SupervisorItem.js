@@ -9,9 +9,10 @@ import docxTemplate from '../assets/models/Attestation_pfe.docx';
 import PizZip from 'pizzip';
 import { saveAs } from 'file-saver';
 import Docxtemplater from "docxtemplater";
+import { URL } from "../constants/constants";
 
 
-export  default function SupervisorItem({allstudents,deleteHandler,supervisor,selectedYearSupervisors,years}) {
+export  default function SupervisorItem({deleteHandler,supervisor,selectedYearSupervisors}) {
     const { state } = useContext(Store);
     const { userInfo } = state;
     const currentYear = new Date().getFullYear();
@@ -21,7 +22,7 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
         label: null,
         value: null
     });
-    const handleAttestation = useAttestationDataHandler(supervisor, userInfo, selectedYearSupervisors, allstudents);
+    const handleAttestation = useAttestationDataHandler(supervisor, userInfo, selectedYearSupervisors);
     const [attestationData,setAttestationData]=useState(null);
 
 
@@ -237,6 +238,9 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
     };
 
 
+
+
+
     function handleDeleteBtn() {
         if(deleteHandler){
             deleteHandler(supervisor)
@@ -308,7 +312,8 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
                                                         </Button>
                                                         <PfeDialogDetails
                                                             visible={detailsVisible[pfe.pfeId] || false}
-                                                            pfeDetails={allstudents.filter(student => student.pfe[0].pfeId === pfe.pfeId)[0]}
+                                                            student={pfe.users.filter(user => user.role === "STUDENT")[0]}
+                                                            pfeDetails={pfe}
                                                             setVisible={setDetailsVisible}
                                                         />
                                                     </Col>
@@ -322,7 +327,7 @@ export  default function SupervisorItem({allstudents,deleteHandler,supervisor,se
                 </Dialog>
             </td>
             {
-            deleteHandler &&
+                deleteHandler &&
                 (
                     <td>
                         <Button
