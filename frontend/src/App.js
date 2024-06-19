@@ -111,11 +111,12 @@ function App() {
             connectStomp();
         }
         return () => {
-            if (stompClient && userInfo) {
+            if (stompClient) {
                 stompClient.disconnect();
             }
         };
-    }, [userInfo?.userId]);
+    }, [userInfo]);
+    
 
     useEffect(() => {
         if (numberOfNotifications === 1) {
@@ -127,6 +128,9 @@ function App() {
 
 
     const connectStomp = () => {
+        if (!userInfo) {
+            return;
+        }
         const socket = new SockJS(URL + '/ws');
         const client = Stomp.over(socket);
 

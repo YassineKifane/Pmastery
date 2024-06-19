@@ -40,6 +40,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                         "/soutnance/getAllSoutnances",
                         "/soutnance/getAllSoutnancesJuryToSupervisors/{userId}",
                         "/soutnance/hasSoutnance/**",
+                        "/soutnance/hasSoutnance/**",
+                        "/soutnance/exists/**",
                         "/pfe/{pfeId}",
                         "/pfe/user/{userId}",
                         "/pfe/hasPFE",

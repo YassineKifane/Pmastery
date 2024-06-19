@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity(name="users")
-
 public class UserEntity implements Serializable {
     @Id
     @GeneratedValue

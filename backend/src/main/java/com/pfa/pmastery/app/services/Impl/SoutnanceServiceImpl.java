@@ -339,10 +339,31 @@ public class SoutnanceServiceImpl implements SoutnanceService {
         return soutnanceResponse;
     }
 
-    public boolean userHasSoutnance(String userId) {
-        return soutnanceRepository.existsByUserEntityUserId(userId);
+    // public boolean userHasSoutnance(String userId) {
+    //     return soutnanceRepository.existsByUserEntityUserId(userId);
+    // }
+
+    @Override
+    public boolean existsByUserIdAndPublish(String userId, boolean publish) {
+        return soutnanceRepository.existsByUserEntityUserIdAndPublish(userId, publish);
     }
 
+    @Override
+    public boolean anySoutenanceExists() {
+        return soutnanceRepository.existsAny();
+    }
+    
+    @Override
+    public boolean hasPropositionDates(String userId) {
+        return soutnanceRepository.hasPropositionDates(userId);
+    }
 
+    @Override
+    public boolean hasAffectedDate(String userId) {
+        return soutnanceRepository.hasAffectedDate(userId);
+    }
 
+    public boolean isUserJuryMember(String fullName) {
+        return soutnanceRepository.existsByUserIdInJuryMembers(fullName);
+    }
 }

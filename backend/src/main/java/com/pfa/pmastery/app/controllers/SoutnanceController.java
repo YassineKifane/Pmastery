@@ -124,10 +124,42 @@ public class SoutnanceController {
         return new ResponseEntity<List<SoutnanceResponse>>(soutnances, HttpStatus.OK);
     }
 
-    @GetMapping("/hasSoutnance/{userId}")
-    public ResponseEntity<Boolean> hasSoutnance(@PathVariable String userId) {
-        boolean hasSoutnance = soutnanceService.userHasSoutnance(userId);
-        return ResponseEntity.ok().body(hasSoutnance);
+    // @GetMapping("/hasSoutnance/{userId}")
+    // public ResponseEntity<Boolean> hasSoutnance(@PathVariable String userId) {
+    //     boolean hasSoutnance = soutnanceService.userHasSoutnance(userId);
+    //     return ResponseEntity.ok().body(hasSoutnance);
+    // }
+
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> anySoutenanceExists() {
+        boolean exists = soutnanceService.anySoutenanceExists();
+        return ResponseEntity.ok().body(exists);
+    }
+
+    @GetMapping("/exists/{userId}/{publish}")
+    public ResponseEntity<Boolean> existsSoutnance(
+            @PathVariable String userId,
+            @PathVariable boolean publish) {
+        boolean exists = soutnanceService.existsByUserIdAndPublish(userId, publish);
+        System.out.println("userId: " + userId + ", publish: " + publish);
+        return ResponseEntity.ok().body(exists);
+    }    
+
+    @GetMapping("/exists/{userId}/hasPropositionDates")
+    public ResponseEntity<Boolean> hasPropositionDates(@PathVariable String userId) {
+        return ResponseEntity.ok(soutnanceService.hasPropositionDates(userId));
+    }
+
+    @GetMapping("/exists/{userId}/hasAffectedDate")
+    public ResponseEntity<Boolean> hasAffectedDate(@PathVariable String userId) {
+        boolean hasDate = soutnanceService.hasAffectedDate(userId);
+        return ResponseEntity.ok().body(hasDate);
+    }
+
+    @GetMapping("/exists/{fullName}/isUserJuryMember")
+    public ResponseEntity<Boolean> isUserJuryMember(@PathVariable String fullName) {
+        boolean inJuryMember = soutnanceService.isUserJuryMember(fullName);
+        return ResponseEntity.ok().body(inJuryMember);
     }
 
 }
