@@ -19,6 +19,11 @@ public interface SoutnanceService {
     List<SoutnanceResponse> getAllSoutnancesToSupervisors(String userId,int year);
 
     List<SoutnanceResponse> getAllSoutnancesJuryToSupervisors(String userId, int year);
+    boolean existsByUserIdAndPublish(String userId, boolean publish);
+   // boolean userHasSoutnance(String userId);
+    boolean hasPropositionDates(String userId);
+    boolean anySoutenanceExists();
+    boolean hasAffectedDate(String userId);
+    boolean isUserJuryMember(String fullName);
 
-    boolean userHasSoutnance(String userId);
 }

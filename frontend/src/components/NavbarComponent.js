@@ -1,13 +1,12 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import {Navbar, Nav, NavDropdown, Container, Badge, NavLink} from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Container, Badge } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Store } from '../Store';
 import { URL } from "../constants/constants";
 import { Link, useLocation } from 'react-router-dom';
 import PMasteryLogo from '../assets/logo/PMasteryv2.png';
 import axios from 'axios';
-
 
 export default function NavbarComponent(props) {
     const location = useLocation();
@@ -16,56 +15,109 @@ export default function NavbarComponent(props) {
     const { numberOfDemands, numberOfNotifications , markNotificationsAsRead } = props;
     const [hasPFE, setHasPFE] = useState(false);
     const [hasSoutnance, setHasSoutnance] = useState(false);
+    const [existSoutnance, setExistSoutnance] = useState(false);
+    const [existSoutnancePropDates, setExistSoutnancePropDates] = useState(false);
+    const [existSoutnanceAndPublish, setExistSoutnanceAndPublish] = useState(false);
+    const [affectedDate, setAffectedDate] = useState(false);
+    const [isUserJuryMember, setIsUserJuryMember] = useState(false);
     const [hasSupervisor, setHasSupervisor] = useState(false);
 
 
     useEffect(() => {
+        console.log("existSoutnancePropDates changed:", existSoutnancePropDates);
         const fetchHasPfeData = async () => {
             try {
-                if (userInfo.pfe && userInfo.pfe.length > 0) {
-                    const hasPFEResponse = await axios.get(`${URL}/pfe/hasPFE`, {
-                        params: { userId: userInfo.userId },
-                    });
-                    const hasPFEValue = hasPFEResponse.data;
-                    setHasPFE(hasPFEValue);
-                    console.log(userInfo.pfe[0].pfeId); // Assurez-vous que userInfo.pfe[0] est défini ici
-                    console.log("has pfe: " + hasPFEValue);
+                const hasPFEResponse = await axios.get(`${URL}/pfe/hasPFE`, {
+                    params: { userId: userInfo.userId },
+                    headers: { Authorization: `${userInfo.token}` },
+                });
+                const hasPFEValue = hasPFEResponse.data;
+                setHasPFE(hasPFEValue);
+                console.log(userInfo.pfe[0].pfeId)
+                console.log("has pfe: "+hasPFEValue);
 
-                    if (hasPFEValue) {
-                        const hasSupervisorResponse = await axios.get(`${URL}/pfe/hasSupervisorEmail`, {
-                            params: { pfeId: userInfo.pfe[0].pfeId },
-                            headers: { Authorization: `${userInfo.token}` },
-                        });
-                        const hasSupervisorValue = hasSupervisorResponse.data;
-                        setHasSupervisor(hasSupervisorValue);
-                    }
-                } else {
-                    // Gérer le cas où userInfo.pfe n'est pas défini ou est vide
-                    console.log("Aucune information sur le PFE trouvée pour cet utilisateur.");
+                if (hasPFEValue) {
+                    const hasSupervisorResponse = await axios.get(`${URL}/pfe/hasSupervisorEmail`, {
+                        params: { pfeId: userInfo.pfe[0].pfeId },
+                        headers: { Authorization: `${userInfo.token}` },
+                    });
+                    const hasSupervisorValue = hasSupervisorResponse.data;
+                    setHasSupervisor(hasSupervisorValue);
                 }
+
             } catch (err) {
                 console.error(err);
             }
         };
 
-        const fetchHasSoutnanceData = async () => {
+        const fetchExistSoutnanceAndPublishData = async () => {
             try {
-                const response = await axios.get(`${URL}/soutnance/hasSoutnance/${userInfo.userId}`);
-                setHasSoutnance(response.data);
-                console.log(response.data);
+                const response = await axios.get(`${URL}/soutnance/exists/${userInfo.userId}/true`, {
+                    headers: { Authorization: userInfo.token },
+                });
+                setExistSoutnanceAndPublish(response.data);                
+                console.log("exist soutnance and publish: " + response.data);
+            } catch (error) {
+                console.error('Une erreur s\'est produite lors de la récupération des données:', error);
+            }
+        };  
+        
+        const fetchExistSoutnanceAndPropDatesData = async () => {
+            try {
+                const response = await axios.get(`${URL}/soutnance/exists/${userInfo.userId}/hasPropositionDates`, {
+                    headers: { Authorization: userInfo.token },
+                });
+                setExistSoutnancePropDates(response.data);                
+                console.log("exist soutnance and proposition dates : " + response.data);
+            } catch (error) {
+                console.error('Une erreur s\'est produite lors de la récupération des données:', error);
+            }
+        };
+          
+        const fetchExistSoutnanceAffectedDateData = async () => {
+            try {
+                const response = await axios.get(`${URL}/soutnance/exists/${userInfo.userId}/hasAffectedDate`, {
+                    headers: { Authorization: userInfo.token },
+                });
+                setAffectedDate(response.data);                
+                console.log("exist soutnance and affected : " + response.data);
             } catch (error) {
                 console.error('Une erreur s\'est produite lors de la récupération des données:', error);
             }
         };
 
-        // Vérification de userInfo pour éviter d'appeler fetchHasPfeData et fetchHasSoutnanceData si userInfo est null ou undefined
-        if (userInfo) {
-            fetchHasPfeData();
-            fetchHasSoutnanceData();
-        }
+        const fetchIsUserJuryMember = async () => {
+            try {
+                const response = await axios.get(`${URL}/soutnance/exists/${userInfo.firstName + ' ' + userInfo.lastName}/isUserJuryMember`, {
+                    headers: { Authorization: userInfo.token },
+                });
+                setIsUserJuryMember(response.data);                
+                console.log("user in jury member : " + response.data);
+            } catch (error) {
+                console.error('Une erreur s\'est produite lors de la récupération des données:', error);
+            }
+        };
 
-    }, [userInfo]);
 
+        const fetchExistSoutnanceData = async () => {
+            try {
+                const response = await axios.get(`${URL}/soutnance/exists`, {
+                    headers: { Authorization: userInfo.token },
+                });
+                setExistSoutnance(response.data);
+                console.log("exist soutnance: " + response.data);
+            } catch (error) {
+                console.error('Une erreur s\'est produite lors de la récupération des données:', error);
+            }
+        };     
+        fetchHasPfeData();
+        fetchExistSoutnanceAndPropDatesData();
+        fetchExistSoutnanceAndPublishData();
+        fetchExistSoutnanceData();
+        fetchExistSoutnanceAffectedDateData();
+        fetchIsUserJuryMember();
+
+    }, [userInfo,existSoutnancePropDates]);
 
 
     const signoutHandler = () => {
@@ -240,48 +292,62 @@ export default function NavbarComponent(props) {
                                         </>
                                     )}
                                     {userInfo.role === 'ADMIN' ? (
-                                        <>
-                                            <NavDropdown title="Soutenances" id="basic-nav-dropdown">
-                                                <LinkContainer to="/lancementsoutenance">
-                                                    <NavDropdown.Item>Lancement</NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/dateaffectation">
-                                                    <NavDropdown.Item>
-                                                        Affectation des dates
-                                                    </NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/soutenances">
-                                                    <NavDropdown.Item>Soutenances</NavDropdown.Item>
-                                                </LinkContainer>
-                                                {hasSoutnance && (
-                                                    <LinkContainer to="/messoutenances">
-                                                        <NavDropdown.Item>Mes soutenances</NavDropdown.Item>
-                                                    </LinkContainer>
-                                                )}
-
-                                            </NavDropdown>
-                                        </>
+                                         <>
+                                         {existSoutnance ? (
+                                             <NavDropdown title="Soutenances" id="basic-nav-dropdown">
+                                                 <LinkContainer to="/lancementsoutenance">
+                                                     <NavDropdown.Item>Lancement</NavDropdown.Item>
+                                                 </LinkContainer>
+                                                 <LinkContainer to="/dateaffectation">
+                                                     <NavDropdown.Item>Affectation des dates</NavDropdown.Item>
+                                                 </LinkContainer>
+                                                 <LinkContainer to="/soutenances">
+                                                     <NavDropdown.Item>Soutenances</NavDropdown.Item>
+                                                 </LinkContainer>
+                                                 {isUserJuryMember && (
+                                                     <LinkContainer to="/messoutenances">
+                                                         <NavDropdown.Item>Mes soutenances</NavDropdown.Item>
+                                                     </LinkContainer>
+                                                 )}
+                                             </NavDropdown>
+                                         ) : (
+                                             <NavDropdown title="Soutenances" id="basic-nav-dropdown">
+                                                 <LinkContainer to="/lancementsoutenance">
+                                                     <NavDropdown.Item>Lancement</NavDropdown.Item>
+                                                 </LinkContainer>
+                                             </NavDropdown>
+                                         )}
+                                     </>
                                     ) : (
                                         <>
-                                            {userInfo.role === 'STUDENT' ? (
+                                        {userInfo.role === 'STUDENT' ? (
+                                            (!existSoutnancePropDates && !existSoutnanceAndPublish) || (existSoutnancePropDates && existSoutnanceAndPublish) ? (
                                                 <NavDropdown title="Soutenance" id="basic-nav-dropdown">
-                                                    <LinkContainer to="/studentsoutenancechoice">
-                                                        <NavDropdown.Item>Choix des dates</NavDropdown.Item>
-                                                    </LinkContainer>
-                                                    {hasSoutnance && (
+                                                    {!affectedDate && (
+                                                        <LinkContainer to="/studentsoutenancechoice">
+                                                            <NavDropdown.Item>Choix des dates</NavDropdown.Item>
+                                                        </LinkContainer>
+                                                    )}
+                                                    {affectedDate && (
                                                         <LinkContainer to="/masoutenance">
                                                             <NavDropdown.Item>Ma soutenance</NavDropdown.Item>
                                                         </LinkContainer>
                                                     )}
                                                 </NavDropdown>
                                             ) : (
-                                                    <Nav.Item className="ms-3 me-3">
-                                                        <LinkContainer to="/messoutenances">
-                                                            <Nav.Link>Mes Soutenances</Nav.Link>
-                                                        </LinkContainer>
-                                                    </Nav.Item>
-                                            )}
-                                        </>
+                                                <></>
+                                            )
+                                        ) : (
+                                            isUserJuryMember && (
+                                                <Nav.Item className="ms-3 me-3">
+                                                    <LinkContainer to="/messoutenances">
+                                                        <Nav.Link>Mes Soutenances</Nav.Link>
+                                                    </LinkContainer>
+                                                </Nav.Item>
+                                            )
+                                        )}
+                                    </>
+                                                                                               
                                     )}
                                     {userInfo.role !== 'STUDENT' && (
                                         <Nav.Item className="ms-3 me-3">
