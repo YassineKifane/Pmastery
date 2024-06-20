@@ -367,11 +367,12 @@ public void deleteUser(String userId, String role) {
         List<PfeEntity> pfeEntities = user.getPfe();
         for (PfeEntity pfe : pfeEntities) {
             pfe.getUsers().remove(user); // Supprimer l'utilisateur de la liste des étudiants associés au PFE
-            if (pfe.getUsers().isEmpty()) {
-                pfeRepository.delete(pfe); // Supprimer le PFE s'il n'a plus d'étudiants associés
-            } else {
-                pfeRepository.save(pfe); // Sauvegarder les entités PFE mises à jour
-            }
+            pfeRepository.delete(pfe);
+//            if (pfe.getUsers().isEmpty()) {
+//                pfeRepository.delete(pfe); // Supprimer le PFE s'il n'a plus d'étudiants associés
+//            } else {
+//                pfeRepository.save(pfe); // Sauvegarder les entités PFE mises à jour
+//            }
         }
     }
 
@@ -380,12 +381,12 @@ public void deleteUser(String userId, String role) {
         List<PfeEntity> pfeEntities = user.getPfe();
         for (PfeEntity pfe : pfeEntities) {
             pfe.getUsers().remove(user);
-            pfeRepository.delete(pfe);// Supprimer l'utilisateur de la liste des étudiants associés au PFE
-            if (pfe.getUsers().isEmpty()) {
-                pfeRepository.delete(pfe); // Supprimer le PFE s'il n'a plus d'étudiants associés
-            } else {
-                pfeRepository.save(pfe); // Sauvegarder les entités PFE mises à jour
-            }
+            // Supprimer l'utilisateur de la liste des étudiants associés au PFE
+//            if (pfe.getUsers().isEmpty()) {
+//                pfeRepository.delete(pfe); // Supprimer le PFE s'il n'a plus d'étudiants associés
+//            } else {
+//                pfeRepository.save(pfe); // Sauvegarder les entités PFE mises à jour
+//            }
         }
     }
 
@@ -393,8 +394,6 @@ public void deleteUser(String userId, String role) {
     for (ConfirmationToken token : user.getConfirmationTokens()) {
         confirmationTokenRepository.delete(token);
     }
-
-
 
     // Supprimer toutes les associations
     user.getPfe().clear();

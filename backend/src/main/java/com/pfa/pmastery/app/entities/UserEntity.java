@@ -54,6 +54,7 @@ public class UserEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "pfe_id"))
     @JsonIgnore
     private List<PfeEntity> pfe;
+
 //@ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
 //private List<PfeEntity> pfe;
 
