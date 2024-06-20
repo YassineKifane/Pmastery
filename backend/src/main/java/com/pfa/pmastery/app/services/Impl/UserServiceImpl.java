@@ -331,78 +331,47 @@ public class UserServiceImpl implements UserService {
     }
 
 
-//    @Override
-//    @Transactional
-//    public void deleteUser(String userId) {
-//        UserEntity user = userRepository.findByUserId(userId);
-//
-//        // Remove associations from PfeEntity
-//        for (PfeEntity pfe : user.getPfe()) {
-//            pfe.getUsers().remove(user);
-//            pfeRepository.save(pfe);
-//        }
-//
-//        // Remove associations from ConfirmationToken
-//        for (ConfirmationToken token : user.getConfirmationTokens()) {
-//            confirmationTokenRepository.delete(token);
-//        }
-//
-//        user.getPfe().clear();
-//        user.getSentMessages().clear();
-//        user.getReceivedMessages().clear();
-//
-//        userRepository.delete(user);
-//    }
-@Override
-@Transactional
-public void deleteUser(String userId, String role) {
-    UserEntity user = userRepository.findByUserId(userId);
 
-    if (user == null) {
-        throw new RuntimeException("Utilisateur introuvable avec l'ID: " + userId);
-    }
 
-    // Supprimer les associations avec les PFE (si l'utilisateur est un étudiant)
-    if ("STUDENT".equals(role)) {
-        List<PfeEntity> pfeEntities = user.getPfe();
-        for (PfeEntity pfe : pfeEntities) {
-            pfe.getUsers().remove(user); // Supprimer l'utilisateur de la liste des étudiants associés au PFE
-            pfeRepository.delete(pfe);
-//            if (pfe.getUsers().isEmpty()) {
-//                pfeRepository.delete(pfe); // Supprimer le PFE s'il n'a plus d'étudiants associés
-//            } else {
-//                pfeRepository.save(pfe); // Sauvegarder les entités PFE mises à jour
-//            }
+    @Override
+    @Transactional
+    public void deleteUser(String userId, String role) {
+        UserEntity user = userRepository.findByUserId(userId);
+
+        if (user == null) {
+            throw new RuntimeException("Utilisateur introuvable avec l'ID: " + userId);
         }
-    }
 
-
-    if ("SUPERVISOR".equals(role)) {
+        // Récupérer les associations avec les PFE
         List<PfeEntity> pfeEntities = user.getPfe();
+
+        // Supprimer les tokens de confirmation associés à l'utilisateur
+        for (ConfirmationToken token : user.getConfirmationTokens()) {
+            confirmationTokenRepository.delete(token);
+        }
+
+        // Supprimer toutes les associations restantes de l'utilisateur
+        user.getSentMessages().clear();
+        user.getReceivedMessages().clear();
+
+        // Gérer les PFE associés
         for (PfeEntity pfe : pfeEntities) {
+            // Supprimer l'utilisateur de la liste des utilisateurs associés au PFE
             pfe.getUsers().remove(user);
-            // Supprimer l'utilisateur de la liste des étudiants associés au PFE
-//            if (pfe.getUsers().isEmpty()) {
-//                pfeRepository.delete(pfe); // Supprimer le PFE s'il n'a plus d'étudiants associés
-//            } else {
-//                pfeRepository.save(pfe); // Sauvegarder les entités PFE mises à jour
-//            }
+
+            // Si l'utilisateur est un "STUDENT", supprimer le PFE
+            if ("STUDENT".equals(user.getRole())) {
+                pfeRepository.delete(pfe);
+            } else if ("SUPERVISOR".equals(user.getRole())) {
+                // Si l'utilisateur est un "SUPERVISOR", sauvegarder le PFE mis à jour
+                pfeRepository.save(pfe);
+            }
         }
+
+        // Enfin, supprimer l'entité utilisateur elle-même
+        userRepository.delete(user);
     }
 
-    // Supprimer les tokens de confirmation associés à l'utilisateur
-    for (ConfirmationToken token : user.getConfirmationTokens()) {
-        confirmationTokenRepository.delete(token);
-    }
-
-    // Supprimer toutes les associations
-    user.getPfe().clear();
-    user.getSentMessages().clear();
-    user.getReceivedMessages().clear();
-
-    // Enfin, supprimer l'entité utilisateur elle-même
-    userRepository.delete(user);
-}
 
 
     @Override

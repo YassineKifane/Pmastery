@@ -89,29 +89,19 @@ export default function SupervisorsListScreen() {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimer ce compte?`)) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(URL + `/user/${supervisor.userId}`, {
+        await axios.delete(`${URL}/user/${supervisor.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
           params: { role: 'SUPERVISOR' },
         });
         toast.success('Encadrant supprimé avec succès');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
-        console.error('Error deleting supervisor:', err);
-
-        if (err.response && err.response.data && err.response.data.message) {
-          if (err.response.data.message.includes('constraint')) {
-            toast.error('Impossible de supprimer l\'encadrant. Il se peut qu\'il soit référencé par d\'autres enregistrements.');
-          } else {
-            toast.error(getError(err));
-          }
-        } else {
-          toast.error(getError(err));
-        }
-
+        toast.error(getError(err));
         dispatch({ type: 'DELETE_FAIL' });
       }
     }
   };
+
 
 
   return (

@@ -74,9 +74,9 @@ export default function ListScreen() {
         if (window.confirm(`Êtes-vous sûr de vouloir supprimer ce compte?`)) {
             try {
                 dispatch({ type: 'DELETE_REQUEST' });
-                await axios.delete(URL + `/user/${student.userId}`, {
+                await axios.delete(`${URL}/user/${student.userId}`, {
                     headers: { Authorization: `${userInfo.token}` },
-                    params: { role: 'STUDENT' }
+                    params: { role: 'STUDENT' },
                 });
                 toast.success('Étudiant supprimé avec succès');
                 dispatch({ type: 'DELETE_SUCCESS' });
@@ -86,6 +86,7 @@ export default function ListScreen() {
             }
         }
     };
+
 
     return (
         <div className="p-5">
