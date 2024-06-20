@@ -320,7 +320,7 @@ export default function NavbarComponent(props) {
                                      </>
                                     ) : (
                                         <>
-                                        {userInfo.role === 'STUDENT' ? (
+                                        {userInfo.role === 'STUDENT' && existSoutnance ? (
                                             (!existSoutnancePropDates && !existSoutnanceAndPublish) || (existSoutnancePropDates && existSoutnanceAndPublish) ? (
                                                 <NavDropdown title="Soutenance" id="basic-nav-dropdown">
                                                     {!affectedDate && (
@@ -349,7 +349,7 @@ export default function NavbarComponent(props) {
                                     </>
                                                                                                
                                     )}
-                                    {userInfo.role !== 'STUDENT' && (
+                                    {userInfo.role === 'ADMIN' && (
                                         <Nav.Item className="ms-3 me-3">
                                             <LinkContainer to="/archive">
                                                 <Nav.Link>Archive</Nav.Link>
