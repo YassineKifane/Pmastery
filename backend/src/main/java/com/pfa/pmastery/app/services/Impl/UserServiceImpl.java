@@ -369,7 +369,7 @@ public class UserServiceImpl implements UserService {
                     }
                 }
             }
-   }
+        }
         else if ("SUPERVISOR".equals(role)) {
             // Si l'utilisateur est un superviseur, supprimer uniquement l'entité utilisateur
             for (PfeEntity pfe : pfeEntities) {
@@ -381,7 +381,6 @@ public class UserServiceImpl implements UserService {
         // Enfin, supprimer l'entité utilisateur elle-même
         userRepository.delete(user);
     }
-
 
 
 
