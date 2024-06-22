@@ -374,6 +374,7 @@ public class UserServiceImpl implements UserService {
             // Si l'utilisateur est un superviseur, supprimer uniquement l'entité utilisateur
             for (PfeEntity pfe : pfeEntities) {
                 pfe.getUsers().remove(user);
+                pfe.setApproved(false);
                 pfeRepository.save(pfe);
             }
         }
