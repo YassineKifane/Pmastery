@@ -32,14 +32,14 @@ public class ChatController {
 
         ChatMessageDto savedMsg = chatMessageService.save(chatMessageDto);
 
-        messagingTemplate.convertAndSendToUser(
-                chatMessageDto.getRecipient().getUserId(), "/queue/messages",
-                new NotificationEntity(
-                        chatMessageDto.getSender().getLastName() + " " + chatMessageDto.getSender().getFirstName(),
-                        chatMessageDto.getRecipient().getLastName() + " " + chatMessageDto.getRecipient().getFirstName(),
-                        chatMessageDto.getContent()
-                )
-        );
+        // messagingTemplate.convertAndSendToUser(
+        //         chatMessageDto.getRecipient().getUserId(), "/queue/messages",
+        //         new NotificationEntity(
+        //                 chatMessageDto.getSender().getLastName() + " " + chatMessageDto.getSender().getFirstName(),
+        //                 chatMessageDto.getRecipient().getLastName() + " " + chatMessageDto.getRecipient().getFirstName(),
+        //                 chatMessageDto.getContent()
+        //         )
+        // );
 
     }
 

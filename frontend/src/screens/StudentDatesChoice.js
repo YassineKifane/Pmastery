@@ -10,7 +10,8 @@ import { Calendar } from 'primereact/calendar';
 import { toast } from 'react-toastify';
 import { getError } from '../utils';
 import { URL } from "../constants/constants";
-import { useNavigate } from 'react-router-dom'; 
+import { useAppContext } from '../context/context';
+import { useNavigate } from 'react-router-dom';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -43,9 +44,15 @@ const reducer = (state, action) => {
   }
 };
 export default function StudentDatesChoice() {
+  const {
+    existSoutenancePropDates,
+    setExistSoutenancePropDates,
+    fetchExistSoutnanceAndPropDatesData
+} = useAppContext();
+
+  const navigate = useNavigate();
   const { state } = useContext(Store);
   const { userInfo } = state;
-  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   const [minDate, setMinDate] = useState('');
   const [maxDate, setMaxDate] = useState('');
@@ -171,6 +178,8 @@ export default function StudentDatesChoice() {
   }
 
   const submitHandler = async () => {
+
+
     if (selectedDates.some((date) => date === '')) {
       toast.error('Vous devez remplir les trois choix');
       return;
@@ -194,10 +203,8 @@ export default function StudentDatesChoice() {
       );
       dispatch({ type: 'SEND_CHOICE_SUCCESS' });
       toast.success('Votre choix a été envoyé');
-      //navigate('/home');
-      setTimeout(() => {
-        window.location.href = '/home';
-      }, 2000);      
+      fetchExistSoutnanceAndPropDatesData(userInfo);
+      navigate("/home"); 
       
     } catch (err) {
       dispatch({ type: 'SEND_CHOICE_FAIL' });

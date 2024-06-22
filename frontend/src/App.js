@@ -36,6 +36,7 @@ import StudentDatesChoice from './screens/StudentDatesChoice';
 import DateAssignmentScreen from './screens/DateAssignmentScreen';
 import MaSoutenanceStudentScreen from './screens/MaSoutenanceStudentScreen';
 import MesSoutenancesScreen from './screens/MesSoutenancesScreen';
+import { AppProvider } from './context/context';
 
 import ChatScreen from './screens/ChatScreen';
 import SockJS from "sockjs-client";
