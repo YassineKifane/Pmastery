@@ -172,6 +172,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la suppression de l'utilisateur: " + e.getMessage());
         }
     }
+
+
     @GetMapping("/studentsWithPfe")
     public ResponseEntity<List<UserDto>> getStudentsWithPfe(@RequestParam String affiliationCode) {
         List<UserDto> studentsWithPfe = userService.getStudentWithPfe(affiliationCode);

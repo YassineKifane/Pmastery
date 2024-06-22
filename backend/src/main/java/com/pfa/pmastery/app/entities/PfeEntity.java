@@ -44,7 +44,7 @@ public class PfeEntity implements Serializable {
         year = java.time.LocalDate.now().getYear();
     }
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "pfe_users",
             joinColumns = @JoinColumn(name = "pfe_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))

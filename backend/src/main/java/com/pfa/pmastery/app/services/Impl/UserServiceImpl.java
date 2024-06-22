@@ -336,14 +336,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(String userId, String role) {
+
         UserEntity user = userRepository.findByUserId(userId);
 
         if (user == null) {
             throw new RuntimeException("Utilisateur introuvable avec l'ID: " + userId);
         }
-
-        // Récupérer les associations avec les PFE
-        List<PfeEntity> pfeEntities = user.getPfe();
 
         // Supprimer les tokens de confirmation associés à l'utilisateur
         for (ConfirmationToken token : user.getConfirmationTokens()) {
@@ -354,16 +352,28 @@ public class UserServiceImpl implements UserService {
         user.getSentMessages().clear();
         user.getReceivedMessages().clear();
 
-        // Gérer les PFE associés
-        for (PfeEntity pfe : pfeEntities) {
-            // Supprimer l'utilisateur de la liste des utilisateurs associés au PFE
-            pfe.getUsers().remove(user);
+        // Récupérer les PFEs associés à l'utilisateur
+        List<PfeEntity> pfeEntities = user.getPfe();
 
-            // Si l'utilisateur est un "STUDENT", supprimer le PFE
-            if ("STUDENT".equals(user.getRole())) {
+        // Si l'utilisateur est un étudiant, supprimer l'utilisateur et son PFE
+        if ("STUDENT".equals(role)) {
+            for (PfeEntity pfe : pfeEntities) {
+                // Supprimer le PFE
                 pfeRepository.delete(pfe);
-            } else if ("SUPERVISOR".equals(user.getRole())) {
-                // Si l'utilisateur est un "SUPERVISOR", sauvegarder le PFE mis à jour
+
+                // Retirer le PFE de la liste des PFEs encadrés des superviseurs
+                for (UserEntity supervisor : pfe.getUsers()) {
+                    if ("SUPERVISOR".equals(supervisor.getRole())) {
+                        supervisor.getPfe().remove(pfe);
+                        userRepository.save(supervisor); // Sauvegarder les modifications au superviseur
+                    }
+                }
+            }
+   }
+        else if ("SUPERVISOR".equals(role)) {
+            // Si l'utilisateur est un superviseur, supprimer uniquement l'entité utilisateur
+            for (PfeEntity pfe : pfeEntities) {
+                pfe.getUsers().remove(user);
                 pfeRepository.save(pfe);
             }
         }
@@ -371,6 +381,8 @@ public class UserServiceImpl implements UserService {
         // Enfin, supprimer l'entité utilisateur elle-même
         userRepository.delete(user);
     }
+
+
 
 
 

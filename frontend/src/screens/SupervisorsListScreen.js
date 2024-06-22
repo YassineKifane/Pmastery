@@ -89,18 +89,26 @@ export default function SupervisorsListScreen() {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimer ce compte?`)) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
+
+        // Assurez-vous que l'URL et les headers sont correctement définis
         await axios.delete(`${URL}/user/${supervisor.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
           params: { role: 'SUPERVISOR' },
         });
+
+        // Afficher un toast de succès après la suppression réussie
         toast.success('Encadrant supprimé avec succès');
+
+        // Dispatch l'action DELETE_SUCCESS pour réinitialiser l'état
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
+        // En cas d'erreur, afficher un toast d'erreur avec les détails de l'erreur
         toast.error(getError(err));
         dispatch({ type: 'DELETE_FAIL' });
       }
     }
   };
+
 
 
 
