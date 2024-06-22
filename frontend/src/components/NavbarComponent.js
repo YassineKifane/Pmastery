@@ -7,117 +7,71 @@ import { URL } from "../constants/constants";
 import { Link, useLocation } from 'react-router-dom';
 import PMasteryLogo from '../assets/logo/PMasteryv2.png';
 import axios from 'axios';
+import { useAppContext } from '../context/context';
+
 
 export default function NavbarComponent(props) {
+    const { 
+        existSoutenance,
+        existSoutnancePropDates, 
+        isUserJuryMember,
+        fetchExistSoutenanceData,
+        fetchExistSoutnanceAndPropDatesData,
+        fetchIsUserJuryMember
+     } = useAppContext();
+
+
     const location = useLocation();
     const { state, dispatch: ctxDispatch } = useContext(Store);
     const { userInfo } = state;
     const { numberOfDemands, numberOfNotifications , markNotificationsAsRead } = props;
     const [hasPFE, setHasPFE] = useState(false);
-    const [hasSoutnance, setHasSoutnance] = useState(false);
-    const [existSoutnance, setExistSoutnance] = useState(false);
-    const [existSoutnancePropDates, setExistSoutnancePropDates] = useState(false);
+    const [hasSupervisor, setHasSupervisor] = useState(false);
     const [existSoutnanceAndPublish, setExistSoutnanceAndPublish] = useState(false);
     const [affectedDate, setAffectedDate] = useState(false);
-    const [isUserJuryMember, setIsUserJuryMember] = useState(false);
-    const [hasSupervisor, setHasSupervisor] = useState(false);
-
 
     useEffect(() => {
-        console.log("existSoutnancePropDates changed:", existSoutnancePropDates);
-        const fetchHasPfeData = async () => {
+        const fetchData = async () => {
             try {
-                const hasPFEResponse = await axios.get(`${URL}/pfe/hasPFE`, {
-                    params: { userId: userInfo.userId },
-                    headers: { Authorization: `${userInfo.token}` },
-                });
+                const [
+                    hasPFEResponse, 
+                    existSoutnanceAndPublishResponse, 
+                    existSoutnanceAffectedDateResponse,  
+                ] = await Promise.all([
+                    axios.get(`${URL}/pfe/hasPFE`, { params: { userId: userInfo.userId }, headers: { Authorization: `${userInfo.token}` } }),
+                    axios.get(`${URL}/soutnance/exists/${userInfo.userId}/true`, { headers: { Authorization: userInfo.token } }),
+                    axios.get(`${URL}/soutnance/exists/${userInfo.userId}/hasAffectedDate`, { headers: { Authorization: userInfo.token } }),
+                ]);
+
                 const hasPFEValue = hasPFEResponse.data;
                 setHasPFE(hasPFEValue);
-                console.log(userInfo.pfe[0].pfeId)
-                console.log("has pfe: "+hasPFEValue);
 
                 if (hasPFEValue) {
                     const hasSupervisorResponse = await axios.get(`${URL}/pfe/hasSupervisorEmail`, {
                         params: { pfeId: userInfo.pfe[0].pfeId },
                         headers: { Authorization: `${userInfo.token}` },
                     });
-                    const hasSupervisorValue = hasSupervisorResponse.data;
-                    setHasSupervisor(hasSupervisorValue);
+                    setHasSupervisor(hasSupervisorResponse.data);
                 }
 
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        const fetchExistSoutnanceAndPublishData = async () => {
-            try {
-                const response = await axios.get(`${URL}/soutnance/exists/${userInfo.userId}/true`, {
-                    headers: { Authorization: userInfo.token },
-                });
-                setExistSoutnanceAndPublish(response.data);                
-                console.log("exist soutnance and publish: " + response.data);
+                setExistSoutnanceAndPublish(existSoutnanceAndPublishResponse.data);
+                setAffectedDate(existSoutnanceAffectedDateResponse.data);
+                
             } catch (error) {
                 console.error('Une erreur s\'est produite lors de la récupération des données:', error);
             }
-        };  
+        };
+
+        if (userInfo) {
+            fetchData();
+            fetchExistSoutenanceData(userInfo);
+            fetchExistSoutnanceAndPropDatesData(userInfo);
+            fetchIsUserJuryMember(userInfo);
+        }
+
         
-        const fetchExistSoutnanceAndPropDatesData = async () => {
-            try {
-                const response = await axios.get(`${URL}/soutnance/exists/${userInfo.userId}/hasPropositionDates`, {
-                    headers: { Authorization: userInfo.token },
-                });
-                setExistSoutnancePropDates(response.data);                
-                console.log("exist soutnance and proposition dates : " + response.data);
-            } catch (error) {
-                console.error('Une erreur s\'est produite lors de la récupération des données:', error);
-            }
-        };
-          
-        const fetchExistSoutnanceAffectedDateData = async () => {
-            try {
-                const response = await axios.get(`${URL}/soutnance/exists/${userInfo.userId}/hasAffectedDate`, {
-                    headers: { Authorization: userInfo.token },
-                });
-                setAffectedDate(response.data);                
-                console.log("exist soutnance and affected : " + response.data);
-            } catch (error) {
-                console.error('Une erreur s\'est produite lors de la récupération des données:', error);
-            }
-        };
+    }, [userInfo]);
 
-        const fetchIsUserJuryMember = async () => {
-            try {
-                const response = await axios.get(`${URL}/soutnance/exists/${userInfo.firstName + ' ' + userInfo.lastName}/isUserJuryMember`, {
-                    headers: { Authorization: userInfo.token },
-                });
-                setIsUserJuryMember(response.data);                
-                console.log("user in jury member : " + response.data);
-            } catch (error) {
-                console.error('Une erreur s\'est produite lors de la récupération des données:', error);
-            }
-        };
-
-
-        const fetchExistSoutnanceData = async () => {
-            try {
-                const response = await axios.get(`${URL}/soutnance/exists`, {
-                    headers: { Authorization: userInfo.token },
-                });
-                setExistSoutnance(response.data);
-                console.log("exist soutnance: " + response.data);
-            } catch (error) {
-                console.error('Une erreur s\'est produite lors de la récupération des données:', error);
-            }
-        };     
-        fetchHasPfeData();
-        fetchExistSoutnanceAndPropDatesData();
-        fetchExistSoutnanceAndPublishData();
-        fetchExistSoutnanceData();
-        fetchExistSoutnanceAffectedDateData();
-        fetchIsUserJuryMember();
-
-    }, [userInfo,existSoutnancePropDates]);
 
 
     const signoutHandler = () => {
@@ -293,7 +247,7 @@ export default function NavbarComponent(props) {
                                     )}
                                     {userInfo.role === 'ADMIN' ? (
                                          <>
-                                         {existSoutnance ? (
+                                         {existSoutenance ? (
                                              <NavDropdown title="Soutenances" id="basic-nav-dropdown">
                                                  <LinkContainer to="/lancementsoutenance">
                                                      <NavDropdown.Item>Lancement</NavDropdown.Item>
@@ -320,8 +274,8 @@ export default function NavbarComponent(props) {
                                      </>
                                     ) : (
                                         <>
-                                        {userInfo.role === 'STUDENT' ? (
-                                            (!existSoutnancePropDates && !existSoutnanceAndPublish) || (existSoutnancePropDates && existSoutnanceAndPublish) ? (
+                                        {userInfo.role === 'STUDENT' && existSoutenance ? (
+                                             (!existSoutnancePropDates && !existSoutnanceAndPublish) || (existSoutnancePropDates && existSoutnanceAndPublish) ? (
                                                 <NavDropdown title="Soutenance" id="basic-nav-dropdown">
                                                     {!affectedDate && (
                                                         <LinkContainer to="/studentsoutenancechoice">
@@ -349,7 +303,7 @@ export default function NavbarComponent(props) {
                                     </>
                                                                                                
                                     )}
-                                    {userInfo.role !== 'STUDENT' && (
+                                    {userInfo.role === 'ADMIN' && (
                                         <Nav.Item className="ms-3 me-3">
                                             <LinkContainer to="/archive">
                                                 <Nav.Link>Archive</Nav.Link>

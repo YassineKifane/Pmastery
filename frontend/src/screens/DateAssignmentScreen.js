@@ -9,6 +9,7 @@ import MessageBox from '../components/MessageBox';
 import CreatableSelect from 'react-select/creatable';
 import { toast } from 'react-toastify';
 import { URL } from "../constants/constants";
+import { useAppContext } from '../context/context';
 
 import {
   compareDates,
@@ -65,6 +66,11 @@ export default function DateAssignmentScreen() {
   const [juryMembers, setJuryMembers] = useState([]);
   const [selectedSoutenance, setSelectedSoutenance] = useState(null);
   const currentYear = new Date().getFullYear();
+
+  const { 
+    fetchIsUserJuryMember
+ } = useAppContext();
+
   const [
     {
       loading,
@@ -292,6 +298,7 @@ export default function DateAssignmentScreen() {
       setJuryMembers([]);
       setDateToAffect('');
       toast.success(data);
+      fetchIsUserJuryMember(userInfo);
       dispatch({ type: 'AFFECT_SUCCESS' });
       setSelectedSoutenance(null);
     } catch (err) {

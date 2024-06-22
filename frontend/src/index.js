@@ -13,13 +13,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HelmetProvider } from 'react-helmet-async';
 import { StoreProvider } from './Store';
+import { AppProvider } from './context/context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <StoreProvider>
       <HelmetProvider>
+      <AppProvider>
         <App />
+      </AppProvider>
       </HelmetProvider>
     </StoreProvider>
   </React.StrictMode>

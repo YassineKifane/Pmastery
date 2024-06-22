@@ -9,6 +9,7 @@ import { getError } from '../utils';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { URL } from "../constants/constants";
+import { useAppContext } from '../context/context';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -41,6 +42,12 @@ export default function LancementSoutenances() {
   const currentYear = new Date().getFullYear();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const {
+    existSoutenance,
+   setExistSoutenance,
+   fetchExistSoutenanceData
+  } = useAppContext();
+
   const [
     { loading, error, startEndDates, loadingLaunch, successLaunch },
     dispatch,
@@ -74,9 +81,12 @@ export default function LancementSoutenances() {
     } else {
       fetchData();
     }
+
+
   }, [userInfo, currentYear, successLaunch]);
 
   const launchHandler = async () => {
+   
     if (startDate === '' || endDate === '') {
       toast.error('Vous devez remplir les dates');
       return;
@@ -109,6 +119,8 @@ export default function LancementSoutenances() {
       );
       dispatch({ type: 'LAUNCH_SUCCESS', payload: data });
       toast.success(data);
+      fetchExistSoutenanceData(userInfo.token);
+      console.log(existSoutenance);
     } catch (err) {
       console.log(getError(err));
       dispatch({ type: 'LAUNCH_FAIL' });
