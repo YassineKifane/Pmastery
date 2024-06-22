@@ -1,0 +1,32 @@
+@startuml
+skinparam participant {
+    BackgroundColor #69B4AA
+    BorderColor Black
+    FontColor White
+}
+
+participant "Emetteur" as Emetteur
+participant "Recepteur" as Recepteur
+participant "Conversation" as Conversation
+participant "Message" as Message
+
+alt Conversation existante
+    Emetteur -> Message: Envoie un message
+    activate Message
+    Message -> Conversation: Associe le message à la conversation existante
+    deactivate Message
+else Conversation inexistante
+    Emetteur -> Message: Envoie un message
+    activate Message
+    Message -> Conversation: Crée une nouvelle conversation
+    Conversation -> Conversation: Associe le message à la nouvelle conversation
+    deactivate Message
+end
+
+Conversation -> Recepteur: Notifie le Recepteur d'un nouveau message
+activate Recepteur
+Conversation -> Recepteur: Récupère les messages de la conversation
+Recepteur -> Recepteur: Lire le message notifié
+deactivate Recepteur
+
+@enduml
