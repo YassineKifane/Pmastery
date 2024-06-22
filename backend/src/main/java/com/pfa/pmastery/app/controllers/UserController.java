@@ -22,6 +22,9 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+
 
 @RestController
 @RequestMapping("/user")
@@ -181,14 +184,17 @@ public class UserController {
                                                                                   @RequestParam("affiliationCode") String affiliationCode,
                                                                                   @RequestParam("role") String role){
 
+        Set<String> userIds = new HashSet<>();
         List<UserResponse> userResponses = new ArrayList<>();
         List<UserDto> supervisorlist = userService.userWithCurrentPfeAndApproved(role,affiliationCode ,year);
 
-
         for (UserDto userDto : supervisorlist) {
-            ModelMapper modelMapper = new ModelMapper();
-            UserResponse user = modelMapper.map(userDto, UserResponse.class);
-            userResponses.add(user);
+            if (!userIds.contains(userDto.getUserId())) {
+                ModelMapper modelMapper = new ModelMapper();
+                UserResponse user = modelMapper.map(userDto, UserResponse.class);
+                userResponses.add(user);
+                userIds.add(userDto.getUserId());
+            }
         }
 
         return new ResponseEntity<List<UserResponse>>(userResponses, HttpStatus.OK);
