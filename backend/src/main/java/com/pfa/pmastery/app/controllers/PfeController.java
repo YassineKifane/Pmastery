@@ -54,6 +54,26 @@ public class PfeController {
         }
     }
 
+    @GetMapping("/hasStudentPfe")
+    public ResponseEntity<?> hasStudentPfe() {
+        try {
+            boolean hasStudentPfe = pfeService.hasStudentPfe();
+            return ResponseEntity.ok().body(hasStudentPfe);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check student PFE status: " + e.getMessage());
+        }
+    }
+    @GetMapping("/isUserInJoinTable")
+    public ResponseEntity<Boolean> isUserInJoinTable(@RequestParam String userId) {
+        boolean exists = pfeService.isUserInJoinTable(userId);
+        return ResponseEntity.ok(exists);
+    }
+    @GetMapping("/existsUnapprovedPfe")
+    public ResponseEntity<Boolean> existsUnapprovedPfe(@RequestHeader("Authorization") String token) {
+        // Optionally, you can include user validation logic here using the token
+        boolean exists = pfeService.existsUnapprovedPfe();
+        return ResponseEntity.ok(exists);
+    }
     @GetMapping("/hasSupervisorEmail")
     public ResponseEntity<?> hasSupervisorEmail(@RequestParam("pfeId") String pfeId) {
         try {

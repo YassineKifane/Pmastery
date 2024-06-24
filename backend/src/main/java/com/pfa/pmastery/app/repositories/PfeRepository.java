@@ -31,6 +31,13 @@ public interface PfeRepository extends PagingAndSortingRepository<PfeEntity,Long
     @Query("SELECT DISTINCT p.year FROM pfe p JOIN p.users u WHERE u.affiliationCode = :affiliationCode")
     List<Integer> findAllPfeYears(@Param("affiliationCode") String affiliationCode);
 
+    @Query("SELECT p FROM pfe p JOIN p.users u WHERE u.role = :role")
+    List<PfeEntity> findByRole(String role);
 
+    @Query("SELECT COUNT(p) > 0 FROM pfe p JOIN p.users u WHERE u.userId = :userId")
+    boolean existsByUserIdInJoinTable(@Param("userId") String userId);
+
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN TRUE ELSE FALSE END FROM pfe p WHERE p.isApproved = 0")
+    boolean existsUnapprovedPfe();
 
 }

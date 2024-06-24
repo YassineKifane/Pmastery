@@ -192,6 +192,23 @@ public class PfeServiceImpl implements PfeService {
         return !pfeList.isEmpty();
     }
     @Override
+    public boolean hasStudentPfe() {
+        // Query the database for PFEs associated with the role STUDENT
+        List<PfeEntity> pfeList = pfeRepository.findByRole("STUDENT");
+
+        // Return true if the list is not empty, indicating at least one PFE exists for students
+        return !pfeList.isEmpty();
+    }
+    @Override
+    public boolean isUserInJoinTable(String userId) {
+        return pfeRepository.existsByUserIdInJoinTable(userId);
+    }
+
+    @Override
+    public boolean existsUnapprovedPfe() {
+        return pfeRepository.existsUnapprovedPfe();
+    }
+    @Override
     public boolean hasSupervisorEmail(String pfeId) {
         PfeEntity pfe = pfeRepository.findByPfeId(pfeId);
 

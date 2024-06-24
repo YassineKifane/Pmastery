@@ -16,7 +16,10 @@ public interface PfeService {
  PfeDto approvePfeToSupervisors(String pfeId, List<String> userIds);
  boolean hasPFE(String userId);
  boolean hasSupervisorEmail(String pfeId);
+ boolean isUserInJoinTable(String userId);
 
+ boolean existsUnapprovedPfe();
+ boolean hasStudentPfe();
  List<Integer> pfeYearsList(String affiliationCode);
 
 }

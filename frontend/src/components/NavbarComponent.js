@@ -1,64 +1,87 @@
-
-import React, { useContext, useEffect, useState } from 'react';
-import { Navbar, Nav, NavDropdown, Container, Badge } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Store } from '../Store';
-import { URL } from "../constants/constants";
-import { Link, useLocation } from 'react-router-dom';
+import React, {useContext, useEffect, useState} from 'react';
+import {Navbar, Nav, NavDropdown, Container, Badge} from 'react-bootstrap';
+import {LinkContainer} from 'react-router-bootstrap';
+import {Store} from '../Store';
+import {URL} from "../constants/constants";
+import {Link, useLocation} from 'react-router-dom';
 import PMasteryLogo from '../assets/logo/PMasteryv2.png';
 import axios from 'axios';
-import { useAppContext } from '../context/context';
+import {useAppContext} from '../context/context';
 
 
 export default function NavbarComponent(props) {
-    const { 
+    const {
         existSoutenance,
-        existSoutnancePropDates, 
+        existSoutnancePropDates,
         isUserJuryMember,
         fetchExistSoutenanceData,
         fetchExistSoutnanceAndPropDatesData,
         fetchIsUserJuryMember
-     } = useAppContext();
+    } = useAppContext();
 
 
     const location = useLocation();
-    const { state, dispatch: ctxDispatch } = useContext(Store);
-    const { userInfo } = state;
-    const { numberOfDemands, numberOfNotifications , markNotificationsAsRead } = props;
+    const {state, dispatch: ctxDispatch} = useContext(Store);
+    const {userInfo} = state;
+    const {numberOfDemands, numberOfNotifications, markNotificationsAsRead} = props;
     const [hasPFE, setHasPFE] = useState(false);
     const [hasSupervisor, setHasSupervisor] = useState(false);
     const [existSoutnanceAndPublish, setExistSoutnanceAndPublish] = useState(false);
     const [affectedDate, setAffectedDate] = useState(false);
+    const [isSupervisor, setIsSupervisor] = useState(false);
+    const [hasStudentPfe, setHasStudentPfe] = useState(false);
+    const [demandCount, setDemandCount] = useState(0);
+    const [existsUnapprovedPfe, setExistsUnapprovedPfe] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [
-                    hasPFEResponse, 
-                    existSoutnanceAndPublishResponse, 
-                    existSoutnanceAffectedDateResponse,  
+                    hasPFEResponse,
+                    existSoutnanceAndPublishResponse,
+                    existSoutnanceAffectedDateResponse,
+                    hasStudentPfeResponse,
+                    isSupervisorResponse,
+                    {data},
+                    existsUnapprovedPfeResponse,
                 ] = await Promise.all([
-                    axios.get(`${URL}/pfe/hasPFE`, { params: { userId: userInfo.userId }, headers: { Authorization: `${userInfo.token}` } }),
-                    axios.get(`${URL}/soutnance/exists/${userInfo.userId}/true`, { headers: { Authorization: userInfo.token } }),
-                    axios.get(`${URL}/soutnance/exists/${userInfo.userId}/hasAffectedDate`, { headers: { Authorization: userInfo.token } }),
+                    axios.get(`${URL}/pfe/hasPFE`, {
+                        params: {userId: userInfo.userId},
+                        headers: {Authorization: `${userInfo.token}`}
+                    }),
+                    axios.get(`${URL}/soutnance/exists/${userInfo.userId}/true`, {headers: {Authorization: userInfo.token}}),
+                    axios.get(`${URL}/soutnance/exists/${userInfo.userId}/hasAffectedDate`, {headers: {Authorization: userInfo.token}}),
+                    axios.get(`${URL}/pfe/hasStudentPfe`, {headers: {Authorization: `${userInfo.token}`}}),
+                    axios.get(`${URL}/pfe/isUserInJoinTable`, {
+                        params: {userId: userInfo.userId},
+                        headers: {Authorization: `${userInfo.token}`}
+                    }),
+                    axios.get(URL + '/demande', {
+                        headers: {Authorization: `${userInfo.token}`},
+                        params: {userId: userInfo.userId}
+                    }),
+                    axios.get(`${URL}/pfe/existsUnapprovedPfe`, {headers: {Authorization: `${userInfo.token}`}}),
                 ]);
 
                 const hasPFEValue = hasPFEResponse.data;
                 setHasPFE(hasPFEValue);
-
-                if (hasPFEValue) {
+                if (hasPFEValue && userInfo.role === 'STUDENT') {
                     const hasSupervisorResponse = await axios.get(`${URL}/pfe/hasSupervisorEmail`, {
-                        params: { pfeId: userInfo.pfe[0].pfeId },
-                        headers: { Authorization: `${userInfo.token}` },
+                        params: {pfeId: userInfo.pfe[0].pfeId},
+                        headers: {Authorization: `${userInfo.token}`},
                     });
                     setHasSupervisor(hasSupervisorResponse.data);
                 }
 
                 setExistSoutnanceAndPublish(existSoutnanceAndPublishResponse.data);
                 setAffectedDate(existSoutnanceAffectedDateResponse.data);
-                
+                setHasStudentPfe(hasStudentPfeResponse.data);
+                setIsSupervisor(isSupervisorResponse.data);
+                if (data && data.length > 0)
+                    setDemandCount(data.length);
+                setExistsUnapprovedPfe(existsUnapprovedPfeResponse.data);
             } catch (error) {
-                console.error('Une erreur s\'est produite lors de la récupération des données:', error);
+                console.error('Une erreur s\'est produite lors de la récupération des données: ', error);
             }
         };
 
@@ -69,13 +92,12 @@ export default function NavbarComponent(props) {
             fetchIsUserJuryMember(userInfo);
         }
 
-        
+
     }, [userInfo]);
 
 
-
     const signoutHandler = () => {
-        ctxDispatch({ type: 'USER_SIGNOUT' });
+        ctxDispatch({type: 'USER_SIGNOUT'});
         localStorage.removeItem('userInfo');
         window.location.href = '/';
     };
@@ -109,7 +131,7 @@ export default function NavbarComponent(props) {
                                         <span>
                       <i
                           className="pi pi-user me-1"
-                          style={{ color: '#708090' }}
+                          style={{color: '#708090'}}
                       ></i>{' '}
                                             {`${userInfo.firstName} ${userInfo.lastName}`}
                     </span>
@@ -119,7 +141,7 @@ export default function NavbarComponent(props) {
                                     <LinkContainer to="/profile">
                                         <NavDropdown.Item>Profile</NavDropdown.Item>
                                     </LinkContainer>
-                                    <NavDropdown.Divider />
+                                    <NavDropdown.Divider/>
                                     <Link
                                         className="dropdown-item"
                                         to="#signout"
@@ -141,7 +163,7 @@ export default function NavbarComponent(props) {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            {userInfo &&(
+            {userInfo && (
                 <>
                     <Navbar expand="lg" className="userNavBarStyle" variant="dark">
                         <Container>
@@ -181,8 +203,8 @@ export default function NavbarComponent(props) {
                                             </Nav.Item>
                                         </>
                                     )}
-                                    {userInfo.role === 'STUDENT'  ? (
-                                        hasPFE ?  (
+                                    {userInfo.role === 'STUDENT' ? (
+                                        hasPFE ? (
                                             <NavDropdown title="PFE" id="basic-nav-dropdown">
                                                 <LinkContainer to="/mon-pfe">
                                                     <NavDropdown.Item>Mon-PFE</NavDropdown.Item>
@@ -206,102 +228,111 @@ export default function NavbarComponent(props) {
                                         )
                                     ) : (
                                         <>
-                                            <NavDropdown title="PFE" id="basic-nav-dropdown">
-                                                <LinkContainer to="/list-choix">
-                                                    <NavDropdown.Item>
-                                                        Choix d'encadrement
-                                                    </NavDropdown.Item>
-                                                </LinkContainer>
-                                                {userInfo.role === 'ADMIN' && (
-                                                    <>
-                                                        <LinkContainer to="/pfe">
-                                                            <NavDropdown.Item>PFE</NavDropdown.Item>
-                                                        </LinkContainer>
-                                                        <LinkContainer to="/affectation">
-                                                            <NavDropdown.Item>Affectation</NavDropdown.Item>
-                                                        </LinkContainer>
-                                                    </>
-                                                )}
-                                                <LinkContainer to="/mes-pfe">
-                                                    <NavDropdown.Item>Mes-PFE</NavDropdown.Item>
-                                                </LinkContainer>
-                                                <LinkContainer to="/suivi-pfe">
-                                                    <NavDropdown.Item onClick={props.markNotificationsAsRead}>
-                                                        Suivi Mes PFE{' '}
-                                                        {numberOfNotifications > 0 && (
-                                                            <Badge pill className="bg-danger">
-                                                                {numberOfNotifications}
-                                                            </Badge>
-                                                        )}
-                                                    </NavDropdown.Item>
-                                                </LinkContainer>
-                                                {userInfo.role === 'ADMIN' && (
-                                                <LinkContainer to="/fiches-de-stages">
-                                                    <NavDropdown.Item>
-                                                        Fiches de stages
-                                                    </NavDropdown.Item>
-                                                </LinkContainer>
-                                                )}
-                                            </NavDropdown>
-                                        </>
-                                    )}
-                                    {userInfo.role === 'ADMIN' ? (
-                                         <>
-                                         {existSoutenance ? (
-                                             <NavDropdown title="Soutenances" id="basic-nav-dropdown">
-                                                 <LinkContainer to="/lancementsoutenance">
-                                                     <NavDropdown.Item>Lancement</NavDropdown.Item>
-                                                 </LinkContainer>
-                                                 <LinkContainer to="/dateaffectation">
-                                                     <NavDropdown.Item>Affectation des dates</NavDropdown.Item>
-                                                 </LinkContainer>
-                                                 <LinkContainer to="/soutenances">
-                                                     <NavDropdown.Item>Soutenances</NavDropdown.Item>
-                                                 </LinkContainer>
-                                                 {isUserJuryMember && (
-                                                     <LinkContainer to="/messoutenances">
-                                                         <NavDropdown.Item>Mes soutenances</NavDropdown.Item>
-                                                     </LinkContainer>
-                                                 )}
-                                             </NavDropdown>
-                                         ) : (
-                                             <NavDropdown title="Soutenances" id="basic-nav-dropdown">
-                                                 <LinkContainer to="/lancementsoutenance">
-                                                     <NavDropdown.Item>Lancement</NavDropdown.Item>
-                                                 </LinkContainer>
-                                             </NavDropdown>
-                                         )}
-                                     </>
-                                    ) : (
-                                        <>
-                                        {userInfo.role === 'STUDENT' && existSoutenance ? (
-                                             (!existSoutnancePropDates && !existSoutnanceAndPublish) || (existSoutnancePropDates && existSoutnanceAndPublish) ? (
-                                                <NavDropdown title="Soutenance" id="basic-nav-dropdown">
-                                                    {!affectedDate && (
-                                                        <LinkContainer to="/studentsoutenancechoice">
-                                                            <NavDropdown.Item>Choix des dates</NavDropdown.Item>
+                                            {hasStudentPfe && (
+                                                <NavDropdown title="PFE" id="basic-nav-dropdown">
+                                                    {userInfo.role === 'SUPERVISOR' && existsUnapprovedPfe && (
+                                                        <LinkContainer to="/list-choix">
+                                                            <NavDropdown.Item>
+                                                                Choix d'encadrement
+                                                            </NavDropdown.Item>
                                                         </LinkContainer>
                                                     )}
-                                                    {affectedDate && (
-                                                        <LinkContainer to="/masoutenance">
-                                                            <NavDropdown.Item>Ma soutenance</NavDropdown.Item>
+                                                    {userInfo.role === 'ADMIN' && (
+                                                        <>
+                                                            <LinkContainer to="/pfe">
+                                                                <NavDropdown.Item>PFE</NavDropdown.Item>
+                                                            </LinkContainer>
+                                                            <LinkContainer to="/affectation">
+                                                                <NavDropdown.Item>Affectation</NavDropdown.Item>
+                                                            </LinkContainer>
+                                                        </>
+                                                    )}
+                                                    {isSupervisor && (
+                                                        <LinkContainer to="/mes-pfe">
+                                                            <NavDropdown.Item>Mes-PFE</NavDropdown.Item>
+                                                        </LinkContainer>
+                                                    )}
+                                                    {isSupervisor && (
+                                                        <LinkContainer to="/suivi-pfe">
+                                                            <NavDropdown.Item onClick={props.markNotificationsAsRead}>
+                                                                Suivi Mes PFE{' '}
+                                                                {numberOfNotifications > 0 && (
+                                                                    <Badge pill className="bg-danger">
+                                                                        {numberOfNotifications}
+                                                                    </Badge>
+                                                                )}
+                                                            </NavDropdown.Item>
+                                                        </LinkContainer>
+                                                    )}
+                                                    {userInfo.role === 'ADMIN' && demandCount > 0 && (
+                                                        <LinkContainer to="/fiches-de-stages">
+                                                            <NavDropdown.Item>
+                                                                Fiches de stages
+                                                            </NavDropdown.Item>
+                                                        </LinkContainer>
+                                                    )}
+                                                </NavDropdown>
+                                            )}
+                                        </>
+
+                                    )}
+                                    {userInfo.role === 'ADMIN' ? (
+                                        <>
+                                            {existSoutenance ? (
+                                                <NavDropdown title="Soutenances" id="basic-nav-dropdown">
+                                                    <LinkContainer to="/lancementsoutenance">
+                                                        <NavDropdown.Item>Lancement</NavDropdown.Item>
+                                                    </LinkContainer>
+                                                    <LinkContainer to="/dateaffectation">
+                                                        <NavDropdown.Item>Affectation des dates</NavDropdown.Item>
+                                                    </LinkContainer>
+                                                    <LinkContainer to="/soutenances">
+                                                        <NavDropdown.Item>Soutenances</NavDropdown.Item>
+                                                    </LinkContainer>
+                                                    {isUserJuryMember && (
+                                                        <LinkContainer to="/messoutenances">
+                                                            <NavDropdown.Item>Mes soutenances</NavDropdown.Item>
                                                         </LinkContainer>
                                                     )}
                                                 </NavDropdown>
                                             ) : (
-                                                <></>
-                                            )
-                                        ) : (
-                                            isUserJuryMember && (
-                                                <Nav.Item className="ms-3 me-3">
-                                                    <LinkContainer to="/messoutenances">
-                                                        <Nav.Link>Mes Soutenances</Nav.Link>
+                                                <NavDropdown title="Soutenances" id="basic-nav-dropdown">
+                                                    <LinkContainer to="/lancementsoutenance">
+                                                        <NavDropdown.Item>Lancement</NavDropdown.Item>
                                                     </LinkContainer>
-                                                </Nav.Item>
-                                            )
-                                        )}
-                                    </>
-                                                                                               
+                                                </NavDropdown>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            {userInfo.role === 'STUDENT' && existSoutenance ? (
+                                                (!existSoutnancePropDates && !existSoutnanceAndPublish) || (existSoutnancePropDates && existSoutnanceAndPublish) ? (
+                                                    <NavDropdown title="Soutenance" id="basic-nav-dropdown">
+                                                        {!affectedDate && (
+                                                            <LinkContainer to="/studentsoutenancechoice">
+                                                                <NavDropdown.Item>Choix des dates</NavDropdown.Item>
+                                                            </LinkContainer>
+                                                        )}
+                                                        {affectedDate && (
+                                                            <LinkContainer to="/masoutenance">
+                                                                <NavDropdown.Item>Ma soutenance</NavDropdown.Item>
+                                                            </LinkContainer>
+                                                        )}
+                                                    </NavDropdown>
+                                                ) : (
+                                                    <></>
+                                                )
+                                            ) : (
+                                                isUserJuryMember && (
+                                                    <Nav.Item className="ms-3 me-3">
+                                                        <LinkContainer to="/messoutenances">
+                                                            <Nav.Link>Mes Soutenances</Nav.Link>
+                                                        </LinkContainer>
+                                                    </Nav.Item>
+                                                )
+                                            )}
+                                        </>
+
                                     )}
                                     {userInfo.role === 'ADMIN' && (
                                         <Nav.Item className="ms-3 me-3">
