@@ -8,6 +8,8 @@ import {TableSection} from "../components/TableSection";
 import CreatableSelect from "react-select/creatable";
 import SupervisorItem from "../components/SupervisorItem";
 import { URL } from "../constants/constants";
+import LoadingBox from '../components/LoadingBox';
+
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -183,7 +185,7 @@ export default function ArchiveScreen() {
                             />
                         </Col>
                     </Form.Group>
-                    {
+                    {loading ? <LoadingBox /> : (
                         (selectedYear.supervisor.value && supervisors && supervisors.length > 0 ) ?
                             (<>
                                 <Row>
@@ -250,7 +252,7 @@ export default function ArchiveScreen() {
                                 (selectedYear.supervisor.value && supervisors && supervisors.length === 0) &&
                                 <MessageBox>Aucun encadrant inscrit pour cette année</MessageBox>
                             )
-                    }
+                    )}
                 </Tab>
                 <Tab
                     eventKey="Archives des étudiants"
@@ -282,67 +284,69 @@ export default function ArchiveScreen() {
                             />
                         </Col>
                     </Form.Group>
-                    {(selectedYear.student.value && students && students.length > 0) ? (
-                        <>
-                            <Row>
-                                <Col className="text-end">
-                                    <h6>Nombre d'étudiants: {students.length}</h6>
-                                </Col>
-                            </Row>
+                    {loading ? <LoadingBox /> : (
+                        (selectedYear.student.value && students && students.length > 0) ? (
                             <>
-                                <Form>
-                                    <InputGroup className="my-3">
-                                        <Form.Control
-                                            onChange={e =>
-                                                setSearchValues({
-                                                    ...searchValues,
-                                                    students:  e.target.value
-                                                })}
-                                            placeholder="Rechercher"
-                                        />
-                                    </InputGroup>
-                                </Form>
-                                <Table responsive>
-                                    <thead>
-                                    <tr>
-                                        <th>Nom</th>
-                                        <th>Prénom</th>
-                                        <th>Email</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {students
-                                        .filter((student) => {
-                                            return searchValues.students.toLowerCase() === ''
-                                                ? student
-                                                : student.lastName
-                                                    .toLowerCase()
-                                                    .includes(searchValues.students.toLowerCase()) ||
-                                                student.firstName
-                                                    .toLowerCase()
-                                                    .includes(searchValues.students.toLowerCase()) ||
-                                                student.email
-                                                    .toLowerCase()
-                                                    .includes(searchValues.students.toLowerCase()) ||
-                                                student.pfe
-                                                    .filter((p) => p.year === currentYear)
-                                                    .length.toString() === searchValues.students;
-                                        })
-                                        .map((student) => (
-                                            <TableSection
-                                                key={student.userId}
-                                                user={student}
-                                                currentYear={selectedYear.student.value}
+                                <Row>
+                                    <Col className="text-end">
+                                        <h6>Nombre d'étudiants: {students.length}</h6>
+                                    </Col>
+                                </Row>
+                                <>
+                                    <Form>
+                                        <InputGroup className="my-3">
+                                            <Form.Control
+                                                onChange={e =>
+                                                    setSearchValues({
+                                                        ...searchValues,
+                                                        students:  e.target.value
+                                                    })}
+                                                placeholder="Rechercher"
                                             />
-                                        ))}
-                                    </tbody>
-                                </Table>
+                                        </InputGroup>
+                                    </Form>
+                                    <Table responsive>
+                                        <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Prénom</th>
+                                            <th>Email</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {students
+                                            .filter((student) => {
+                                                return searchValues.students.toLowerCase() === ''
+                                                    ? student
+                                                    : student.lastName
+                                                        .toLowerCase()
+                                                        .includes(searchValues.students.toLowerCase()) ||
+                                                    student.firstName
+                                                        .toLowerCase()
+                                                        .includes(searchValues.students.toLowerCase()) ||
+                                                    student.email
+                                                        .toLowerCase()
+                                                        .includes(searchValues.students.toLowerCase()) ||
+                                                    student.pfe
+                                                        .filter((p) => p.year === currentYear)
+                                                        .length.toString() === searchValues.students;
+                                            })
+                                            .map((student) => (
+                                                <TableSection
+                                                    key={student.userId}
+                                                    user={student}
+                                                    currentYear={selectedYear.student.value}
+                                                />
+                                            ))}
+                                        </tbody>
+                                    </Table>
+                                </>
                             </>
-                        </>
-                    ) : ( (selectedYear.student.value && students && students.length === 0) &&
-                        <MessageBox>Aucun étudiant inscrit pour cette année</MessageBox>
+                        ) :  (selectedYear.student.value && students && students.length === 0) &&
+                            <MessageBox>Aucun étudiant inscrit pour cette année</MessageBox>
                     )}
+
                 </Tab>
             </Tabs>
         </div>

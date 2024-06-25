@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useReducer, useState } from 'react';
-import { Col, Form, InputGroup, Row, Table } from 'react-bootstrap';
+import {Button, Col, Form, InputGroup, Row, Table } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
 import LoadingBox from '../components/LoadingBox';
@@ -9,7 +9,7 @@ import { Store } from '../Store';
 import { getError } from '../utils';
 import { TableSection } from '../components/TableSection';
 import { URL } from "../constants/constants";
-
+import * as XLSX from 'xlsx';
 const reducer = (state, action) => {
     switch (action.type) {
         case 'FETCH_REQUEST':
@@ -30,6 +30,12 @@ const reducer = (state, action) => {
             return { ...state, loadingDelete: false };
         case 'DELETE_RESET':
             return { ...state, loadingDelete: false, successDelete: false };
+        case 'GENERATEFILE_REQUEST':
+            return { ...state, loadingFile: true };
+        case 'GENERATEFILE_SUCCESS':
+            return { ...state, loadingFile: false, listStudents : action.payload };
+        case 'GENERATEFILE_FAIL':
+            return { ...state, loadingFile: false, error : action.payload };
         default:
             return state;
     }
@@ -39,7 +45,7 @@ export default function ListScreen() {
     const { userInfo } = state;
     const currentYear = new Date().getFullYear();
     const [search, setSearch] = useState('');
-    const [{ loading, error, students, loadingDelete, successDelete }, dispatch] =
+    const [{ loading, error, students, loadingDelete, successDelete , listStudents , loadingFile }, dispatch] =
         useReducer(reducer, {
             loading: true,
             error: '',
@@ -70,13 +76,79 @@ export default function ListScreen() {
         }
     }, [userInfo, successDelete, currentYear]);
 
+    const generateExcelDoc = async () => {
+        if (window.confirm(`Voulez-vous télécharger la liste des étudiants sous format Excel`)) {
+            try {
+                dispatch({type: 'GENERATEFILE_REQUEST'});
+                const {data} = await axios.get(`${URL}/pfe/process/`, {
+                    headers: {Authorization: `${userInfo.token}`},
+                    params: {
+                        affiliationCode: userInfo.affiliationCode,
+                        isApproved: true,
+                        year: currentYear
+                    }
+                });
+
+                const listStudents = data.map(pfe => {
+                    const student = pfe.users.find(user => user.role === "STUDENT");
+                    const supervisor = pfe.users.find(user => user.role === "SUPERVISOR" || user.role === "ADMIN");
+
+                    return {
+                        "Nom": student ? student.lastName : "",
+                        "Prénom": student ? student.firstName : "",
+                        "Sujet PFE": pfe.subject,
+                        "Entreprise": pfe.company,
+                        "Ville": pfe.city,
+                        "Technologies utilisées": pfe.usedTechnologies,
+                        "Email Encadrant entreprise": pfe.supervisorEmail,
+                        "Email Encadrant (prof)": supervisor ? supervisor.email : ""
+                    };
+                });
+
+                dispatch({
+                    type: 'GENERATEFILE_SUCCESS',
+                    payload: listStudents,
+                });
+
+                // Conversion des données JSON en feuille de calcul
+                const worksheet = XLSX.utils.json_to_sheet(listStudents);
+
+                // Définir la largeur des colonnes
+                const columnWidths = [
+                    {wch: 20}, // Nom
+                    {wch: 20}, // Prénom
+                    {wch: 30}, // Sujet PFE
+                    {wch: 20}, // Entreprise
+                    {wch: 20}, // Ville
+                    {wch: 30}, // Technologies utilisées
+                    {wch: 30}, // Email Encadrant entreprise
+                    {wch: 30}  // Email Encadrant (prof)
+                ];
+
+                worksheet['!cols'] = columnWidths;
+
+                // Création d'un nouveau classeur
+                const workbook = XLSX.utils.book_new();
+
+                // Ajout de la feuille de calcul au classeur
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+                // Génération du fichier Excel
+                XLSX.writeFile(workbook, `listStudents_${currentYear}.xlsx`);
+            } catch (e) {
+                console.log(e);
+                dispatch({type: 'GENERATEFILE_FAIL', payload: e});
+            }
+        }
+    }
+
     const deleteHandler = async (student) => {
         if (window.confirm(`Êtes-vous sûr de vouloir supprimer ce compte?`)) {
             try {
                 dispatch({ type: 'DELETE_REQUEST' });
-                await axios.delete(`${URL}/user/${student.userId}`, {
+                await axios.delete(URL + `/user/${student.userId}`, {
                     headers: { Authorization: `${userInfo.token}` },
-                    params: { role: 'STUDENT' },
+                    params: { role: 'STUDENT' }
                 });
                 toast.success('Étudiant supprimé avec succès');
                 dispatch({ type: 'DELETE_SUCCESS' });
@@ -86,7 +158,6 @@ export default function ListScreen() {
             }
         }
     };
-
 
     return (
         <div className="p-5">
@@ -111,6 +182,19 @@ export default function ListScreen() {
                     <Row>
                         <Col className="text-end">
                             <h6>Nombre d'étudiants: {students.length}</h6>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col className="text-end">
+                            {loadingFile ? <LoadingBox /> :
+                                <Button
+                                    type="button"
+                                    onClick={()=>generateExcelDoc()}
+                                >
+                                    Télécharger la liste
+                                </Button>
+                            }
                         </Col>
                     </Row>
                     {students.length > 0 ? (

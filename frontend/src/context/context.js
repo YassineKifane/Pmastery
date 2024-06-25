@@ -20,14 +20,14 @@ export const AppProvider = ({ children }) => {
         } catch (error) {
             console.error('Une erreur s\'est produite lors de la récupération des données:', error);
         }
-    }; 
-    
+    };
+
     const fetchExistSoutnanceAndPropDatesData = async (userInfo) => {
         try {
             const response = await axios.get(`${URL}/soutnance/exists/${userInfo.userId}/hasPropositionDates`, {
                 headers: { Authorization: userInfo.token },
             });
-            setExistSoutnancePropDates(response.data);                
+            setExistSoutnancePropDates(response.data);
             console.log("exist soutnance and proposition dates : " + response.data);
         } catch (error) {
             console.error('Une erreur s\'est produite lors de la récupération des données:', error);
@@ -39,7 +39,7 @@ export const AppProvider = ({ children }) => {
             const response = await axios.get(`${URL}/soutnance/exists/${userInfo.firstName + ' ' + userInfo.lastName}/isUserJuryMember`, {
                 headers: { Authorization: userInfo.token },
             });
-            setIsUserJuryMember(response.data);                
+            setIsUserJuryMember(response.data);
             console.log("user in jury member : " + response.data);
         } catch (error) {
             console.error('Une erreur s\'est produite lors de la récupération des données:', error);
@@ -52,7 +52,7 @@ export const AppProvider = ({ children }) => {
             value={{
                 existSoutenance,
                 existSoutnancePropDates,
-                isUserJuryMember, 
+                isUserJuryMember,
                 fetchExistSoutenanceData,
                 fetchExistSoutnanceAndPropDatesData,
                 fetchIsUserJuryMember

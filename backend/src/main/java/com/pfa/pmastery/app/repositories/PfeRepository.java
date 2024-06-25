@@ -30,7 +30,6 @@ public interface PfeRepository extends PagingAndSortingRepository<PfeEntity,Long
     List<PfeEntity> findByUserIdAndYear(@Param("userId") String userId ,@Param("role") String role, @Param("year") int year);
     @Query("SELECT DISTINCT p.year FROM pfe p JOIN p.users u WHERE u.affiliationCode = :affiliationCode")
     List<Integer> findAllPfeYears(@Param("affiliationCode") String affiliationCode);
-
     @Query("SELECT p FROM pfe p JOIN p.users u WHERE u.role = :role")
     List<PfeEntity> findByRole(String role);
 
