@@ -559,25 +559,34 @@ export default function SoutenanceScreen() {
                   </ListGroup.Item>
                   <ListGroup.Item>
                     <strong>Informations de la soutenance:</strong>
-                    <br />
+                    <br/>
                     <span>
                       <strong>Date et l'heure de la soutenance: </strong>
                       {formatDate(selectedSoutenance.affectedDate)}
                     </span>
-                    <br />
+                    <br/>
                     <strong>Les Membres de jury:</strong>
                     <Row>
                       {selectedSoutenance.juryMembers.map((m, index) => (
-                        <Col xs={12} key={index}>
-                          <span>{m}</span>
-                        </Col>
+                          <Col xs={12} key={index}>
+                            <span>{m}</span>
+                          </Col>
                       ))}
                     </Row>
+                    {
+                      (selectedSoutenance.note !== -1) &&
+                        (
+                            <>
+                              <strong>La note affectée: </strong>
+                              <span>{selectedSoutenance.note}</span>
+                            </>
+                        )
+                    }
                   </ListGroup.Item>
                   <div className={modifySoutenance ? 'd-none' : 'd-block mt-2'}>
                     <Button
-                      onClick={() => setModifySoutenance(true)}
-                      className="w-100"
+                        onClick={() => setModifySoutenance(true)}
+                        className="w-100"
                     >
                       Modifier la soutenance
                     </Button>

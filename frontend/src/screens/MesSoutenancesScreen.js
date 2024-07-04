@@ -3,7 +3,7 @@ import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
-import { Col, Container, ListGroup, Row } from 'react-bootstrap';
+import { Col, Container, ListGroup, Row, FormControl, Button} from 'react-bootstrap';
 import LoadingBox from '../components/LoadingBox';
 import { compareDates, convertDateFormat, formatDate } from '../utils';
 import { Badge } from 'primereact/badge';
@@ -39,6 +39,36 @@ export default function MesSoutenancesScreen() {
     loading: true,
     error: '',
   });
+  
+  const [note, setNote] = useState('');
+  const [btnModifedSelected, setbtnModifedSelected] = useState(0);
+
+  const noteSubmit = async (note, userId) => {
+    try {
+      const { data } = await axios.post(
+          `${URL}/pfe/submitNote/${userId}`,
+          null,
+          {
+            headers: {
+              Authorization: `Bearer ${userInfo.token}`
+            },
+            params: {
+              note: note
+            }
+          }
+      );
+      console.log("Note soumise avec succès :", data);
+      setSelectedSoutenance(prev => ({
+        ...prev,
+        note: note
+      }));
+      setbtnModifedSelected(0)
+      setNote("")
+    } catch (error) {
+      console.error("Erreur lors de la soumission de la note :", error);
+    }
+  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -209,17 +239,17 @@ export default function MesSoutenancesScreen() {
                             <Col xs={10}>
                               <span>
                                 <strong>Etudiant: </strong>
-                                {e.fullName}
+                                {e.fullName} 
                               </span>
-                              <br />
+                              <br/>
                               <span>
                                 <strong>Encadrant: </strong>
                                 {e.supervisorName}
                               </span>
                             </Col>
                             <Col
-                              xs={2}
-                              className="bg-light d-flex align-items-center justify-content-center"
+                                xs={2}
+                                className="bg-light d-flex align-items-center justify-content-center"
                             >
                               <strong>{`${String(
                                 new Date(e.affectedDate).getHours()
@@ -243,22 +273,22 @@ export default function MesSoutenancesScreen() {
                 <ListGroup variant="flush sticky-top removeZindex">
                   <ListGroup.Item>
                     <strong>Informations de l'étudiant et son sujet:</strong>
-                    <br />
+                    <br/>
                     <span>
                       <strong>Etudiant: </strong>
                       {selectedSoutenance.fullName}
                     </span>
-                    <br />
+                    <br/>
                     <span>
                       <strong>Encadrant: </strong>
                       {selectedSoutenance.supervisorName}
                     </span>
-                    <br />
+                    <br/>
                     <span>
                       <strong>Sujet: </strong>
                       {selectedSoutenance.pfeSubject}
                     </span>
-                    <br />
+                    <br/>
                     <span>
                       <strong>Entreprise: </strong>
                       {selectedSoutenance.company}
@@ -266,30 +296,81 @@ export default function MesSoutenancesScreen() {
                   </ListGroup.Item>
                   <ListGroup.Item>
                     <strong>Informations de la soutenance:</strong>
-                    <br />
+                    <br/>
                     <span>
                       <strong>Date et l'heure de la soutenance: </strong>
                       {formatDate(selectedSoutenance.affectedDate)}
                     </span>
-                    <br />
+                    <br/>
                     <strong>Les Membres de jury:</strong>
-                    <Row>
                       {selectedSoutenance.juryMembers.map((m, index) => (
-                        <Col xs={12} key={index}>
-                          <span>{m}</span>
-                        </Col>
+                          <Row>
+                            <Col xs={6} key={index}>
+                              <span>{m}</span>
+                            </Col>
+                          </Row>
                       ))}
-                    </Row>
-                  </ListGroup.Item>
+                    <br/>
+                    {
+                      (userInfo.firstName+" "+userInfo.lastName === selectedSoutenance.supervisorName) &&
+                      (
+                        (btnModifedSelected == 1 || selectedSoutenance.note == -1) ?
+                          (
+                              <>
+                                <strong>Entrer la note :</strong>
+                                <Row>
+                                  <Col>
+                                    <FormControl
+                                        placeholder="Entrez la note"
+                                        aria-label="Entrez la note"
+                                        aria-describedby="basic-addon2"
+                                        type="number"
+                                        value={note}
+                                        onChange={e=>setNote(e.target.value)}
+                                        xs={6}
+                                    />
+                                  </Col>
+                                  <Col>
+                                    <Button 
+                                        onClick={()=>noteSubmit(note, selectedSoutenance.userId)}
+                                        xs={6}
+                                    >
+                                      Submit
+                                    </Button>
+                                  </Col>
+                                </Row>
+                              </>
+                          ):
+                          (
+                              <>
+                                <Row xs={3}>
+                                    <span>
+                                    <strong>Note: </strong>
+                                      {selectedSoutenance.note}
+                                    </span>
+                                </Row>
+                                        <Row xs={3}>
+                                          <Button
+                                              onClick={() => setbtnModifedSelected(1)}
+                                          >
+                                            Modifier
+                                          </Button>
+                                        </Row>
+                              </>
+                          )
+                      )
+                    }
+                  <br/>
+                </ListGroup.Item>
                 </ListGroup>
               )}
             </Col>
           </Row>
         </Container>
       ) : (
-        <MessageBox variant="info">
+          <MessageBox variant="info">
           Les soutenances n'ont pas encore été lancées
-        </MessageBox>
+          </MessageBox>
       )}
     </div>
   );

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PfeServiceImpl implements PfeService {
@@ -222,6 +223,13 @@ public class PfeServiceImpl implements PfeService {
     @Override
     public List<Integer> pfeYearsList(String affiliationCode) {
         return pfeRepository.findAllPfeYears(affiliationCode);
+    }
+
+    @Transactional
+    public void updateNote(String userId, Double note) {
+        List<PfeEntity> pfeEntities = pfeRepository.findByUserId(userId, "STUDENT");
+        pfeEntities.get(0).setNote(note);
+        pfeRepository.save(pfeEntities.get(0));
     }
 
 }

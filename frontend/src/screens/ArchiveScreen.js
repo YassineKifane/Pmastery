@@ -44,7 +44,7 @@ export default function ArchiveScreen() {
     const { userInfo } = state;
     const [{ loading, error,students,supervisors, loadingDelete, successDelete }, dispatch] =
         useReducer(reducer, {
-            loading: true,
+            loading: false,
             error: '',
         });
     const currentYear = new Date().getFullYear();
@@ -185,7 +185,7 @@ export default function ArchiveScreen() {
                             />
                         </Col>
                     </Form.Group>
-                    {loading ? <LoadingBox /> : (
+                    {(loading && selectedYear.supervisor.value) ? <LoadingBox /> : (
                         (selectedYear.supervisor.value && supervisors && supervisors.length > 0 ) ?
                             (<>
                                 <Row>
@@ -284,7 +284,7 @@ export default function ArchiveScreen() {
                             />
                         </Col>
                     </Form.Group>
-                    {loading ? <LoadingBox /> : (
+                    {(loading && selectedYear.student.value) ? <LoadingBox /> : (
                         (selectedYear.student.value && students && students.length > 0) ? (
                             <>
                                 <Row>

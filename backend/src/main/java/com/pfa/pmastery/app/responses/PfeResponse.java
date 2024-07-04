@@ -12,6 +12,7 @@ public class PfeResponse {
     private String usedTechnologies;
     private Boolean isApproved;
     private int year;
+    private Double note;
     private List<UserResponse> user;
 
     private List<UserResponseWithoutPfe> users;
@@ -79,6 +80,14 @@ public class PfeResponse {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public Double getNote() {
+        return note;
+    }
+
+    public void setNote(Double note) {
+        this.note = note;
     }
 
     public List<UserResponse> getUser() {

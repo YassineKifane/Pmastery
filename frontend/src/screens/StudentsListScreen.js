@@ -101,7 +101,8 @@ export default function ListScreen() {
                         "Ville": pfe.city,
                         "Technologies utilisées": pfe.usedTechnologies,
                         "Email Encadrant entreprise": pfe.supervisorEmail,
-                        "Email Encadrant (prof)": supervisor ? supervisor.email : ""
+                        "Email Encadrant (prof)": supervisor ? supervisor.email : "",
+                        "Note affectée":pfe.note
                     };
                 });
 
@@ -122,7 +123,8 @@ export default function ListScreen() {
                     {wch: 20}, // Ville
                     {wch: 30}, // Technologies utilisées
                     {wch: 30}, // Email Encadrant entreprise
-                    {wch: 30}  // Email Encadrant (prof)
+                    {wch: 30}, // Email Encadrant (prof)
+                    {wch: 15}  // Note
                 ];
 
                 worksheet['!cols'] = columnWidths;

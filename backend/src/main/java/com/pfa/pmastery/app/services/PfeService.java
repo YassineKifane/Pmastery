@@ -21,5 +21,7 @@ public interface PfeService {
  boolean existsUnapprovedPfe();
  boolean hasStudentPfe();
  List<Integer> pfeYearsList(String affiliationCode);
+ void updateNote(String userId, Double note);
+ 
 
 }

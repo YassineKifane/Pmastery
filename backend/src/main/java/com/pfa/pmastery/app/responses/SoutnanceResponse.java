@@ -16,7 +16,7 @@ public class SoutnanceResponse {
     private List<LocalDate> propositionDates = new ArrayList<>(3);
     private Date affectedDate;
     private List<String> juryMembers = new ArrayList<>();
-
+    private Double note;
     public String getUserId() {
         return userId;
     }
@@ -24,6 +24,8 @@ public class SoutnanceResponse {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+    public Double getNote() {return note;}
+    public void setNote(Double note) {this.note = note;}
 
     public String getFullName() {
         return fullName;

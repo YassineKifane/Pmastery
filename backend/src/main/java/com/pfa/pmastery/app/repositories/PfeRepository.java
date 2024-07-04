@@ -18,7 +18,7 @@ public interface PfeRepository extends PagingAndSortingRepository<PfeEntity,Long
 
     @Query("SELECT DISTINCT p FROM pfe p JOIN p.users u WHERE p.year = :year and u.affiliationCode=:code and p.isApproved =:isApproved and u.isVerified=true and u.isEmailVerified=true")
     List<PfeEntity> getPfeWithStatus(@Param("year") int year, @Param("code") String code,@Param("isApproved") boolean isApproved);
-
+    
     PfeEntity findByPfeId(String pfeId);
     //Page<PfeEntity> findByPfeId(Pageable pageable , String pfeId);
 

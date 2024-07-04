@@ -16,6 +16,7 @@ public class PfeDto implements Serializable {
     private String usedTechnologies;
     private Boolean isApproved;
     private int year;
+    private Double note;
     private UserDto user;
     private List<UserDto> users;
 
@@ -94,6 +95,14 @@ public class PfeDto implements Serializable {
 
     public UserDto getUser() {
         return user;
+    }
+
+    public Double getNote() {
+        return note;
+    }
+
+    public void setNote(Double note) {
+        this.note = note;
     }
 
     public void setUser(UserDto user) {

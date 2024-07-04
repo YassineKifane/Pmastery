@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity(name="pfe")
 public class PfeEntity implements Serializable {
@@ -39,6 +41,11 @@ public class PfeEntity implements Serializable {
     @Column(name = "year", columnDefinition = "integer default extract(year from current_date)")
     private int year;
 
+    @Min(0)
+    @Max(20)
+    @Column(nullable = true)
+    private Double note;
+
     @PrePersist
     protected void onCreate() {
         year = java.time.LocalDate.now().getYear();
@@ -51,7 +58,12 @@ public class PfeEntity implements Serializable {
     @JsonIgnore
     private List<UserEntity> users;
 
-
+    public Double getNote() {
+        return note;
+    }
+    public void setNote(Double note) {
+        this.note = note;
+    }
 
     public Long getId() {
         return id;

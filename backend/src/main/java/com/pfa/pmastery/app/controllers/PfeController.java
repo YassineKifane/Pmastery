@@ -210,4 +210,9 @@ public class PfeController {
         List<Integer> yearsList=pfeService.pfeYearsList(affiliationCode);
         return yearsList;
     }
+    @PostMapping("/submitNote/{userId}")
+    public ResponseEntity<Void> submitNote(@PathVariable String userId, @RequestParam Double note) {
+        pfeService.updateNote(userId, note);
+        return ResponseEntity.ok().build();
+    }
 }

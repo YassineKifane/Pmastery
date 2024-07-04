@@ -246,6 +246,11 @@ public class SoutnanceServiceImpl implements SoutnanceService {
                 student.setFullName(allStudents.get(i).getFirstName() + " " + allStudents.get(i).getLastName());
                 student.setPfeSubject(studentPfe.get(0).getSubject());
                 student.setCompany(studentPfe.get(0).getCompany());
+                if (studentPfe.get(0).getNote() != null){
+                    student.setNote(studentPfe.get(0).getNote());
+                }else {
+                    student.setNote(-1.0);
+                }
                 if (!studentPfe.get(0).getUsers().get(0).getRole().equals("STUDENT")){
                     student.setSupervisorName(studentPfe.get(0).getUsers().get(0).getFirstName()+" "+studentPfe.get(0).getUsers().get(0).getLastName());
                 } else {
