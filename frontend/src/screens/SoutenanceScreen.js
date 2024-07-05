@@ -30,6 +30,8 @@ const reducer = (state, action) => {
       return {
         ...state,
         loading: false,
+        nbrNoteNonAffected: action.nbrNoteNonAffected,
+        numberSoutnance: action.numberSoutnance,
         soutenancesAffected: action.sAffected,
         soutenancesNotAffected: action.sNotAffected,
         dateInterval: action.dates,
@@ -69,6 +71,8 @@ export default function SoutenanceScreen() {
     {
       loading,
       error,
+      nbrNoteNonAffected,
+      numberSoutnance,
       soutenancesAffected,
       soutenancesNotAffected,
       dateInterval,
@@ -125,12 +129,13 @@ export default function SoutenanceScreen() {
             return `${day}/${month}/${year}`;
           }
         );
-        // console.log(generatedDateList);
         setMinDate(new Date(data[0]));
         setMaxDate(new Date(data[1]));
         // console.log(result.data);
         dispatch({
           type: 'FETCH_SUCCESS',
+          numberSoutnance: result.data.length,
+          nbrNoteNonAffected: result.data.filter(s=>s.note == -1).length, 
           sAffected: result.data.filter(
             (s) => s.affectedDate !== null && s.propositionDates !== null
           ),
@@ -382,6 +387,16 @@ export default function SoutenanceScreen() {
         </Col>
         <Col className="text-end">
           <h4>{currentYear}</h4>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12} className="text-end">
+          <h6>Nombre de soutenances : {numberSoutnance}</h6>
+        </Col>
+        <Col xs={12} className="text-end">
+          <h6>
+            Nombre de notes non affectées : {nbrNoteNonAffected}
+          </h6>
         </Col>
       </Row>
       {loading ? (
