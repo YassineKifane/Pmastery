@@ -264,7 +264,7 @@ export  default function SupervisorItem({deleteHandler,supervisor,selectedYearSu
                     type="button"
                     variant="primary"
                     onClick={() => setVisible(true)}
-                >
+                 >
                     PFE encadrés
                 </Button>
 

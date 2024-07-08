@@ -64,17 +64,16 @@ export default function MesSoutenancesScreen() {
       }));
       setbtnModifedSelected(0)
       setNote("")
+      fetchData();
     } catch (error) {
       console.error("Erreur lors de la soumission de la note :", error);
     }
   };
 
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(
+  const fetchData = async () => {
+    try {
+      dispatch({ type: 'FETCH_REQUEST' });
+      const { data } = await axios.get(
           URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
@@ -83,17 +82,17 @@ export default function MesSoutenancesScreen() {
               affiliationCode: userInfo.affiliationCode,
             },
           }
-        );
-        const result = await axios.get(URL + `/soutnance/getAllSoutnances`, {
-          headers: { Authorization: `${userInfo.token}` },
-          params: {
-            year: currentYear,
-            affiliationCode: userInfo.affiliationCode,
-          },
-        });
-        const startDate = new Date(data[0]);
-        const endDate = new Date(data[1]);
-        const generatedDateList = Array.from(
+      );
+      const result = await axios.get(URL + `/soutnance/getAllSoutnances`, {
+        headers: { Authorization: `${userInfo.token}` },
+        params: {
+          year: currentYear,
+          affiliationCode: userInfo.affiliationCode,
+        },
+      });
+      const startDate = new Date(data[0]);
+      const endDate = new Date(data[1]);
+      const generatedDateList = Array.from(
           { length: (endDate - startDate) / (1000 * 60 * 60 * 24) + 1 },
           (_, index) => {
             const currentDate = new Date(startDate);
@@ -105,29 +104,30 @@ export default function MesSoutenancesScreen() {
 
             return `${day}/${month}/${year}`;
           }
-        );
-        // console.log(generatedDateList);
-        // console.log(result.data);
-        dispatch({
-          type: 'FETCH_SUCCESS',
-          sAffected: result.data.filter(
+      );
+      // console.log(generatedDateList);
+      // console.log(result.data);
+      dispatch({
+        type: 'FETCH_SUCCESS',
+        sAffected: result.data.filter(
             (s) =>
-              s.affectedDate !== null &&
-              s.propositionDates !== null &&
-              s.juryMembers.includes(
-                `${userInfo.firstName} ${userInfo.lastName}`
-              )
-          ),
-          dates: generatedDateList,
-        });
-      } catch (err) {
-        dispatch({
-          type: 'FETCH_FAIL',
-          payload: err,
-        });
-      }
-    };
+                s.affectedDate !== null &&
+                s.propositionDates !== null &&
+                s.juryMembers.includes(
+                    `${userInfo.firstName} ${userInfo.lastName}`
+                )
+        ),
+        dates: generatedDateList,
+      });
+    } catch (err) {
+      dispatch({
+        type: 'FETCH_FAIL',
+        payload: err,
+      });
+    }
+  };
 
+  useEffect(() => {
     if (successAffect) {
       dispatch({ type: 'AFFECT_RESET' });
     } else {
