@@ -149,6 +149,9 @@ export default function ChatScreen(props) {
 
     return (
         <main className="my-4 mx-5">
+             <div className="mt-4 mb-4">
+                <h3>Suivi de PFE</h3>
+             </div>
             {(userInfo.role === 'SUPERVISOR' || userInfo.role === 'ADMIN') && students && students.length === 0 && (
                 <MessageBox variant="info" className="bg-blue">
                     Pas d'étudiants pour le moment.
