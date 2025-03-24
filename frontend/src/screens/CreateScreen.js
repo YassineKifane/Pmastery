@@ -97,30 +97,36 @@ export default function StudentJoinForm() {
       setErrors(formErrors);
       return;
     }
+  
     try {
       setLoading(true);
-      // console.log(form);
-      const response = await axios.post(URL + '/user', form, {
-        params: { role: 'ADMIN' },
+  
+      // Step 1: Create user
+      const response = await axios.post(URL + "/user", form, {
+        params: { role: "ADMIN" },
       });
       const userId = response.data.userId;
-      // Envoi de l'image
+  
+      // Step 2: Always send FormData
       const formData = new FormData();
-      formData.append('image', form.image);
+      formData.append("userId", userId); // Always include userId
+      if (form.image) {
+        formData.append("image", form.image); // Add image only if exists
+      }
+  
       await axios.post(`${URL}/image`, formData, {
-        params : {
-          'userId': userId,
-        }
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
+  
       setLoading(false);
-      navigate(redirect || '/');
-      toast.info('Vérifier votre email pour valider votre compte');
+      navigate(redirect || "/");
+      toast.info("Vérifier votre email pour valider votre compte");
     } catch (err) {
       toast.error(getError(err));
       setLoading(false);
     }
   };
+  
   useEffect(() => {
     // Find the first input element with an error
     const firstErrorInput = Object.keys(errors).find(

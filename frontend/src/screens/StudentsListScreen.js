@@ -187,18 +187,26 @@ export default function ListScreen() {
                         </Col>
                     </Row>
 
+                    
+
                     <Row>
                         <Col className="text-end">
-                            {loadingFile ? <LoadingBox /> :
+                            {loadingFile ? (
+                                <LoadingBox />
+                            ) : (
                                 <Button
                                     type="button"
-                                    onClick={()=>generateExcelDoc()}
+                                    onClick={generateExcelDoc}
+                                    disabled={students.length === 0} // Disable button if no students
+                                    className="mb-3"
                                 >
-                                    Télécharger la liste
+                                    {students.length === 0 ? 'Aucun étudiant disponible' : 'Télécharger la liste'} 
                                 </Button>
-                            }
+                            )}
                         </Col>
                     </Row>
+
+                    
                     {students.length > 0 ? (
                         <>
                             <Form>

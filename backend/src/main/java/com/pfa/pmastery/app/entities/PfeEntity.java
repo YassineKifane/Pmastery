@@ -45,7 +45,7 @@ public class PfeEntity implements Serializable {
     @Max(20)
     @Column(nullable = true)
     private Double note;
-
+    
     @PrePersist
     protected void onCreate() {
         year = java.time.LocalDate.now().getYear();
@@ -57,6 +57,7 @@ public class PfeEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnore
     private List<UserEntity> users;
+    
 
     public Double getNote() {
         return note;

@@ -4,6 +4,7 @@ import com.pfa.pmastery.app.responses.SoutnanceResponse;
 import com.pfa.pmastery.app.responses.SoutnanceResponseExtract;
 import com.pfa.pmastery.app.services.SoutnanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +25,12 @@ public class SoutnanceController {
     SoutnanceService soutnanceService;
 
     @PutMapping(path="/initializeDate/{userId}")
-    public ResponseEntity<?> initializeDate(@PathVariable String userId ,
-                                            @RequestParam("startDate") LocalDate startDate,
-                                            @RequestParam("finalDate") LocalDate finalDate,
-                                            @RequestParam("year") int year){
-
-        String initializeDate = soutnanceService.initializeDate(userId,startDate,finalDate,year);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(initializeDate);
+    public ResponseEntity<?> initializeDate(@PathVariable String userId,
+                                            @RequestParam("startDate") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate startDate,
+                                            @RequestParam("finalDate") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate finalDate,
+                                            @RequestParam("year") int year) {
+        String initializeDate = soutnanceService.initializeDate(userId, startDate, finalDate, year);
+        return ResponseEntity.status(HttpStatus.OK).body(initializeDate);
     }
 
     @GetMapping(path="/getInitializeDate/{userId}")

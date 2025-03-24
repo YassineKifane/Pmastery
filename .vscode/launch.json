@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-PfaPMasteryApplication<pfa-PMastery>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.pfa.pmastery.app.PfaPMasteryApplication",
+            "projectName": "pfa-PMastery",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

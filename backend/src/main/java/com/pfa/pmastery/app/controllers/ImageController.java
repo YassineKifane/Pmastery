@@ -23,16 +23,23 @@ public class ImageController {
 
 
     @PostMapping
-    public ResponseEntity<?> uploadImage( @RequestParam("image") MultipartFile image,
-                                          @RequestParam(value = "userId") String userId) throws IOException {
+    public ResponseEntity<?> uploadImage(
+            @RequestPart(value = "image", required = false) MultipartFile image, // ✅ Use @RequestPart and make it optional
+            @RequestParam("userId") String userId) throws IOException {
+    
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found for userId: " + userId);
         }
-        String uploadImage = imageService.uploadImage(image, userEntity);
-        return ResponseEntity.status(HttpStatus.OK).body(uploadImage);
+    
+        if (image != null && !image.isEmpty()) {
+            String uploadImage = imageService.uploadImage(image, userEntity);
+            return ResponseEntity.status(HttpStatus.OK).body(uploadImage);
+        }
+    
+        return ResponseEntity.status(HttpStatus.OK).body("User registered without image.");
     }
-
+    
     @GetMapping
     public ResponseEntity<?> downloadImage(String affiliationCode){
         UserEntity chefFiliere = userRepository.findByAffiliationCodeAndRole(affiliationCode, "ADMIN");

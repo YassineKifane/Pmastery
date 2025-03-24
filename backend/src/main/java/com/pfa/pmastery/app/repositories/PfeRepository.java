@@ -39,4 +39,7 @@ public interface PfeRepository extends PagingAndSortingRepository<PfeEntity,Long
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN TRUE ELSE FALSE END FROM pfe p WHERE p.isApproved = 0")
     boolean existsUnapprovedPfe();
 
+
+    
+
 }
