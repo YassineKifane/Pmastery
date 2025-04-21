@@ -23,5 +23,6 @@ public interface PfeService {
  List<Integer> pfeYearsList(String affiliationCode);
  void updateNote(String userId, Double note);
  
-
+ PfeDto publishSupervisorAssignment(String pfeId);
+ boolean areAllSupervisorAssignmentsPublished();
 }

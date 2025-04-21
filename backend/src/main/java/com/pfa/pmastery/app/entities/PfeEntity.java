@@ -41,6 +41,8 @@ public class PfeEntity implements Serializable {
     @Column(name = "year", columnDefinition = "integer default extract(year from current_date)")
     private int year;
 
+    private boolean published = false;
+
     @Min(0)
     @Max(20)
     @Column(nullable = true)
@@ -55,6 +57,7 @@ public class PfeEntity implements Serializable {
     @JoinTable(name = "pfe_users",
             joinColumns = @JoinColumn(name = "pfe_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+            
     @JsonIgnore
     private List<UserEntity> users;
     
@@ -144,6 +147,14 @@ public class PfeEntity implements Serializable {
 
     public void setUsers(List<UserEntity> users) {
         this.users = users;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+    
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 
 }

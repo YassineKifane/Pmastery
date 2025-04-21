@@ -19,7 +19,15 @@ public class PfeDto implements Serializable {
     private Double note;
     private UserDto user;
     private List<UserDto> users;
+    private boolean published;
 
+    public boolean isPublished() {
+        return published;
+    }
+    
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
 
     public Long getId() {
         return id;

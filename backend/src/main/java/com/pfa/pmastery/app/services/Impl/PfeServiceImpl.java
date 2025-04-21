@@ -177,7 +177,8 @@ public class PfeServiceImpl implements PfeService {
         }
 
         pfeEntity.setApproved(true);
-
+        // Don't publish yet
+        pfeEntity.setPublished(false);
         PfeEntity approvedPfe = pfeRepository.save(pfeEntity);
 
         ModelMapper modelMapper = new ModelMapper();
@@ -233,5 +234,30 @@ public class PfeServiceImpl implements PfeService {
         pfeEntities.get(0).setNote(note);
         pfeRepository.save(pfeEntities.get(0));
     }
+
+
+    @Override
+    public PfeDto publishSupervisorAssignment(String pfeId) {
+    PfeEntity pfe = pfeRepository.findByPfeId(pfeId);
+    if (pfe == null) {
+        throw new RuntimeException("PFE not found");
+    }
+
+    pfe.setPublished(true);
+    PfeEntity updated = pfeRepository.save(pfe);
+
+    return new ModelMapper().map(updated, PfeDto.class);
+}
+
+
+@Override
+public boolean areAllSupervisorAssignmentsPublished() {
+    List<PfeEntity> allPfes = (List<PfeEntity>) pfeRepository.findAll();
+    // Return true only if all PFEs that have supervisors are marked as published
+    return allPfes.stream()
+            .filter(pfe -> !pfe.getUsers().isEmpty()) // has supervisors
+            .allMatch(PfeEntity::isPublished);        // all must be published
+}
+
 
 }
