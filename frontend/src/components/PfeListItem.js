@@ -14,7 +14,6 @@ import { getError } from '../utils';
 import LoadingBox from './LoadingBox';
 import { URL } from "../constants/constants";
 
-
 export default function PfeListItem(props) {
   const {
     allPfe,
@@ -27,6 +26,7 @@ export default function PfeListItem(props) {
   } = props;
   const [modifySupervisor, setModifySupervisor] = useState(false);
   const [value, setValue] = useState([]);
+
   const handleChange = (val) => setValue(val);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function PfeListItem(props) {
 
   const submitHandler = async () => {
     if (value.length === 0) {
-      toast.error('Aucun encadrant sélectionnée');
+      toast.error('Aucun encadrant sélectionné');
       return;
     }
     try {
@@ -63,6 +63,43 @@ export default function PfeListItem(props) {
       dispatch({ type: 'ASSIGNMENT_FAIL' });
     }
   };
+
+  const handlePublishSupervisor = async () => {
+    try {
+      dispatch({ type: 'ASSIGNMENT_REQUEST' });
+      await axios.put(
+        `${URL}/pfe/publishSupervisors/${pfeSelectedAction.pfeId}`,
+        {},
+        {
+          headers: { Authorization: `${userInfo.token}` },
+        }
+      );
+      toast.success('Encadrant publié avec succès!');
+      dispatch({ type: 'ASSIGNMENT_SUCCESS' });
+    } catch (err) {
+      toast.error(getError(err));
+      dispatch({ type: 'ASSIGNMENT_FAIL' });
+    }
+  };
+
+  const handlePublishAll = async () => {
+    try {
+      dispatch({ type: 'ASSIGNMENT_REQUEST' });
+      await axios.put(
+        `${URL}/pfe/publishSupervisors/${pfeSelectedAction.pfeId}`,
+        {},
+        {
+          headers: { Authorization: `${userInfo.token}` },
+        }
+      );
+      toast.success('Modifications publiées avec succès!');
+      dispatch({ type: 'ASSIGNMENT_SUCCESS' });
+    } catch (err) {
+      toast.error(getError(err));
+      dispatch({ type: 'ASSIGNMENT_FAIL' });
+    }
+  };
+
   return (
     <ListGroup variant="flush sticky-top removeZindex">
       <ListGroup.Item>
@@ -143,7 +180,7 @@ export default function PfeListItem(props) {
             <>
               <div className="mt-2">
                 <MessageBox variant="danger">
-                  Aucun encadrant affecter à ce sujet
+                  Aucun encadrant affecté à ce sujet
                 </MessageBox>
               </div>
               <div className={modifySupervisor ? 'd-none' : 'd-block'}>
@@ -206,6 +243,40 @@ export default function PfeListItem(props) {
             )}
           </Col>
         </Row>
+        {pfeSelectedAction.assignedSupervisorEmail && (
+          <Row>
+            <Col>
+              <strong>Encadrant assigné:</strong> {pfeSelectedAction.assignedSupervisorEmail}
+              {pfeSelectedAction.isSupervisorPublished ? (
+                <span className="text-success"> (Publié)</span>
+              ) : (
+                <span className="text-warning"> (Non publié)</span>
+              )}
+              {userInfo.role === 'ADMIN' && !pfeSelectedAction.isSupervisorPublished && (
+                <Button
+                  className="mt-2"
+                  onClick={handlePublishSupervisor}
+                >
+                  Publier l'encadrant
+                </Button>
+              )}
+            </Col>
+          </Row>
+        )}
+        {/* Publish All Modifications Button */}
+        {userInfo.role === 'ADMIN' && (
+          <Row className="mt-2">
+            <Col>
+              <Button
+                className="bg-primary"
+                onClick={handlePublishAll}
+                disabled={pfeSelectedAction.isSupervisorPublished}
+              >
+                Publier toutes les modifications
+              </Button>
+            </Col>
+          </Row>
+        )}
       </ListGroup.Item>
     </ListGroup>
   );

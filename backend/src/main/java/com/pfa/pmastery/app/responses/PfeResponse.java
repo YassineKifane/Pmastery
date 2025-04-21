@@ -16,7 +16,15 @@ public class PfeResponse {
     private List<UserResponse> user;
 
     private List<UserResponseWithoutPfe> users;
+    private boolean published;
 
+public boolean isPublished() {
+    return published;
+}
+
+public void setPublished(boolean published) {
+    this.published = published;
+}
 
     public String getPfeId() {
         return pfeId;

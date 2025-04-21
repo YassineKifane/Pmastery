@@ -135,15 +135,20 @@ public class PfeController {
     public ResponseEntity<List<PfeResponseWithoutUser>> getPfeByUserId(@PathVariable String userId,
                                                                        @RequestParam (value="role") String role){
         List<PfeResponseWithoutUser> pfeResponses = new ArrayList<>();
-        List<PfeDto> pfes = pfeService.getPfeByUserId(userId,role);
-        for(PfeDto pfeDto : pfes) {
-            ModelMapper modelMapper = new ModelMapper();
-            PfeResponseWithoutUser pfeResponse = modelMapper.map(pfeDto, PfeResponseWithoutUser.class);
-            pfeResponses.add(pfeResponse);
+        List<PfeDto> pfes = pfeService.getPfeByUserId(userId, role);
+        
+        for (PfeDto pfeDto : pfes) {
+            if (!pfeDto.isPublished()) {
+                // Hide supervisor list
+                pfeDto.setUsers(new ArrayList<>());
+            }
+            PfeResponseWithoutUser response = new ModelMapper().map(pfeDto, PfeResponseWithoutUser.class);
+            pfeResponses.add(response);
         }
-        return new ResponseEntity<List<PfeResponseWithoutUser>>(pfeResponses, HttpStatus.OK);
+    
+        return new ResponseEntity<>(pfeResponses, HttpStatus.OK);
     }
-
+    
     @PutMapping(path ="/{pfeId}")
     public ResponseEntity<PfeResponseWithoutUser> updatePfe(@PathVariable String pfeId , @RequestBody @Valid PfeRequest pfeRequest){
 
@@ -215,4 +220,19 @@ public class PfeController {
         pfeService.updateNote(userId, note);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/publishSupervisors/{pfeId}")
+    public ResponseEntity<PfeResponse> publishSupervisorAssignment(@PathVariable String pfeId) {
+    PfeDto publishedPfe = pfeService.publishSupervisorAssignment(pfeId);
+    PfeResponse response = new ModelMapper().map(publishedPfe, PfeResponse.class);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+}
+
+    
+@GetMapping("/assignmentsPublished")
+public ResponseEntity<Boolean> areAssignmentsPublished() {
+    boolean published = pfeService.areAllSupervisorAssignmentsPublished();
+    return ResponseEntity.ok(published);
+}
+
 }
