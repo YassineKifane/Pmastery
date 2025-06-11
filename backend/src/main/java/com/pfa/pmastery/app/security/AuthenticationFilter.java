@@ -65,36 +65,33 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest req,
-                                            HttpServletResponse res,
-                                            FilterChain chain,
-                                            Authentication auth) throws IOException, ServletException {
+@Override
+protected void successfulAuthentication(HttpServletRequest req,
+                                        HttpServletResponse res,
+                                        FilterChain chain,
+                                        Authentication auth) throws IOException, ServletException {
 
-        String userName = ((User) auth.getPrincipal()).getUsername();
-        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
-        UserDto userDto = userService.getUser(userName);
+    String userName = ((User) auth.getPrincipal()).getUsername();
+    UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+    UserDto userDto = userService.getUser(userName);
 
-        String token = Jwts.builder()
-                .setSubject(userName)
-                .claim("id",userDto.getUserId())
-                .claim("name",userDto.getFirstName()+" "+userDto.getLastName())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET )
-                .compact();
+    String token = Jwts.builder()
+            .setSubject(userName)
+            .claim("id", userDto.getUserId())
+            .claim("name", userDto.getFirstName() + " " + userDto.getLastName())
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+            .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
+            .compact();
 
-        res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+    res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+    res.addHeader("user", new ObjectMapper().writeValueAsString(userDto));
 
-        ObjectMapper mapper = new ObjectMapper();
-        String userJson = mapper.writeValueAsString(userDto);
-        res.addHeader("user", userJson);
+    // This line allows your frontend to read the above headers:
+    res.addHeader("Access-Control-Expose-Headers", SecurityConstants.HEADER_STRING + ", user");
 
-        //res.addHeader("user_id", userDto.getUserId());
-        //res.addHeader("role" , userDto.getRole());
+    res.getWriter().print(new ObjectMapper().writeValueAsString(userDto));
+}
 
-        res.getWriter().print(userJson);
-        //res.getWriter().write("{\n\"token\": \"" + token + "\" \n \"id\": \""+ userDto.getUserId() + "\"\n \"role\": \""+userDto.getRole() +"\"\n}");
-    }
 
 }
