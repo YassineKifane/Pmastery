@@ -148,7 +148,7 @@ export default function FichesDeStagesScreen() {
         formData.append('attachment', pdfBlob, 'fiche_de_stage.pdf');
 
 
-        await axios.post(URL + '/send-pdf', formData, {
+        await axios.post(`${URL}` + '/send-pdf', formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
             await axios.delete(`${URL}/demande/${demande.users[0].userId}`, {

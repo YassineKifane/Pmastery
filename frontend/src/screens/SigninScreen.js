@@ -48,7 +48,7 @@ export default function SigninScreen() {
       return;
     }
     try {
-      const result = await axios.post('http://localhost:3002/api/users/login', form, {
+      const result = await axios.post(`${URL}/api/users/login`, form, {
       withCredentials: true,
       });
       

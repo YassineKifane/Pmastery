@@ -94,7 +94,7 @@ export default function StudentJoinForm() {
       setLoading(true);
       let data = {...form};
 
-      await axios.post(URL + '/user', data, {
+      await axios.post(`${URL}`+ '/user', data, {
         params: { role: 'STUDENT' },
       });
       setLoading(false);

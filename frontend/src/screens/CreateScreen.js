@@ -102,7 +102,7 @@ export default function StudentJoinForm() {
       setLoading(true);
   
       // Step 1: Create user
-      const response = await axios.post(URL + "/user", form, {
+      const response = await axios.post(`${URL}` + "/user", form, {
         params: { role: "ADMIN" },
       });
       const userId = response.data.userId;

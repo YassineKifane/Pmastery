@@ -92,7 +92,7 @@ export default function SupervisorJoinForm() {
     }
     try {
       setLoading(true);
-      await axios.post(URL + '/user', form, {
+      await axios.post(`${URL}` + '/user', form, {
         params: { role: 'SUPERVISOR' },
       });
       setLoading(false);

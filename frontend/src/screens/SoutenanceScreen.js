@@ -326,8 +326,7 @@ export default function SoutenanceScreen() {
         juryMembers: selectedJuryMembers,
       };
       // console.log(sendData);
-      const { data } = await axios.post(
-        URL + `/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
+      const { data } = await axios.post(`${URL}` + `/soutnance/assignDate/${userInfo.userId}/${selectedSoutenance.userId}`,
         sendData,
         {
           headers: {

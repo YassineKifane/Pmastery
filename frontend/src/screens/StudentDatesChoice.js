@@ -191,8 +191,7 @@ export default function StudentDatesChoice() {
     try {
       dispatch({ type: 'SEND_CHOICE_REQUEST' });
       let datePropositions = selectedDates.map((d) => sendDateFormat(d));
-      await axios.post(
-        URL + `/soutnance/proposeDates/${userInfo.userId}`,
+      await axios.post(`${URL}` + `/soutnance/proposeDates/${userInfo.userId}`,
         datePropositions,
         {
           headers: {

@@ -119,7 +119,7 @@ export default function RemplirPfeScreen() {
 
             console.log(data);
             console.log(form.userId)
-            await axios.post(URL + '/pfe', data, {
+            await axios.post(`${URL}` + '/pfe', data, {
                 params: {
                     'userId': form.userId,
                 }
