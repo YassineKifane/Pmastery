@@ -49,6 +49,7 @@ export default function SigninScreen() {
     }
     try {
       const result = await axios.post('/api/users/login', form);
+      
       if (/*result.data.emailVerified*/ true) {
         if (result.data.verified) {
           delete result.data.announcementMsg;
@@ -62,6 +63,7 @@ export default function SigninScreen() {
                 ...result.data,
                 token: result.headers.authorization,
               })
+              
           );
           navigate(redirect || '/home');
         } else {
