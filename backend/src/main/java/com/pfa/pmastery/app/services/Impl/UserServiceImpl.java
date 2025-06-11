@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
         confirmationTokenRepository.save(confirmationToken);
 
         String msg="To confirm your account, please click here : "
-                +"http://localhost:3002/user/confirmEmail?token="+confirmationToken.getConfirmationToken();
+                +"http://77.37.124.70:3002/user/confirmEmail?token="+confirmationToken.getConfirmationToken();
         String subject = "Complete Registration!";
         emailSenderService.sendEmail(userEntity.getEmail(),
                 subject,
