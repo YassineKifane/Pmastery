@@ -58,7 +58,7 @@ function App() {
 
     const fetchUnreadMessages = async () => {
         try {
-            const { data } = await axios.get(URL + '/messages/recipient', {
+            const { data } = await axios.get(`${URL}` + '/messages/recipient', {
                 params: { recipientId: userInfo.userId, isNotified: false },
                 headers: { Authorization: `${userInfo.token}` },
             });
@@ -74,7 +74,7 @@ function App() {
     const markNotificationsAsRead = async () => {
         try {
             for (const notification of notifications) {
-                await axios.put(URL + `/messages/notified/${notification.id}`, null, {
+                await axios.put(`${URL}` + `/messages/notified/${notification.id}`, null, {
                     params: {isNotified: true},
                     headers: {Authorization: `${userInfo.token}`},
                 });
@@ -90,7 +90,7 @@ function App() {
     useEffect(() => {
         const fetchNumberOfDemands = async () => {
             try {
-                const { data } = await axios.get(URL + '/user/nbRequests', {
+                const { data } = await axios.get(`${URL}` + '/user/nbRequests', {
                     params: { affiliationCode: userInfo.affiliationCode },
                     headers: { Authorization: `${userInfo.token}` },
                 });
@@ -132,7 +132,7 @@ function App() {
         if (!userInfo) {
             return;
         }
-        const socket = new SockJS(URL + '/ws');
+        const socket = new SockJS(`${URL}` + '/ws');
         const client = Stomp.over(socket);
 
         client.connect({}, function(frame) {

@@ -49,7 +49,7 @@ export default function SupervisorsListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(URL + '/user/usersWithCurrentPfeAndApproved', {
+        const { data } = await axios.get(`${URL}` + '/user/usersWithCurrentPfeAndApproved', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             role : "SUPERVISOR",
@@ -59,7 +59,7 @@ export default function SupervisorsListScreen() {
         });
 
 
-        const dataa = await axios.get(URL + '/pfe/pfeYears', {
+        const dataa = await axios.get(`${URL}` + '/pfe/pfeYears', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,

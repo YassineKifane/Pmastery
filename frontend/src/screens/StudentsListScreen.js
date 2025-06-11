@@ -54,7 +54,7 @@ export default function ListScreen() {
         const fetchData = async () => {
             try {
                 dispatch({ type: 'FETCH_REQUEST' });
-                const { data } = await axios.get(URL+'/user/allUsers', {
+                const { data } = await axios.get(`${URL}`+'/user/allUsers', {
                     headers: { Authorization: `${userInfo.token}` },
                     params: {
                         affiliationCode: userInfo.affiliationCode,
@@ -148,7 +148,7 @@ export default function ListScreen() {
         if (window.confirm(`Êtes-vous sûr de vouloir supprimer ce compte?`)) {
             try {
                 dispatch({ type: 'DELETE_REQUEST' });
-                await axios.delete(URL + `/user/${student.userId}`, {
+                await axios.delete(`${URL}` + `/user/${student.userId}`, {
                     headers: { Authorization: `${userInfo.token}` },
                     params: { role: 'STUDENT' }
                 });

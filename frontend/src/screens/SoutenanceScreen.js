@@ -100,14 +100,14 @@ export default function SoutenanceScreen() {
             },
           }
         );
-        const result = await axios.get(URL + `/soutnance/getAllSoutnances`, {
+        const result = await axios.get(`${URL}` + `/soutnance/getAllSoutnances`, {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             year: currentYear,
             affiliationCode: userInfo.affiliationCode,
           },
         });
-        const supervisors = await axios.get(URL + '/user/allUsers', {
+        const supervisors = await axios.get(`${URL}` + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,

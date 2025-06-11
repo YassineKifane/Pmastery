@@ -138,7 +138,7 @@ export default function ResetPasswordScreen() {
     }
     try {
       dispatch({ type: 'SEND_EMAIL' });
-      await axios.put(URL + '/user/forgotPassword', null, {
+      await axios.put(`${URL}` + '/user/forgotPassword', null, {
         params: { email: form.email },
       });
       // console.log(result);
@@ -164,7 +164,7 @@ export default function ResetPasswordScreen() {
     }
     try {
       dispatch({ type: 'RESET_PASSWORD_REQUEST' });
-      await axios.put(URL + '/user/resetPassword', `${form.newPass}`, {
+      await axios.put(`${URL}` + '/user/resetPassword', `${form.newPass}`, {
         params: { token: form.code },
         headers: { 'Content-Type': 'application/json' },
         transformRequest: [(data) => data],

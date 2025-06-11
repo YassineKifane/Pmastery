@@ -44,14 +44,14 @@ export default function HomeScreen() {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
         // Fetch announcement message
-        const { data } = await axios.get(URL + `/user/announcementMsg`, {
+        const { data } = await axios.get(`${URL}` + `/user/announcementMsg`, {
           params: { userId: userInfo.userId },
           headers: { Authorization: `${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
 
         // Check if the student has a PFE
-        const hasPFEResponse = await axios.get(URL + `/pfe/hasPFE`, {
+        const hasPFEResponse = await axios.get(`${URL}` + `/pfe/hasPFE`, {
           params: { userId: userInfo.userId },
           headers: { Authorization: `${userInfo.token}` },
         });

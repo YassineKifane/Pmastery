@@ -35,7 +35,7 @@ export default function MesPfeSupervisorScreen() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const { data } = await axios.get(URL + `/pfe/user/${userInfo.userId}`, {
+        const { data } = await axios.get(`${URL}` + `/pfe/user/${userInfo.userId}`, {
           params: { role: userInfo.role },
           headers: { Authorization: `${userInfo.token}` },
         });

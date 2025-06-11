@@ -22,7 +22,7 @@ export default function FichesDeStagesScreen() {
     const [demandCount, setDemandCount] = useState(0);
     const fetchData = async () => {
         try {
-            const { data } = await axios.get(URL + '/demande', {
+            const { data } = await axios.get(`${URL}` + '/demande', {
                 headers: { Authorization: `${userInfo.token}` },
                 params: { userId: userInfo.userId }
             });

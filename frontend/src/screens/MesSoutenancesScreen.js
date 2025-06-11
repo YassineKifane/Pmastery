@@ -83,7 +83,7 @@ export default function MesSoutenancesScreen() {
             },
           }
       );
-      const result = await axios.get(URL + `/soutnance/getAllSoutnances`, {
+      const result = await axios.get(`${URL}` + `/soutnance/getAllSoutnances`, {
         headers: { Authorization: `${userInfo.token}` },
         params: {
           year: currentYear,

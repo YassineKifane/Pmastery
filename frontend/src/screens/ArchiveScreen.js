@@ -67,7 +67,7 @@ export default function ArchiveScreen() {
     useEffect(() => {
         const fetchYears = async () => {
             try {
-                const dataYears = await axios.get(URL + '/pfe/pfeYears', {
+                const dataYears = await axios.get(`${URL}` + '/pfe/pfeYears', {
                     headers: { Authorization: `${userInfo.token}` },
                     params: {
                         affiliationCode: userInfo.affiliationCode,
@@ -87,7 +87,7 @@ export default function ArchiveScreen() {
             if (selectedYear.supervisor.value) {
                 dispatch({ type: 'FETCH_REQUEST' });
                 try {
-                    const { data } = await axios.get(URL + '/user/usersWithCurrentPfeAndApproved', {
+                    const { data } = await axios.get(`${URL}` + '/user/usersWithCurrentPfeAndApproved', {
                         headers: { Authorization: `${userInfo.token}` },
                         params: {
                             role: "SUPERVISOR",
@@ -116,7 +116,7 @@ export default function ArchiveScreen() {
             if (selectedYear.student.value) {
                 dispatch({ type: 'FETCH_REQUEST' });
                 try {
-                    const { data } = await axios.get(URL + '/user/usersWithCurrentPfeAndApproved', {
+                    const { data } = await axios.get(`${URL}` + '/user/usersWithCurrentPfeAndApproved', {
                         headers: { Authorization: `${userInfo.token}` },
                         params: {
                             role: "STUDENT",

@@ -56,7 +56,7 @@ export default function NavbarComponent(props) {
                         params: {userId: userInfo.userId},
                         headers: {Authorization: `${userInfo.token}`}
                     }),
-                    axios.get(URL + '/demande', {
+                    axios.get(`${URL}` + '/demande', {
                         headers: {Authorization: `${userInfo.token}`},
                         params: {userId: userInfo.userId}
                     }),

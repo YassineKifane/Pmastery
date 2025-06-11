@@ -103,7 +103,7 @@ export default function DateAssignmentScreen() {
             },
           }
         );
-        const result = await axios.get(URL + `/soutnance/getAllSoutnances`, {
+        const result = await axios.get(`${URL}` + `/soutnance/getAllSoutnances`, {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             year: currentYear,
@@ -111,7 +111,7 @@ export default function DateAssignmentScreen() {
           },
         });
         console.log("result: "+result)
-        const supervisors = await axios.get(URL + '/user/allUsers', {
+        const supervisors = await axios.get(`${URL}` + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,

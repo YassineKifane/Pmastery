@@ -14,7 +14,7 @@ export const TableSection = ({ user, deleteHandler,currentYear, token}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await axios.get(URL + `/pfe/${user.pfe[0].pfeId}`, {
+        const result = await axios.get(`${URL}` + `/pfe/${user.pfe[0].pfeId}`, {
           headers: { Authorization: `${token}` },
         });
         setResult(result.data)

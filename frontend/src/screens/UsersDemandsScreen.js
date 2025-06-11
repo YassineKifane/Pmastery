@@ -70,7 +70,7 @@ export default function UsersDemandsScreen(props) {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(URL + '/user/allUsers', {
+        const { data } = await axios.get(`${URL}` + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,
@@ -119,7 +119,7 @@ export default function UsersDemandsScreen(props) {
     ) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(URL + `/user/${user.userId}`, {
+        await axios.delete(`${URL}` + `/user/${user.userId}`, {
           headers: { Authorization: `${userInfo.token}` },
         });
         toast.success('Demande refusée');

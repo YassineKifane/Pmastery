@@ -72,14 +72,14 @@ export default function PfeListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(URL + '/pfe', {
+        const { data } = await axios.get(`${URL}` + '/pfe', {
           params: {
             affiliationCode: userInfo.affiliationCode,
             year: currentYear,
           },
           headers: { Authorization: `${userInfo.token}` },
         });
-        const supervisors = await axios.get(URL + '/user/allUsers', {
+        const supervisors = await axios.get(`${URL}` + '/user/allUsers', {
           headers: { Authorization: `${userInfo.token}` },
           params: {
             affiliationCode: userInfo.affiliationCode,

@@ -37,7 +37,7 @@ export default function PfeDetailsScreen() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const result = await axios.get(URL + `/pfe/${pfeId}`, {
+        const result = await axios.get(`${URL}` + `/pfe/${pfeId}`, {
           params: { role: userInfo.role },
           headers: { Authorization: `${userInfo.token}` },
         });
