@@ -127,7 +127,7 @@ public class UserController {
     public ModelAndView confirmEmail(@RequestParam("token")String confirmationToken){
         userService.confirmEmail(confirmationToken);
 
-        ModelAndView modelAndView = new ModelAndView("redirect:http://http://77.37.124.70:3001/");
+        ModelAndView modelAndView = new ModelAndView("redirect:http://77.37.124.70:3001/");
 
         return modelAndView;
     }
