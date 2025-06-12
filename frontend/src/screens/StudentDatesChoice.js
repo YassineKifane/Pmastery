@@ -83,7 +83,7 @@ export default function StudentDatesChoice() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
+          `${URL}` + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -93,13 +93,13 @@ export default function StudentDatesChoice() {
           }
         );
         const result = await axios.get(
-          URL + `/soutnance/getProposeDates/${userInfo.userId}`,
+          `${URL}` + `/soutnance/getProposeDates/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
           }
         );
         const result2 = await axios.get(
-          URL + `/soutnance/getAssignedSoutnance/${userInfo.userId}`,
+          `${URL}` + `/soutnance/getAssignedSoutnance/${userInfo.userId}`,
           { headers: { Authorization: `${userInfo.token}` } }
         );
         // console.log(result.data);

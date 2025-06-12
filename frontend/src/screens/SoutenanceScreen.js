@@ -91,7 +91,7 @@ export default function SoutenanceScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
+         `${URL}` + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -357,7 +357,7 @@ export default function SoutenanceScreen() {
     try {
       dispatch({ type: 'AFFECT_PUB_REQUEST' });
       const { data } = await axios.put(
-        URL + `/soutnance/publishSoutnances/${userInfo.userId}`,
+        `${URL}` + `/soutnance/publishSoutnances/${userInfo.userId}`,
         {},
         {
           headers: {

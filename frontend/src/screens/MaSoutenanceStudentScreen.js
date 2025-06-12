@@ -33,7 +33,7 @@ export default function MaSoutenanceStudentScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          URL + `/soutnance/getAssignedSoutnance/${userInfo.userId}`,
+         `${URL}` + `/soutnance/getAssignedSoutnance/${userInfo.userId}`,
           { headers: { Authorization: `${userInfo.token}` } }
         );
         // console.log(data);

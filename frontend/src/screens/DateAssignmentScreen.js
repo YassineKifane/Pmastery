@@ -94,7 +94,7 @@ export default function DateAssignmentScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
+          `${URL}` + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {

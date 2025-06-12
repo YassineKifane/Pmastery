@@ -97,7 +97,7 @@ export default function UsersDemandsScreen(props) {
     try {
       dispatch({ type: 'ACCEPT_REQUEST' });
       await axios.put(
-        URL + `/user/accept/${user.userId}`,
+        `${URL}` + `/user/accept/${user.userId}`,
         { userId: user.userId },
         {
           headers: { Authorization: `${userInfo.token}` },

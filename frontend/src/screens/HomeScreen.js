@@ -95,7 +95,7 @@ export default function HomeScreen() {
     try {
       // console.log(annonce, roles);
       const { data } = await axios.put(
-          URL + `/user/addAnnouncement`,
+          `${URL}`+ `/user/addAnnouncement`,
           {},
           {
             headers: { Authorization: `${userInfo.token}` },

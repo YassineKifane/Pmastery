@@ -73,7 +73,7 @@ export default function ProfileScreen() {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       const { data } = await axios.put(
-        URL + `/user/${userInfo.userId}`,
+        `${URL}` + `/user/${userInfo.userId}`,
         {
           userId: userInfo.userId,
           affiliationCode: userInfo.affiliationCode,

@@ -61,7 +61,7 @@ export default function LancementSoutenances() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(
-          URL + `/soutnance/getInitializeDate/${userInfo.userId}`,
+          `${URL}` + `/soutnance/getInitializeDate/${userInfo.userId}`,
           {
             headers: { Authorization: `${userInfo.token}` },
             params: {
@@ -99,7 +99,7 @@ export default function LancementSoutenances() {
         ).padStart(2, '0')}/${String(endDate.getFullYear())}`
       );
       const { data } = await axios.put(
-        URL + `/soutnance/initializeDate/${userInfo.userId}`,
+        `${URL}` + `/soutnance/initializeDate/${userInfo.userId}`,
         {},
         {
           headers: { Authorization: `${userInfo.token}` },
